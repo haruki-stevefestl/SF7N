@@ -6,7 +6,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SF7N"
         mc:Ignorable="d"
-        Title="SF7N" Height="720" Width="1920" FontFamily="Courier New" FontSize="20">
+        Title="SF7N" Height="720" Width="1920" FontFamily="Courier New" FontSize="18">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Background" Value="#00000000"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
@@ -31,8 +38,13 @@
         />
 
         <!-- Main Grid -->
-        <DataGrid Grid.Row="1" Margin="8,8,8,8" Name="Search_CSVGrid" IsReadOnly="True" AutoGenerateColumns="False" ColumnHeaderHeight="64">
+        <DataGrid Grid.Row="1" Margin="8,8,8,8" Name="CSVGrid" IsReadOnly="True" AutoGenerateColumns="False" ColumnHeaderHeight="64">
             <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="MinWidth" Value="84"/>
+                    <Setter Property="Padding" Value="8"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
@@ -150,7 +162,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Remarks}" Width="300" MaxWidth="600">
+                <DataGridTextColumn Binding="{Binding Remarks}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Search_Header_Remarks" Text="Remarks"/>
@@ -162,10 +174,10 @@
         </DataGrid>
         
         <!-- Gridsplitter -->
-        <GridSplitter Grid.Column="1" Width="4" Grid.RowSpan="3" HorizontalAlignment="Center"/>
+        <GridSplitter Grid.Column="1" Grid.Row="1" Width="4" HorizontalAlignment="Center"/>
         
         <!-- Preview -->
-        <Button Grid.Column="2" Grid.Row="1" Background="White">
+        <Button Margin="8,0,0,0" Grid.Column="2" Grid.Row="1" Background="White" BorderThickness="0">
             <Grid>
                 <TextBlock Text="Image Preview"/>
                 <Image/>
@@ -174,7 +186,6 @@
         
         <!-- Statusbar -->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
-            
         </StatusBar>
     </Grid>
 </Window>
