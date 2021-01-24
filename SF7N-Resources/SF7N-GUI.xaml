@@ -40,14 +40,14 @@
             VerticalContentAlignment="Center"
             Grid.ColumnSpan="3"
         />
-        
+
         <!-- Header Buttons -->
         <TabControl BorderThickness="0" Margin="196,8,8,8" Background="#00000000">
             <TabItem Margin="0" Height="0">
                 <StackPanel Orientation="Horizontal" Margin="0">
                     <Button Name="Search" Content="Filter CSV" Height="24" Width="512"/>
-                    <CheckBox Name="AliasMode" Content="Alias Mode" VerticalContentAlignment="Center" Margin="84,0,0,0"/>
-                    <CheckBox Name="InputAssist" Content="Input Assist" VerticalContentAlignment="Center" Margin="84,0,0,0"/>
+                    <CheckBox Name="AliasMode" Content="Alias Mode" IsChecked="True" VerticalContentAlignment="Center" Margin="84,0,0,0"/>
+                    <CheckBox Name="InputAssist" Content="Input Assist" IsChecked="True" VerticalContentAlignment="Center" Margin="84,0,0,0"/>
                     <Button Name="ResetSorting" Content="Reset Sorting" Height="24" Margin="84,0,0,0" Width="196"/>
                 </StackPanel>
             </TabItem>
