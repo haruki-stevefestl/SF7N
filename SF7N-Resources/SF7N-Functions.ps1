@@ -7,6 +7,14 @@ function Write-Log ($Location, $Type, $Message) {
 }
 
 function Update-CSV ($ImportFrom) {
+    <#
+        Creates following variables:
+        - csvRaw       [AList] String content from CSV
+        - csv          [AList] Actual datalogging content (line 9~)
+        - csvAlias     [AList] Aliases stored in CSV (line 1~8)
+        - csvSearch    [AList] Matching results in searching
+        - csvHeader    [Array] Header of the CSV
+    #>
     [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
     [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
     [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
@@ -20,7 +28,7 @@ function Search-CSV {
     $wpf.CSVGrid.ItemsSource = $csvSearch
     Update-GUI
 
-    # Input Assist
+    # Apply Input Assist
     $SearchTerms = [PSCustomObject] @{}
     if ($wpf.InputAssist.IsChecked) {
         $csvHeader.foreach({ 
@@ -55,6 +63,7 @@ function Search-CSV {
         $_.Author    -match $SearchTerms.Author    -and
         $_.Remarks   -match $SearchTerms.Remarks
     }).Foreach{
+        # Apply alias if AliasMode is on; else add raw content
         if ($wpf.AliasMode.IsChecked) {
             $tempRow = $_.PsObject.Copy()
             $tempRow.NSFW   = ($_.NSFW   -replace $csvAlias[0].NSFW,$csvAlias[1].NSFW -replace $csvAlias[2].NSFW,$csvAlias[3].NSFW -replace $csvAlias[4].NSFW,$csvAlias[5].NSFW)
@@ -69,9 +78,27 @@ function Search-CSV {
     }
 }
 
-function Invoke-ChangeRow {}
+function Import-Configuration {
+    $script:configuration = Get-Content "$PSScriptRoot\SF7N-Configuration.ini" |
+        Select-Object -Skip 1 |
+            ConvertFrom-StringData
+}
 
-function Export-Configuration {}
+function Export-Configuration {
+    '[SF7N-Configuration]' | Set-Content "$PSScriptRoot\SF7N-Configuration.ini"
+    $configuration.GetEnumerator().ForEach({
+        "$($_.Keys)=$($_.Values)" |
+            Add-Content "$PSScriptRoot\SF7N-Configuration.ini"
+    })
+}
 
-function Import-Configuration {}
+function Invoke-ChangeRow {
+    param (
+        [ValidateSet('InsertBelow', 'InsertAbove', 'InsertLast', 'RemoveAt')]
+        [String] $Type,
+        [Int] $At,
+        [Int] $Count,
+        [Boolean] $IDNeeded
 
+    )
+}
