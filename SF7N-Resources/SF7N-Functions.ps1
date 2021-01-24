@@ -10,19 +10,19 @@ function Update-CSV ($ImportFrom) {
     [System.Collections.ArrayList] $global:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-Csv
     [System.Collections.ArrayList] $global:csv       = $csvRaw[8..$csvRaw.Count]
     [System.Collections.ArrayList] $global:csvAlias  = $csvRaw[1..7]
-    $global:csvHeader = (Get-Content $csvLocation -First 1) -replace '"','' -split ','
     [System.Collections.ArrayList] $global:csvSearch = @()
+    $global:csvHeader = (Get-Content $csvLocation -First 1) -replace '"','' -split ','
 }
 
 function Search-CSV {
     # Initialize
     $global:csvSearch = @()
-    $wpf.CSVGrid.ItemsSource = $null
+    $wpf.CSVGrid.ItemsSource = $csvSearch
+    Update-GUI
     
     # Search
     $csv.ForEach({
         if (
-            # Conditions
             $_.ID        -match $wpf.TextBox_ID.Text        -and
             $_.Viewpoint -match $wpf.TextBox_Viewpoint.Text -and
             $_.Location  -match $wpf.TextBox_Location.Text  -and
@@ -42,9 +42,6 @@ function Search-CSV {
             $global:csvSearch.Add($_)
         }
     })
-
-    # Display Result
-    $wpf.CSVGrid.ItemsSource = $csvSearch
 }
 
 function Invoke-ChangeRow {}
