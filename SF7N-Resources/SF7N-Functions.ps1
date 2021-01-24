@@ -7,13 +7,26 @@ function Write-Log ($Location, $Type, $Message) {
 }
 
 function Update-CSV ($ImportFrom) {
-    [System.Collections.ArrayList] $global:csvRaw = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-Csv
-    $global:csv       = $csvRaw[8..$csvRaw.Count]
-    $global:csvAlias  = $csvRaw[1..7]
-    $global:csvHeader = $csvRaw[0]
+    [System.Collections.ArrayList] $global:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-Csv
+    [System.Collections.ArrayList] $global:csv       = $csvRaw[8..$csvRaw.Count]
+    [System.Collections.ArrayList] $global:csvAlias  = $csvRaw[1..7]
+    $global:csvHeader = (Get-Content $csvLocation -First 1) -replace '"','' -split ','
+    [System.Collections.ArrayList] $global:csvSearch = @()
 }
 
-function Search-CSV {}
+function Search-CSV {
+    # $global:csvSearch = $null
+    $global:csvSearch = @()
+    $wpf.CSVGrid.ItemsSource = $null
+    
+    $csv.ForEach({
+        if ((Get-Random -Minimum 0 -Maximum 49) -eq 1) {
+            $global:csvSearch.Add($_)
+        }
+    })
+
+    $wpf.CSVGrid.ItemsSource = $csvSearch
+}
 
 function Invoke-ChangeRow {}
 
