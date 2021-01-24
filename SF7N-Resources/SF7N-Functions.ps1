@@ -15,16 +15,35 @@ function Update-CSV ($ImportFrom) {
 }
 
 function Search-CSV {
-    # $global:csvSearch = $null
+    # Initialize
     $global:csvSearch = @()
     $wpf.CSVGrid.ItemsSource = $null
     
+    # Search
     $csv.ForEach({
-        if ((Get-Random -Minimum 0 -Maximum 49) -eq 1) {
+        if (
+            # Conditions
+            $_.ID        -match $wpf.TextBox_ID.Text        -and
+            $_.Viewpoint -match $wpf.TextBox_Viewpoint.Text -and
+            $_.Location  -match $wpf.TextBox_Location.Text  -and
+            $_.Collar    -match $wpf.TextBox_Collar.Text    -and
+            $_.Tie       -match $wpf.TextBox_Tie.Text       -and
+            $_.Skirt     -match $wpf.TextBox_Skirt.Text     -and
+            $_.Uniform   -match $wpf.TextBox_Uniform.Text   -and
+            $_.Sleeve    -match $wpf.TextBox_Sleeve.Text    -and
+            $_.NSFW      -match $wpf.TextBox_NSFW.Text      -and
+            $_.Mood      -match $wpf.TextBox_Mood.Text      -and
+            $_.Subject   -match $wpf.TextBox_Subject.Text   -and
+            $_.Gender    -match $wpf.TextBox_Gender.Text    -and
+            $_.Time      -match $wpf.TextBox_Time.Text      -and
+            $_.Author    -match $wpf.TextBox_Author.Text    -and
+            $_.Remarks   -match $wpf.TextBox_Remarks.Text
+        ) {
             $global:csvSearch.Add($_)
         }
     })
 
+    # Display Result
     $wpf.CSVGrid.ItemsSource = $csvSearch
 }
 
