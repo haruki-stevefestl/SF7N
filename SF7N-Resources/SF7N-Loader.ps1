@@ -3,6 +3,10 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 
+# Variables
+$csvLocation = "$PSScriptRoot\S4 Interface - Tag.Current.csv"
+$previewLocation = 'S:\PNG\'
+
 # Load a WPF GUI from a XAML file build with Visual Studio
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 $wpf = @{}
@@ -18,7 +22,6 @@ $namedNodes | ForEach-Object {$wpf.Add($_.Name, $tempform.FindName($_.Name))}
 # Get the form name to be used as parameter in functions external to form...
 $FormName = $NamedNodes[0].Name
 
-
 # Loaded in memory events
 $wpf.$FormName.Add_Loaded({})
 
@@ -28,13 +31,16 @@ $wpf.$FormName.Add_ContentRendered({})
 # Closing events
 $wpf.$FormName.Add_Closing({})
 
-# TODO: Put the following line of code into Update-GUI function
-# $wpf.$FormName.Dispatcher.Invoke("Render",[action][scriptblock]{})
-
 # Remove & Import WPF control modules
 if (Get-Module 'SF7N-GUI') {
-    Remove-Module "SF7N-GUI"
+    Remove-Module 'SF7N-Functions'
+    Remove-Module 'SF7N-GUI'
 }
+
+Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
+
+Update-CSV
+
 Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
 
 

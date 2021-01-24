@@ -6,14 +6,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SF7N"
         mc:Ignorable="d"
-        Title="SF7N" Height="720" Width="1920" FontFamily="Courier New" FontSize="18">
+        Title="SF7N" Height="720" Width="1920" FontFamily="Courier New" FontSize="16">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="Background" Value="#00000000"/>
         </Style>
+
+        <Style x:Key="CellStyleWithPadding" TargetType="DataGridCell">
+            <Setter Property="Padding" Value="16"/>
+        </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
@@ -38,7 +42,11 @@
         />
 
         <!-- Main Grid -->
-        <DataGrid Grid.Row="1" Margin="8,8,8,8" Name="CSVGrid" IsReadOnly="True" AutoGenerateColumns="False" ColumnHeaderHeight="64">
+        <DataGrid Grid.Row="1" Margin="8,8,8,8" Name="CSVGrid" IsReadOnly="True" AutoGenerateColumns="False" ColumnHeaderHeight="64"
+            EnableColumnVirtualization="True" EnableRowVirtualization="True"
+            HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0"
+            CellStyle="{StaticResource CellStyleWithPadding}"
+        >
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="MinWidth" Value="84"/>
@@ -162,7 +170,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Remarks}">
+                <DataGridTextColumn Binding="{Binding Remarks}" Width="*">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Search_Header_Remarks" Text="Remarks"/>
@@ -172,10 +180,10 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+
         <!-- Gridsplitter -->
         <GridSplitter Grid.Column="1" Grid.Row="1" Width="4" HorizontalAlignment="Center"/>
-        
+
         <!-- Preview -->
         <Button Margin="8,0,0,0" Grid.Column="2" Grid.Row="1" Background="White" BorderThickness="0">
             <Grid>
@@ -183,7 +191,7 @@
                 <Image/>
             </Grid>
         </Button>
-        
+
         <!-- Statusbar -->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
         </StatusBar>
