@@ -31,6 +31,12 @@ $wpf.$FormName.Add_Closing({})
 # TODO: Put the following line of code into Update-GUI function
 # $wpf.$FormName.Dispatcher.Invoke("Render",[action][scriptblock]{})
 
+# Remove & Import WPF control modules
+if (Get-Module 'SF7N-GUI') {
+    Remove-Module "SF7N-GUI"
+}
+Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
+
 
 # Load the form:
 # Older way >>>>> $wpf.MyFormName.ShowDialog() | Out-Null >>>>> generates crash if run multiple times
