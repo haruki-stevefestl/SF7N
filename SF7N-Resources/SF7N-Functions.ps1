@@ -1,5 +1,5 @@
 function Update-GUI {
-    $wpf.$FormName.Dispatcher.Invoke("Render",[action][scriptblock]{})
+    $wpf.$formName.Dispatcher.Invoke("Render",[action][scriptblock]{})
 }
 
 function Write-Log ($Location, $Type, $Message) {
@@ -7,41 +7,76 @@ function Write-Log ($Location, $Type, $Message) {
 }
 
 function Update-CSV ($ImportFrom) {
-    [System.Collections.ArrayList] $global:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-Csv
-    [System.Collections.ArrayList] $global:csv       = $csvRaw[8..$csvRaw.Count]
-    [System.Collections.ArrayList] $global:csvAlias  = $csvRaw[1..7]
-    [System.Collections.ArrayList] $global:csvSearch = @()
-    $global:csvHeader = (Get-Content $csvLocation -First 1) -replace '"','' -split ','
+    [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
+    [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
+    [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
+    [System.Collections.ArrayList] $script:csvSearch = @()
+    [Array] $script:csvHeader = ((Get-Content $csvLocation -First 1) -replace '"','') -split ','
 }
 
 function Search-CSV {
     # Initialize
-    $global:csvSearch = @()
+    $script:csvSearch = [PSCustomObject] @{}
     $wpf.CSVGrid.ItemsSource = $csvSearch
     Update-GUI
+
+    # Input Assist
+    $global:SearchTerms = [PSCustomObject] @{}
+    if ($wpf.InputAssist.IsChecked) {
+        $csvHeader.foreach({ 
+            $global:SearchTerms | Add-Member $_ (
+                $wpf.$("TextBox_$_").Text -ireplace
+                    ($csvAlias[1].$_, $csvAlias[0].$_) -ireplace
+                    ($csvAlias[3].$_, $csvAlias[2].$_) -ireplace
+                    ($csvAlias[5].$_, $csvAlias[4].$_)
+            )
+        })
+    } else {
+        $csvHeader.foreach({
+            $global:SearchTerms | Add-Member $_ $wpf.$("TextBox_$_").Text
+        })
+    }
     
     # Search
-    $csv.ForEach({
-        if (
-            $_.ID        -match $wpf.TextBox_ID.Text        -and
-            $_.Viewpoint -match $wpf.TextBox_Viewpoint.Text -and
-            $_.Location  -match $wpf.TextBox_Location.Text  -and
-            $_.Collar    -match $wpf.TextBox_Collar.Text    -and
-            $_.Tie       -match $wpf.TextBox_Tie.Text       -and
-            $_.Skirt     -match $wpf.TextBox_Skirt.Text     -and
-            $_.Uniform   -match $wpf.TextBox_Uniform.Text   -and
-            $_.Sleeve    -match $wpf.TextBox_Sleeve.Text    -and
-            $_.NSFW      -match $wpf.TextBox_NSFW.Text      -and
-            $_.Mood      -match $wpf.TextBox_Mood.Text      -and
-            $_.Subject   -match $wpf.TextBox_Subject.Text   -and
-            $_.Gender    -match $wpf.TextBox_Gender.Text    -and
-            $_.Time      -match $wpf.TextBox_Time.Text      -and
-            $_.Author    -match $wpf.TextBox_Author.Text    -and
-            $_.Remarks   -match $wpf.TextBox_Remarks.Text
-        ) {
-            $global:csvSearch.Add($_)
+    $csv.Where({
+        $_.ID        -match $SearchTerms.ID        -and
+        $_.Viewpoint -match $SearchTerms.Viewpoint -and
+        $_.Location  -match $SearchTerms.Location  -and
+        $_.Collar    -match $SearchTerms.Collar    -and
+        $_.Tie       -match $SearchTerms.Tie       -and
+        $_.Skirt     -match $SearchTerms.Skirt     -and
+        $_.Uniform   -match $SearchTerms.Uniform   -and
+        $_.Sleeve    -match $SearchTerms.Sleeve    -and
+        $_.NSFW      -match $SearchTerms.NSFW      -and
+        $_.Mood      -match $SearchTerms.Mood      -and
+        $_.Subject   -match $SearchTerms.Subject   -and
+        $_.Gender    -match $SearchTerms.Gender    -and
+        $_.Time      -match $SearchTerms.Time      -and
+        $_.Author    -match $SearchTerms.Author    -and
+        $_.Remarks   -match $SearchTerms.Remarks
+    }).Foreach{
+        if ($wpf.AliasMode.IsChecked) {
+            $script:csvSearch.Add([PSCustomObject] @{
+                ID        =  $_.ID
+                Viewpoint =  $_.Viewpoint
+                Location  =  $_.Location
+                Collar    =  $_.Collar
+                Tie       =  $_.Tie
+                Skirt     =  $_.Skirt
+                Uniform   =  $_.Uniform
+                Subject   =  $_.Subject
+                Author    =  $_.Author
+                Remarks   =  $_.Remarks
+                NSFW      = ($_.NSFW    -replace $csvAlias[0].NSFW,$csvAlias[1].NSFW -replace $csvAlias[2].NSFW,$csvAlias[3].NSFW -replace $csvAlias[4].NSFW,$csvAlias[5].NSFW)
+                Mood      = ($_.Mood    -replace $csvAlias[0].Mood,$csvAlias[1].Mood -replace $csvAlias[2].Mood,$csvAlias[3].Mood -replace $csvAlias[4].Mood,$csvAlias[5].Mood)
+                Time      = ($_.Time    -replace $csvAlias[0].Time,$csvAlias[1].Time -replace $csvAlias[2].Time,$csvAlias[3].Time -replace $csvAlias[4].Time,$csvAlias[5].Time)
+                Sleeve    = ($_.Sleeve  -replace $csvAlias[0].Sleeve,$csvAlias[1].Sleeve -replace $csvAlias[2].Sleeve,$csvAlias[3].Sleeve)
+                Gender    = ($_.Gender  -replace $csvAlias[0].Gender,$csvAlias[1].Gender -replace $csvAlias[2].Gender,$csvAlias[3].Gender)
+            })
+        } else {
+            $script:csvSearch.Add($_)
         }
-    })
+    }
 }
 
 function Invoke-ChangeRow {}
