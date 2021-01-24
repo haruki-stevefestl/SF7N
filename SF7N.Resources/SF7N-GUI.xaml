@@ -1,0 +1,155 @@
+<Window x:Class="SF7N.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SF7N"
+        mc:Ignorable="d"
+        Title="SF7N" Height="600" Width="1400" FontFamily="Courier New" FontSize="20">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Header -->
+        <Label
+            Content="  SF7N Interface"
+            FontWeight="Bold"
+            Background="#F0F0F0"
+            Height="48"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            Grid.ColumnSpan="3"
+        />
+
+        <!-- Main Grid -->
+        <DataGrid Margin="8,64,8,8" Name="Search_CSVGrid" IsReadOnly="True" AutoGenerateColumns="False" ColumnHeaderHeight="64">
+            <DataGrid.Resources>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding ID}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_ID" Text="ID"/>
+                            <TextBox Name="Search_TextBox_ID"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Viewpoint}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Viewpoint" Text="Viewpoint"/>
+                            <TextBox Name="Search_TextBox_Viewpoint"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Location}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Location" Text="Location"/>
+                            <TextBox Name="Search_TextBox_Location"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Collar}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Collar" Text="Collar"/>
+                            <TextBox Name="Search_TextBox_Collar"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Tie}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Tie" Text="Tie"/>
+                            <TextBox Name="Search_TextBox_Tie"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Skirt}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Skirt" Text="Skirt"/>
+                            <TextBox Name="Search_TextBox_Skirt"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Uniform}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Uniform" Text="Uniform"/>
+                            <TextBox Name="Search_TextBox_Uniform"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Sleeve}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Sleeve" Text="Sleeve"/>
+                            <TextBox Name="Search_TextBox_Sleeve"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding NSFW}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_NSFW" Text="NSFW"/>
+                            <TextBox Name="Search_TextBox_NSFW"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Mood}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Mood" Text="Mood"/>
+                            <TextBox Name="Search_TextBox_Mood"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Subject}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Subject" Text="Subject"/>
+                            <TextBox Name="Search_TextBox_Subject"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Gender}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Gender" Text="Gender"/>
+                            <TextBox Name="Search_TextBox_Gender"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Time}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Time" Text="Time"/>
+                            <TextBox Name="Search_TextBox_Time"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Author}">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Author" Text="Author"/>
+                            <TextBox Name="Search_TextBox_Author"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Remarks}" Width="300" MaxWidth="600">
+                    <DataGridTextColumn.Header>
+                        <StackPanel>
+                            <TextBlock Name="Search_Header_Remarks" Text="Remarks"/>
+                            <TextBox Name="Search_TextBox_Remarks"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
