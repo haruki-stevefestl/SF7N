@@ -36,7 +36,11 @@ $formName = $NamedNodes[0].Name
 
 # More initalization work
 Update-CSV
+Import-Configuration
+
 Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
+
+$wpf.CSVGrid.ItemsSource = $csv
 
 
 # Load the form:
