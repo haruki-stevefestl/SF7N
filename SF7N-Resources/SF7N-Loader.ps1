@@ -4,7 +4,7 @@
 #>
 
 # Variables
-$csvLocation = "$PSScriptRoot\S4 Interface - Tag.Current.csv"
+$csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
 # Remove & Import WPF control modules
@@ -14,12 +14,18 @@ if (Get-Module 'SF7N-GUI') {
 }
 
 Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
+Write-Log 'INF' 'SF7N Startup'
+Write-Log 'DBG'
 
 # Load a WPF GUI from a XAML file build with Visual Studio
+Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 $wpf = @{}
+
+Write-Log 'INF' 'Read   XAML'
 $inputXML = Get-Content -Path "$PSScriptRoot\SF7N-GUI.xaml"
 
+Write-Log 'INF' 'Parse  XAML'
 $inputXMLClean = $inputXML -replace 'mc:Ignorable="d"','' -replace "x:N",'N' -replace 'x:Class=".*?"','' -replace 'd:DesignHeight="\d*?"','' -replace 'd:DesignWidth="\d*?"',''
 [Xml] $xaml = $inputXMLClean
 $reader = New-Object System.Xml.XmlNodeReader $xaml
@@ -30,23 +36,25 @@ $namedNodes | ForEach-Object {$wpf.Add($_.Name, $tempform.FindName($_.Name))}
 # Get the form name to be used as parameter in functions external to form.
 $formName = $NamedNodes[0].Name
 
-# Loaded in RAM events    $wpf.$formName.Add_Loaded({})
-# Rendered events         $wpf.$formName.Add_ContentRendered({})
-# Closing events          $wpf.$formName.Add_Closing({})
+# Prepare splash screen
+$wpf.Splashscreen.Visibility = "Visible"
 
-# More initalization work
-Update-CSV
-Import-Configuration
+# Initialzation work after splashscreen show
+$wpf.$formName.Add_ContentRendered({
+    Update-CSV
+    $wpf.CSVGrid.ItemsSource = $csv
 
-Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
+    Import-Configuration
+    Write-Log 'INF' 'Import GUI Control Module'
+    Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
 
-$wpf.CSVGrid.ItemsSource = $csv
+    $wpf.Splashscreen.Visibility = "Hidden"
+    Write-Log 'DBG'
+})
 
-
-# Load the form:
-# Older way >>>>> $wpf.MyformName.ShowDialog() | Out-Null >>>>> generates crash if run multiple times
-# Newer way >>>>> avoiding crashes after a couple of launches in PowerShell...
-# Using method from https://gist.github.com/altrive/6227237 to avoid crashing Powershell after we re-run the script after some inactivity time or if we run it several times consecutively...
+# Load WPF Form:
+# Old way >> .ShowDialog() | Out-Null >> crashes if run multiple times
+# New way >> Using method from https://gist.github.com/altrive/6227237
 $async = $wpf.$formName.Dispatcher.InvokeAsync({
     $wpf.$formName.ShowDialog() | Out-Null
 })
