@@ -2,8 +2,30 @@ function Update-GUI {
     $wpf.$formName.Dispatcher.Invoke("Render",[action][scriptblock]{})
 }
 
-function Write-Log ($Type, $Message) {
-    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Message"
+function Show-MessageBox {
+    param (
+        [Parameter(Mandatory=$true)] $Title,
+        [Parameter(Mandatory=$true)] $Message,
+        [Parameter(Mandatory=$true)] $Button,
+        [Parameter(Mandatory=$false)] $Image
+    )
+    $MessageBox =
+        if ($null -ne $Image) {
+             [System.Windows.MessageBox]::Show($Message,$Title,$Button,$Image)
+        } else {
+           [System.Windows.MessageBox]::Show($Message,$Title,$Button)
+        }
+
+    return $MessageBox
+}
+
+function Write-Log {
+    param (
+        [ValidateSet('INF','DBG','ERR')] $Type,
+        $Log
+    )
+    if ($Type -eq 'ERR') {Show-MessageBox 'Error' $Log 'OK' 'Error'}
+    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Log"
 }
 
 function Update-CSV ($ImportFrom) {
