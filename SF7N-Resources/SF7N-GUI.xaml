@@ -38,23 +38,45 @@
         />
 
         <!-- Header Toolbar -->
-        <TabControl BorderThickness="0" Margin="196,8,8,8" Background="#00000000">
+        <TabControl Name="Toolbar" BorderThickness="0" Margin="196,8,8,8" Background="#00000000">
             <!-- Search Toolbar -->
             <TabItem Margin="0" Height="0">
-                <StackPanel Orientation="Horizontal" Margin="0">
-                    <Button Name="Search" Content="Filter CSV" Height="24" Width="512"/>
-                    <CheckBox Name="AliasMode" Content="Alias Mode" IsChecked="True" VerticalContentAlignment="Center" Margin="84,0,0,0"/>
-                    <CheckBox Name="InputAssist" Content="Input Assist" IsChecked="True" VerticalContentAlignment="Center" Margin="84,0,0,0"/>
-                    <Button Name="ResetSorting" Content="Reset Sorting" Height="24" Margin="84,0,0,0" Width="196"/>
-                </StackPanel>
+                <Grid Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button   Name="Search" Content="Filter CSV" Margin="0"/>
+                    <CheckBox Grid.Column="2" Name="AliasMode" Content="Alias Mode" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
+                    <CheckBox Grid.Column="4" Name="InputAssist" Content="Input Assist" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
+                    <Button   Grid.Column="6" Name="ResetSorting" Content="Reset Sorting" Margin="0"/>
+                </Grid>
             </TabItem>
             <!-- Editing toolbar -->
             <TabItem Margin="0" Height="0">
+                <UniformGrid Columns="6">
+                    <UniformGrid Columns="2" Margin="0,0,8,0">
+                        <Button Name="InsertLast" Content="Append"/>
+                        <TextBox Name="InsertLastCount" Margin="8,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    </UniformGrid>
+
+                    <Button Name="InsertAbove" Content="Insert Above" Margin="16,0,8,0"/>
+                    <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0"/>
+                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,16,0"/>
+                    
+                    <Button Name="Commit" Content="Commit" Margin="16,0,8,0"/>
+                    <Button Name="CommitReturn" Content="Commit &amp; Return" Margin="8,0,0,0"/>
+                </UniformGrid>
             </TabItem>
         </TabControl>
 
         <!-- Main Grid -->
-        <DataGrid Grid.Row="1" Margin="8,8,8,8" BorderThickness="0,1,0,0" Name="CSVGrid" IsReadOnly="True" AutoGenerateColumns="False"
+        <DataGrid Grid.Row="1" Margin="8,8,8,8" BorderThickness="0,1,0,0" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
         EnableColumnVirtualization="True" EnableRowVirtualization="True"
         HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0">
             <!-- Datagrid Styling -->
@@ -223,7 +245,7 @@
         <!-- Statusbar -->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
         </StatusBar>
-        
+
         <!-- Splashscreen -->
         <Grid Name="Splashscreen" Grid.ColumnSpan="3" Grid.RowSpan="3" Background="White" Visibility="Hidden">
             <VirtualizingStackPanel VerticalAlignment="Center">
