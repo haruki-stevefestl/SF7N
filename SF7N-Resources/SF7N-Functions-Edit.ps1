@@ -6,3 +6,10 @@ function Invoke-ChangeRow {
         [Int] $Count
     )
 }
+
+function Export-CustomCSV {
+    Write-Log 'INF' 'Save  CSV'
+    try {
+        $wpf.CSVGrid.ItemsSource | Export-CSV $csvLocation -NoTypeInformation
+    } catch {Write-Log 'ERR' 'Save  CSV Failed'}
+}
