@@ -2,8 +2,8 @@ function Update-GUI {
     $wpf.$formName.Dispatcher.Invoke("Render",[action][scriptblock]{})
 }
 
-function Write-Log ($Location, $Type, $Message) {
-    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Location][$Type][$Message]"
+function Write-Log ($Type, $Message) {
+    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Message"
 }
 
 function Update-CSV ($ImportFrom) {
@@ -15,15 +15,19 @@ function Update-CSV ($ImportFrom) {
         - csvSearch    [AList] Matching results in searching
         - csvHeader    [Array] Header of the CSV
     #>
-    [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
-    [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
-    [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
-    [System.Collections.ArrayList] $script:csvSearch = @()
-    [Array] $script:csvHeader = ((Get-Content $csvLocation -First 1) -replace '"','') -split ','
+    Write-Log 'INF' 'Read   CSV'
+    try {
+        [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
+        [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
+        [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
+        [System.Collections.ArrayList] $script:csvSearch = @()
+        [Array] $script:csvHeader = ((Get-Content $csvLocation -First 1) -replace '"','') -split ','
+    } catch {Write-Log 'ERR' 'Read   CSV Failed'}
 }
 
 function Search-CSV {
     # Initialize
+    Write-Log 'INF' 'Search CSV'
     $script:csvSearch = [PSCustomObject] @{}
     $wpf.CSVGrid.ItemsSource = $csvSearch
     Update-GUI
@@ -76,29 +80,35 @@ function Search-CSV {
             $script:csvSearch.Add($_)
         }
     }
+
+    Write-Log 'DBG' "Search CSV ended with $($csvSearch.Count) matches"
 }
 
 function Import-Configuration {
-    $script:configuration = Get-Content "$PSScriptRoot\SF7N-Configuration.ini" |
-        Select-Object -Skip 1 |
-            ConvertFrom-StringData
+    Write-Log 'INF' 'Import Configuration'
+    try {
+        $script:configuration = Get-Content "$PSScriptRoot\SF7N-Configuration.ini" |
+            Select-Object -Skip 1 |
+                ConvertFrom-StringData
+    } catch {Write-Log 'ERR' 'Import Configuration Failed'}
 }
 
 function Export-Configuration {
-    '[SF7N-Configuration]' | Set-Content "$PSScriptRoot\SF7N-Configuration.ini"
-    $configuration.GetEnumerator().ForEach({
-        "$($_.Keys)=$($_.Values)" |
-            Add-Content "$PSScriptRoot\SF7N-Configuration.ini"
-    })
+    Write-Log 'INF' 'Export Configuration'
+    try {
+        '[SF7N-Configuration]' | Set-Content "$PSScriptRoot\SF7N-Configuration.ini"
+        $configuration.GetEnumerator().ForEach({
+            "$($_.Keys)=$($_.Values)" |
+                Add-Content "$PSScriptRoot\SF7N-Configuration.ini"
+        })
+    } catch {Write-Log 'ERR' 'Exoprt Configuration Failed'}
 }
 
 function Invoke-ChangeRow {
     param (
         [ValidateSet('InsertBelow', 'InsertAbove', 'InsertLast', 'RemoveAt')]
-        [String] $Type,
+        [String] $Action,
         [Int] $At,
-        [Int] $Count,
-        [Boolean] $IDNeeded
-
+        [Int] $Count
     )
 }
