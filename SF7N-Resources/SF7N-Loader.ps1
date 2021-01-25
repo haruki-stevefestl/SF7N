@@ -3,16 +3,15 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 
-# Variables
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
+Remove-Variable "*"
+Remove-Module "SF7N-*"
+
 $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
-# Remove & Import WPF control modules
-if (Get-Module 'SF7N-GUI') {
-    Remove-Module 'SF7N-Functions'
-    Remove-Module 'SF7N-GUI'
-}
+# Force use of UTF-8
+$PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
 Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
 Clear-Host
@@ -42,12 +41,14 @@ $wpf.Splashscreen.Visibility = "Visible"
 
 # Initialzation work after splashscreen show
 $wpf.$formName.Add_ContentRendered({
-    Update-CSV
+    Import-CustomCSV
     $wpf.CSVGrid.ItemsSource = $csv
 
     Import-Configuration
     Write-Log 'INF' 'Import GUI Control Module'
     Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
+    Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
+    Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
 
     $wpf.Splashscreen.Visibility = "Hidden"
     Write-Log 'DBG'
