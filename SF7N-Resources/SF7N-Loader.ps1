@@ -3,7 +3,8 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 
-# Variables
+# Variables#—————————————————————————————————————————————————————————————————————————————+—————————————————————
+
 $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
@@ -17,24 +18,23 @@ Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
 
-# Load a WPF GUI from a XAML file build with Visual Studio
+# Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
-$wpf = @{}
 
 Write-Log 'INF' 'Read   XAML'
 $inputXML = Get-Content -Path "$PSScriptRoot\SF7N-GUI.xaml"
 
 Write-Log 'INF' 'Parse  XAML'
-$inputXMLClean = $inputXML -replace 'mc:Ignorable="d"','' -replace "x:N",'N' -replace 'x:Class=".*?"','' -replace 'd:DesignHeight="\d*?"','' -replace 'd:DesignWidth="\d*?"',''
-[Xml] $xaml = $inputXMLClean
-$reader = New-Object System.Xml.XmlNodeReader $xaml
+[Xml] $xaml = $inputXML -replace 'x:Class=".*?"',''
+$reader = [System.Xml.XmlNodeReader]::New($xaml)
 $tempform = [Windows.Markup.XamlReader]::Load($reader)
+$wpf = @{}
 $namedNodes = $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]")
-$namedNodes | ForEach-Object {$wpf.Add($_.Name, $tempform.FindName($_.Name))}
+$namedNodes.ForEach({$wpf.Add($_.Name, $tempform.FindName($_.Name))})
 
-# Get the form name to be used as parameter in functions external to form.
-$formName = $NamedNodes[0].Name
+# Get form name
+$formName = $namedNodes[0].Name
 
 # Prepare splash screen
 $wpf.Splashscreen.Visibility = "Visible"
