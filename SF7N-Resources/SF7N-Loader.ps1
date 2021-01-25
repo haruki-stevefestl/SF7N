@@ -3,8 +3,8 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 
-# Variables#—————————————————————————————————————————————————————————————————————————————+—————————————————————
-
+# Variables
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
@@ -31,7 +31,7 @@ $reader = [System.Xml.XmlNodeReader]::New($xaml)
 $tempform = [Windows.Markup.XamlReader]::Load($reader)
 $wpf = @{}
 $namedNodes = $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]")
-$namedNodes.ForEach({$wpf.Add($_.Name, $tempform.FindName($_.Name))})
+$namedNodes.Name.ForEach({$wpf.Add($_, $tempform.FindName($_))})
 
 # Get form name
 $formName = $namedNodes[0].Name
