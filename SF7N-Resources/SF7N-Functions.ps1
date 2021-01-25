@@ -117,15 +117,27 @@ function Set-Preview ($InputObject) {
 function Import-Configuration {
     Write-Log 'INF' 'Import Configuration'
     try {
+        # Retrieve configurations from .ini
         $script:configuration = Get-Content "$PSScriptRoot\SF7N-Configuration.ini" |
             Select-Object -Skip 1 |
                 ConvertFrom-StringData
+
+        # Apply them
+        $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
+        $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
+        $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
     } catch {Write-Log 'ERR' 'Import Configuration Failed'}
 }
 
 function Export-Configuration {
     Write-Log 'INF' 'Export Configuration'
     try {
+        # Retrieve configurations from UI
+        $configuration.AliasMode       = $wpf.AliasMode.IsChecked
+        $configuration.InputAssist     = $wpf.InputAssist.IsChecked
+        $configuration.InsertLastCount = $wpf.InsertLastCount.Text
+
+        # Export them
         '[SF7N-Configuration]' | Set-Content "$PSScriptRoot\SF7N-Configuration.ini"
         $configuration.GetEnumerator().ForEach({
             "$($_.Keys)=$($_.Values)" |
