@@ -15,6 +15,7 @@ if (Get-Module 'SF7N-GUI') {
 }
 
 Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
+Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
 
@@ -26,7 +27,7 @@ Write-Log 'INF' 'Read   XAML'
 $inputXML = Get-Content -Path "$PSScriptRoot\SF7N-GUI.xaml"
 
 Write-Log 'INF' 'Parse  XAML'
-[Xml] $xaml = $inputXML -replace 'x:Class=".*?"',''
+[Xml] $xaml = $inputXML -replace 'x:Class=".*?"','' -replace 'mc:Ignorable="d"','' -replace "x:N",'N' -replace 'x:Class=".*?"','' -replace 'd:DesignHeight="\d*?"','' -replace 'd:DesignWidth="\d*?"',''
 $reader = [System.Xml.XmlNodeReader]::New($xaml)
 $tempform = [Windows.Markup.XamlReader]::Load($reader)
 $wpf = @{}
