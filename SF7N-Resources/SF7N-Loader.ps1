@@ -38,6 +38,8 @@ $formName = $namedNodes[0].Name
 
 # Prepare splash screen
 $wpf.Splashscreen.Visibility = "Visible"
+Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
+Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.$formName.Add_ContentRendered({
@@ -47,8 +49,6 @@ $wpf.$formName.Add_ContentRendered({
     Import-Configuration
     Write-Log 'INF' 'Import GUI Control Module'
     Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
-    Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
-    Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
 
     $wpf.Splashscreen.Visibility = "Hidden"
     Write-Log 'DBG'

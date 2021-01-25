@@ -27,14 +27,10 @@ $wpf.CSVGrid.Add_BeginningEdit({
 })
 
 # Commit actions
-$wpf.Commit.Add_Click({
-    Export-CustomCSV
-    Import-CustomCSV
-})
+$wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 
 $wpf.CommitReturn.Add_Click({
-    Export-CustomCSV
-    Import-CustomCSV
+    Export-CustomCSV $csvLocation
     $wpf.Toolbar.SelectedIndex = 0
     Search-CSV
 })

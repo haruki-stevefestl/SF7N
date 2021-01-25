@@ -1,7 +1,10 @@
+# SF7N-Functions-Search.ps1
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 function Search-CSV {
     # Initialize
     Write-Log 'INF' 'Search CSV'
-    $script:csvSearch = [PSCustomObject] @{}
+    # $script:csvSearch = [PSCustomObject] @{}
+    $script:csvSearch = @()
     $wpf.CSVGrid.ItemsSource = $csvSearch
     Update-GUI
 

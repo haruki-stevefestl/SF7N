@@ -7,9 +7,11 @@ function Invoke-ChangeRow {
     )
 }
 
-function Export-CustomCSV {
-    Write-Log 'INF' 'Save  CSV'
+function Export-CustomCSV ($ExportTo) {
+    Write-Log 'INF' 'Export CSV'
     try {
-        $wpf.CSVGrid.ItemsSource | Export-CSV $csvLocation -NoTypeInformation
-    } catch {Write-Log 'ERR' 'Save  CSV Failed'}
+        $wpf.CSVGrid.ItemsSource | Export-CSV $ExportTo -NoTypeInformation
+    } catch {Write-Log 'ERR' 'Export CSV Failed'}
+
+    Import-CSV $ExportTo
 }

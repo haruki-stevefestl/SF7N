@@ -38,14 +38,14 @@ function Import-CustomCSV ($ImportFrom) {
         - csvSearch    [AList] Matching results in searching
         - csvHeader    [Array] Header of the CSV
     #>
-    Write-Log 'INF' 'Read   CSV'
+    Write-Log 'INF' 'Import CSV'
     try {
         [Array] $script:csvHeader = ((Get-Content $csvLocation -First 1) -replace '"','') -split ','
         [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
         [System.Collections.ArrayList] $script:csv       = $csvRaw[9..$csvRaw.Count]
         [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[1..8]
         [System.Collections.ArrayList] $script:csvSearch = @()
-    } catch {Write-Log 'ERR' 'Read   CSV Failed'}
+    } catch {Write-Log 'ERR' 'Import CSV Failed'}
 }
 
 
