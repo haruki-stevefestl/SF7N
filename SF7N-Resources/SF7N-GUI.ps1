@@ -6,16 +6,35 @@ $wpf.CSVGrid.Add_MouseUp({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
 $wpf.CSVGrid.Add_Keyup({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
 
 # Editing-related actions
-$editingMode = $false
+# Entering editing mode
 $wpf.CSVGrid.Add_BeginningEdit({
-    $script:editingMode = $true
-    $wpf.Toolbar.SelectedIndex = 1
-    Write-Log 'DBG' 'Editing Mode On'
+    if ($wpf.Toolbar.SelectedIndex -ne 1) {
+        Write-Log 'DBG' 'Editing Mode On'
+        $script:editingMode = $true
+        $wpf.Toolbar.SelectedIndex = 1
+
+        # Expand CSV and focus on oringally selected row
+        $SelectedItem = $wpf.CSVGrid.CurrentCell[0].Item
+        $wpf.CSVGrid.ItemsSource  = $null
+        $wpf.CSVGrid.Items.Clear()
+        $wpf.CSVGrid.ItemsSource  = $csvRaw
+        $NewSelectedItem = $wpf.CSVGrid.Items | Where-Object {$_.ID -eq $SelectedItem.ID}
+        $wpf.CSVGrid.SelectedItem = $NewSelectedItem
+        $wpf.CSVGrid.ScrollIntoView($NewSelectedItem)
+
+        $wpf.CSVGrid.BeginEdit()
+    }
 })
 
-# On Commit/Commit&Return
-# $wpf.CSVGrid.Add_RowEditEnding({
-    # $script:editingMode = $false
-    # $wpf.Toolbar.SelectedIndex = 0
-    # Write-Log 'DBG' 'Editing Mode Off'
-# })
+# Commit actions
+$wpf.Commit.Add_Click({
+    Export-CustomCSV
+    Import-CustomCSV
+})
+
+$wpf.CommitReturn.Add_Click({
+    Export-CustomCSV
+    Import-CustomCSV
+    $wpf.Toolbar.SelectedIndex = 0
+    Search-CSV
+})
