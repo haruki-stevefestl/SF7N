@@ -1,3 +1,4 @@
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 function Update-GUI {
     $wpf.$formName.Dispatcher.Invoke("Render",[action][scriptblock]{})
 }
@@ -11,9 +12,9 @@ function Show-MessageBox {
     )
     $MessageBox =
         if ($null -ne $Image) {
-             [System.Windows.MessageBox]::Show($Message,$Title,$Button,$Image)
+            [System.Windows.MessageBox]::Show($Message,$Title,$Button,$Image)
         } else {
-           [System.Windows.MessageBox]::Show($Message,$Title,$Button)
+            [System.Windows.MessageBox]::Show($Message,$Title,$Button)
         }
 
     return $MessageBox
@@ -104,6 +105,13 @@ function Search-CSV {
     }
 
     Write-Log 'DBG' "Search CSV ended with $($csvSearch.Count) matches"
+}
+
+function Set-Preview ($InputObject) {
+    $InputObject = "S:\PNG\$($InputObject).png"
+    if (($null -ne $InputObject) -and (Test-Path $InputObject)) {
+        $wpf.Preview.Source = $InputObject
+    }
 }
 
 function Import-Configuration {
