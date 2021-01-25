@@ -12,10 +12,6 @@
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="Background" Value="#00000000"/>
         </Style>
-
-        <Style x:Key="CellStyleWithPadding" TargetType="DataGridCell">
-            <Setter Property="Padding" Value="16"/>
-        </Style>
     </Window.Resources>
 
     <Grid>
@@ -41,8 +37,9 @@
             Grid.ColumnSpan="3"
         />
 
-        <!-- Header Buttons -->
+        <!-- Header Toolbar -->
         <TabControl BorderThickness="0" Margin="196,8,8,8" Background="#00000000">
+            <!-- Search Toolbar -->
             <TabItem Margin="0" Height="0">
                 <StackPanel Orientation="Horizontal" Margin="0">
                     <Button Name="Search" Content="Filter CSV" Height="24" Width="512"/>
@@ -51,14 +48,16 @@
                     <Button Name="ResetSorting" Content="Reset Sorting" Height="24" Margin="84,0,0,0" Width="196"/>
                 </StackPanel>
             </TabItem>
+            <!-- Editing toolbar -->
+            <TabItem Margin="0" Height="0">
+            </TabItem>
         </TabControl>
 
         <!-- Main Grid -->
-        <DataGrid Grid.Row="1" Margin="8,8,8,8" Name="CSVGrid" IsReadOnly="True" AutoGenerateColumns="False"
-            EnableColumnVirtualization="True" EnableRowVirtualization="True"
-            HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0"
-            CellStyle="{StaticResource CellStyleWithPadding}"
-        >
+        <DataGrid Grid.Row="1" Margin="8,8,8,8" BorderThickness="0,1,0,0" Name="CSVGrid" IsReadOnly="True" AutoGenerateColumns="False"
+        EnableColumnVirtualization="True" EnableRowVirtualization="True"
+        HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0">
+            <!-- Datagrid Styling -->
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="MinWidth" Value="128"/>
@@ -69,6 +68,7 @@
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
             </DataGrid.Resources>
+            <!-- Datagrid Layout -->
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ID}">
                     <DataGridTextColumn.Header>
@@ -207,5 +207,13 @@
         <!-- Statusbar -->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
         </StatusBar>
+        
+        <!-- Splashscreen -->
+        <Grid Name="Splashscreen" Grid.ColumnSpan="3" Grid.RowSpan="3" Background="White" Visibility="Hidden">
+            <VirtualizingStackPanel VerticalAlignment="Center">
+                <TextBlock Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Text="Naming convention is not based on N700 Series Shinkansen!" HorizontalAlignment="Center"/>
+            </VirtualizingStackPanel>
+        </Grid>
     </Grid>
 </Window>
