@@ -75,6 +75,8 @@
             </TabItem>
         </TabControl>
 
+
+
         <!-- Main Grid -->
         <DataGrid Grid.Row="1" Margin="8,8,8,8" BorderThickness="0,1,0,0" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
         EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
@@ -108,7 +110,7 @@
             </DataGrid.Resources>
             <!-- -->
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ID}">
+                <DataGridTextColumn Binding="{Binding ID, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_ID" Text="ID"/>
@@ -116,7 +118,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Viewpoint}">
+                <DataGridTextColumn Binding="{Binding Viewpoint, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Viewpoint" Text="Viewpoint"/>
@@ -124,7 +126,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Location}">
+                <DataGridTextColumn Binding="{Binding Location, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Location" Text="Location"/>
@@ -132,7 +134,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Collar}">
+                <DataGridTextColumn Binding="{Binding Collar, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Collar" Text="Collar"/>
@@ -140,7 +142,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Tie}">
+                <DataGridTextColumn Binding="{Binding Tie, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Tie" Text="Tie"/>
@@ -148,7 +150,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Skirt}">
+                <DataGridTextColumn Binding="{Binding Skirt, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Skirt" Text="Skirt"/>
@@ -156,7 +158,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Uniform}">
+                <DataGridTextColumn Binding="{Binding Uniform, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Uniform" Text="Uniform"/>
@@ -164,7 +166,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Sleeve}">
+                <DataGridTextColumn Binding="{Binding Sleeve, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Sleeve" Text="Sleeve"/>
@@ -172,7 +174,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding NSFW}">
+                <DataGridTextColumn Binding="{Binding NSFW, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_NSFW" Text="NSFW"/>
@@ -180,7 +182,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Mood}">
+                <DataGridTextColumn Binding="{Binding Mood, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Mood" Text="Mood"/>
@@ -188,7 +190,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Subject}">
+                <DataGridTextColumn Binding="{Binding Subject, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Subject" Text="Subject"/>
@@ -196,7 +198,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Gender}">
+                <DataGridTextColumn Binding="{Binding Gender, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Gender" Text="Gender"/>
@@ -204,7 +206,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Time}">
+                <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Time" Text="Time"/>
@@ -212,7 +214,7 @@
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Author}">
+                <DataGridTextColumn Binding="{Binding Author, Mode=TwoWay}">
                     <DataGridTextColumn.Header>
                         <StackPanel>
                             <TextBlock Name="Header_Author" Text="Author"/>
@@ -253,5 +255,8 @@
                 <TextBlock Text="Naming convention is not based on N700 Series Shinkansen!" HorizontalAlignment="Center"/>
             </VirtualizingStackPanel>
         </Grid>
+        
+        <!-- Debug Tool -->
+        <Button Grid.Column="2" Content="Debug Console" Name="Debug"/>
     </Grid>
 </Window>

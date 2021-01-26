@@ -40,15 +40,15 @@ $formName = $namedNodes[0].Name
 $wpf.Splashscreen.Visibility = "Visible"
 Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
 Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
+Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.$formName.Add_ContentRendered({
-    Import-CustomCSV
+    Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
 
     Import-Configuration
     Write-Log 'INF' 'Import GUI Control Module'
-    Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
 
     $wpf.Splashscreen.Visibility = "Hidden"
     Write-Log 'DBG'

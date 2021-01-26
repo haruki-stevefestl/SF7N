@@ -3,10 +3,8 @@
 function Search-CSV {
     # Initialize
     Write-Log 'INF' 'Search CSV'
-    # $script:csvSearch = [PSCustomObject] @{}
-    $script:csvSearch = @()
-    $wpf.CSVGrid.ItemsSource = $csvSearch
-    Update-GUI
+    $wpf.CSVGrid.ItemsSource = $null
+    $wpf.CSVGrid.Items.Clear()
 
     # Apply Input Assist
     $SearchTerms = [PSCustomObject] @{}
@@ -51,11 +49,12 @@ function Search-CSV {
             $tempRow.Time   = ($_.Time   -replace $csvAlias[0].Time,$csvAlias[1].Time -replace $csvAlias[2].Time,$csvAlias[3].Time -replace $csvAlias[4].Time,$csvAlias[5].Time)
             $tempRow.Sleeve = ($_.Sleeve -replace $csvAlias[0].Sleeve,$csvAlias[1].Sleeve -replace $csvAlias[2].Sleeve,$csvAlias[3].Sleeve)
             $tempRow.Gender = ($_.Gender -replace $csvAlias[0].Gender,$csvAlias[1].Gender -replace $csvAlias[2].Gender,$csvAlias[3].Gender)
-            $script:csvSearch.Add($tempRow)
+            $wpf.CSVGrid.Items.Add($tempRow)
         } else {
-            $script:csvSearch.Add($_)
+            $wpf.CSVGrid.Items.Add($_)
         }
     }
 
-    Write-Log 'DBG' "Search CSV ended with $($csvSearch.Count) matches"
+    Update-GUI
+    Write-Log 'DBG' "Search CSV ended with $($wpf.CSVGrid.Items.Count) matches"
 }

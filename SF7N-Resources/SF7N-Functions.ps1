@@ -26,7 +26,7 @@ function Write-Log {
         $Log
     )
     if ($Type -eq 'ERR') {Show-MessageBox 'Error' $Log 'OK' 'Error'}
-    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Log"
+    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Log" | Out-Host
 }
 
 function Import-CustomCSV ($ImportFrom) {
@@ -42,8 +42,8 @@ function Import-CustomCSV ($ImportFrom) {
     try {
         [Array] $script:csvHeader = ((Get-Content $csvLocation -First 1) -replace '"','') -split ','
         [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
-        [System.Collections.ArrayList] $script:csv       = $csvRaw[9..$csvRaw.Count]
-        [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[1..8]
+        [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
+        [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
         [System.Collections.ArrayList] $script:csvSearch = @()
     } catch {Write-Log 'ERR' 'Import CSV Failed'}
 }
