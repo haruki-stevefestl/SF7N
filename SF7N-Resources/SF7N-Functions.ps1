@@ -5,19 +5,11 @@ function Update-GUI {
 
 function Show-MessageBox {
     param (
-        [Parameter(Mandatory=$true)] $Title,
-        [Parameter(Mandatory=$true)] $Message,
-        [Parameter(Mandatory=$true)] $Button,
-        [Parameter(Mandatory=$false)] $Image
+        [Parameter(Mandatory=$true)][String] $Prompt,
+        [Parameter(Mandatory=$true)][String] $Button,
+        [Parameter(Mandatory=$true)][String] $Image
     )
-    $MessageBox =
-        if ($null -ne $Image) {
-            [System.Windows.MessageBox]::Show($Message,$Title,$Button,$Image)
-        } else {
-            [System.Windows.MessageBox]::Show($Message,$Title,$Button)
-        }
-
-    return $MessageBox
+    return [System.Windows.MessageBox]::Show($Prompt,'SF7N Interface',$Button)
 }
 
 function Write-Log {
@@ -25,18 +17,18 @@ function Write-Log {
         [ValidateSet('INF','DBG','ERR')] $Type,
         $Log
     )
-    if ($Type -eq 'ERR') {Show-MessageBox 'Error' $Log 'OK' 'Error'}
+    if ($Type -eq 'ERR') {Show-MessageBox $Log 'OK' 'Error'}
     Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Log" | Out-Host
 }
 
 function Import-CustomCSV ($ImportFrom) {
     <#
         Creates following variables:
+        - csvHeader    [Array] Header of the CSV
         - csvRaw       [AList] String content from CSV
         - csv          [AList] Actual datalogging content (line 9~)
         - csvAlias     [AList] Aliases stored in CSV (line 1~8)
         - csvSearch    [AList] Matching results in searching
-        - csvHeader    [Array] Header of the CSV
     #>
     Write-Log 'INF' 'Import CSV'
     try {
@@ -48,7 +40,7 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' 'Import CSV Failed'}
 }
 
-
+# Set preview image of illustration
 function Set-Preview ($InputObject) {
     $InputObject = "S:\PNG\$($InputObject).png"
     if (($null -ne $InputObject) -and (Test-Path $InputObject)) {
