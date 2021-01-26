@@ -7,30 +7,31 @@ $wpf.CSVGrid.Add_Keyup({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
 
 # Editing-related actions
 $wpf.CSVGrid.Add_BeginningEdit({
-    # don't
     if ($wpf.Toolbar.SelectedIndex -eq 0) {
-        # Enable editing mode
+        # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
         
-        $global:CurrentCell = $wpf.CSVGrid.CurrentCell[0]
+        # Capture current active cell
+        $CurrentCell = $wpf.CSVGrid.CurrentCell[0]
+        
+        # Change Itemssource (to show all rows in CSV)
         $wpf.CSVGrid.ItemsSource = $null
         $wpf.CSVGrid.Items.Clear()
         $wpf.CSVGrid.ItemsSource = $csvRaw
 
-        $global:NewCurrentCell = $wpf.CSVGrid.Items | Where-Object {$_.ID -eq $CurrentCell.Item.ID}
-
-        $wpf.CSVGrid.ScrollIntoView($NewCurrentCell)
-        # $global:NewCurrentCellInfo = [System.Windows.Controls.DataGridCellInfo]::new($NewCurrentCell, $CurrentCell.Column.DisplayIndex)
-        # $wpf.CSVGrid.CurrentCell = New-Object System.Windows.Controls.DataGridCellInfo $NewCurrentCell, $CurrentCell.Column.DisplayIndex
+        # Refocus on captured cell
+        $wpf.CSVGrid.ScrollIntoView($(
+            $wpf.CSVGrid.Items | Where-Object {$_.ID -eq $CurrentCell.Item.ID}
+        ))
         $wpf.CSVGrid.SelectedCells.Add($wpf.CSVGrid.CurrentCell[0])
-
-        # $global:NewCurrentCell = $wpf.CSVGrid.Items | Where-Object {$_ -eq $CurrentCell.Item}
-        # Write-Host $NewCurrentCell | Out-Host
         $wpf.CSVGrid.BeginEdit() 
     }
 })
 
+# Export CSV on Commit
 $wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
+
+# Reload CSV on Commit & Return
 $wpf.CommitReturn.Add_Click({
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
