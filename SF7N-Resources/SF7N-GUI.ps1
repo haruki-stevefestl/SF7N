@@ -5,7 +5,9 @@ $wpf.Search.Add_Click({Search-CSV})
 $wpf.CSVGrid.Add_MouseUp({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
 $wpf.CSVGrid.Add_Keyup({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
 
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Editing-related actions
+# Enter edit mode
 $wpf.CSVGrid.Add_BeginningEdit({
     if ($wpf.Toolbar.SelectedIndex -eq 0) {
         # Enable editing toolbar
@@ -28,6 +30,29 @@ $wpf.CSVGrid.Add_BeginningEdit({
     }
 })
 
+# Invoke-ChangeRow actions
+$wpf.InsertLast.Add_Click({
+    Invoke-ChangeRow 'InsertLast' -Count $wpf.InsertLastCount.Text
+})
+
+$wpf.InsertAbove.Add_Click({
+    $Params = @{
+        At    = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
+        Count = $wpf.CSVGrid.SelectedCells.Count
+    }
+    Invoke-ChangeRow 'InsertAbove' @Params
+})
+
+$wpf.InsertBelow.Add_Click({
+    $Params = @{
+        At    = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
+        Count = $wpf.CSVGrid.SelectedCells.Count
+    }
+    Invoke-ChangeRow 'InsertBelow' @Params
+})
+
+$wpf.RemoveSelected.Add_Click({Invoke-ChangeRow 'Remove'})
+
 # Export CSV on Commit
 $wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 
@@ -39,6 +64,7 @@ $wpf.CommitReturn.Add_Click({
     $wpf.Toolbar.SelectedIndex = 0
 })
 
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Debugger
 $wpf.Debug.Add_Click({
     Write-Host 'SF7N Debugger - Enter "break" to exit section'
