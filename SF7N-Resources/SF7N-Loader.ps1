@@ -45,6 +45,7 @@ $wpf.Splashscreen.Visibility = "Visible"
 $wpf.$formName.Add_ContentRendered({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
+    $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
     Import-Configuration
 
     $wpf.Splashscreen.Visibility = "Hidden"
