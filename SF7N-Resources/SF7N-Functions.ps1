@@ -32,17 +32,18 @@ function Import-CustomCSV ($ImportFrom) {
     #>
     Write-Log 'INF' 'Import CSV'
     try {
-        [Array] $script:csvHeader = ((Get-Content $csvLocation -First 1) -replace '"','') -split ','
-        [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($csvLocation) | ConvertFrom-CSV
+        [Array] $script:csvHeader = ((Get-Content $ImportFrom -First 1) -replace '"','') -split ','
+        [System.Collections.ArrayList] $script:csvRaw    = [System.IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
         [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
         [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
         [System.Collections.ArrayList] $script:csvSearch = @()
-    } catch {Write-Log 'ERR' 'Import CSV Failed'}
+    } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
 # Set preview image of illustration
 function Set-Preview ($InputObject) {
-    $InputObject = "S:\PNG\$($InputObject).png"
+    $InputObject = "S:\PNG\$InputObject.png"
+    write-host $inputObject | out-host
     if (($null -ne $InputObject) -and (Test-Path $InputObject)) {
         $wpf.Preview.Source = $InputObject
     }
@@ -60,13 +61,13 @@ function Import-Configuration {
         $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
         $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
         $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
-    } catch {Write-Log 'ERR' 'Import Configuration Failed'}
+    } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 }
 
 function Export-Configuration {
     Write-Log 'INF' 'Export Configuration'
     try {
-        # Retrieve configurations from UI
+        # Retrieve modifiable configurations from UI
         $configuration.AliasMode       = $wpf.AliasMode.IsChecked
         $configuration.InputAssist     = $wpf.InputAssist.IsChecked
         $configuration.InsertLastCount = $wpf.InsertLastCount.Text
@@ -77,5 +78,5 @@ function Export-Configuration {
             "$($_.Keys)=$($_.Values)" |
                 Add-Content "$PSScriptRoot\SF7N-Configuration.ini"
         })
-    } catch {Write-Log 'ERR' 'Exoprt Configuration Failed'}
+    } catch {Write-Log 'ERR' "Exoprt Configuration Failed: $_"}
 }
