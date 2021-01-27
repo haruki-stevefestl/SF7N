@@ -2,17 +2,17 @@
     Cloned from SammyKrosoft/Powershell/How-To-Load-WPF-Form-XAML.ps1
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
-
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-Remove-Variable "*"
-Remove-Module "SF7N-*"
+# Initialization work; clear previous session
+Remove-Module "SF7N-.*"
+Remove-Variable * -ErrorAction SilentlyContinue
+$PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
+# Variables
 $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
-# Force use of UTF-8
-$PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
-
+# Import basic functions
 Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
@@ -32,23 +32,20 @@ $tempform = [Windows.Markup.XamlReader]::Load($reader)
 $wpf = @{}
 $namedNodes = $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]")
 $namedNodes.Name.ForEach({$wpf.Add($_, $tempform.FindName($_))})
-
-# Get form name
 $formName = $namedNodes[0].Name
 
-# Prepare splash screen
-$wpf.Splashscreen.Visibility = "Visible"
+# Import GUI Control functions & Prepare splash screen
+Write-Log 'INF' 'Import GUI Control Module'
 Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
 Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
 Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
+$wpf.Splashscreen.Visibility = "Visible"
 
 # Initialzation work after splashscreen show
 $wpf.$formName.Add_ContentRendered({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
-
     Import-Configuration
-    Write-Log 'INF' 'Import GUI Control Module'
 
     $wpf.Splashscreen.Visibility = "Hidden"
     Write-Log 'DBG'
