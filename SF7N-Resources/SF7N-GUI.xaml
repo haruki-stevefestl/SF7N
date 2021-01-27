@@ -6,19 +6,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SF7N"
         mc:Ignorable="d"
-        Title="SF7N" Height="720" Width="1920" FontFamily="Courier New" FontSize="16">
+        Title="SF7N Interface" Height="720" Width="1920" FontFamily="Courier New" FontSize="16">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="Background" Value="#00000000"/>
         </Style>
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="42"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="24"/>
+            <RowDefinition Height="28"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -27,28 +38,19 @@
         </Grid.ColumnDefinitions>
 
         <!-- Header -->
-        <Label
-            Content="  SF7N Interface"
-            FontWeight="Bold"
-            Background="#F0F0F0"
-            Height="48"
-            VerticalAlignment="Top"
-            VerticalContentAlignment="Center"
-            Grid.ColumnSpan="3"
-        />
 
         <!-- Header Toolbar -->
-        <TabControl Name="Toolbar" BorderThickness="0" Margin="196,8,8,8" Background="#00000000">
+        <TabControl Name="Toolbar" BorderThickness="0" Margin="10,10,10,0" Background="#F1EDED">
             <!-- Search Toolbar -->
             <TabItem Margin="0" Height="0">
                 <Grid Margin="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <Button   Name="Search" Content="Filter CSV" Margin="0"/>
@@ -78,9 +80,11 @@
 
 
         <!-- Main Grid -->
-        <DataGrid Grid.Row="1" Margin="8,8,8,8" BorderThickness="0,1,0,0" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
+        <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
         EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
-        HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0">
+        HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0" MinRowHeight="24"
+        CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+        >
             <!-- Datagrid Styling -->
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
@@ -234,10 +238,10 @@
         </DataGrid>
 
         <!-- Gridsplitter -->
-        <GridSplitter Grid.Column="1" Grid.Row="1" Width="4" HorizontalAlignment="Center"/>
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="4" HorizontalAlignment="Center"/>
 
         <!-- Preview -->
-        <Button Margin="8,0,0,0" Grid.Column="2" Grid.Row="1" Background="White" BorderThickness="0">
+        <Button Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
             <Grid>
                 <TextBlock Text="Image Preview"/>
                 <Image Name="Preview"/>
@@ -245,7 +249,38 @@
         </Button>
 
         <!-- Statusbar -->
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" FontFamily="Courier New">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Name="CurrentMode" Text="Search Mode"/>
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2">
+                <TextBlock Name="TotalRows" Text="Total Rows: "/>
+            </StatusBarItem>
+            <Separator Grid.Column="3" />
+            <StatusBarItem Grid.Column="4">
+                <TextBlock Name="ActiveCell" Text="Active Cell: "/>
+            </StatusBarItem>
+            <Separator Grid.Column="5" />
+            <StatusBarItem Grid.Column="7">
+                <Button Content="Development Portal" Name="Debug" Width="256"/>
+            </StatusBarItem>
         </StatusBar>
 
         <!-- Splashscreen -->
@@ -255,8 +290,5 @@
                 <TextBlock Text="Naming convention is not based on N700 Series Shinkansen!" HorizontalAlignment="Center"/>
             </VirtualizingStackPanel>
         </Grid>
-        
-        <!-- Debug Tool -->
-        <Button Grid.Column="2" Content="Debug Console" Name="Debug"/>
     </Grid>
 </Window>
