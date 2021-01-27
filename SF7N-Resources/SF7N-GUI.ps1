@@ -12,6 +12,8 @@ $wpf.CSVGrid.Add_BeginningEdit({
     if ($wpf.Toolbar.SelectedIndex -eq 0) {
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
+        $wpf.CurrentMode.Text = 'Edit Mode'
+        $wpf.TotalRows.Text = "Total rows: $($csvRaw.Count)"
         
         # Capture current active cell
         $CurrentCell = $wpf.CSVGrid.CurrentCell[0]
@@ -58,6 +60,9 @@ $wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 
 # Reload CSV on Commit & Return
 $wpf.CommitReturn.Add_Click({
+    $wpf.CurrentMode.Text = 'Search Mode'
+    $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
+
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
@@ -67,10 +72,13 @@ $wpf.CommitReturn.Add_Click({
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Debugger
 $wpf.Debug.Add_Click({
+    $PreviousMode = $wpf.CurrentMode.Text
+    $wpf.CurrentMode.Text = 'Debug Mode'
     Write-Host 'SF7N Debugger - Enter "break" to exit session'
     Write-Host '---------------------------------------------'
     while ($true) {
         Write-Host "SF7N > " -NoNewLine
         $Host.UI.ReadLine() | Invoke-Expression | Out-Host
     }
+    $wpf.CurrentMode.Text = $PreviousMode
 })

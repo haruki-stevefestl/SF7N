@@ -54,6 +54,7 @@ function Search-CSV {
         }
     }
 
+    $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
     Update-GUI
     Write-Log 'DBG' "Search CSV ended with $($wpf.CSVGrid.Items.Count) matches"
 }
