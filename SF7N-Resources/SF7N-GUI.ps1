@@ -2,8 +2,8 @@
 # Search-related actions
 $wpf.Search.Add_Click({Search-CSV})
 
-$wpf.CSVGrid.Add_MouseUp({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
-$wpf.CSVGrid.Add_Keyup({Set-Preview $wpf.CSVGrid.SelectedItem.ID})
+$wpf.CSVGrid.Add_MouseUp({Set-Preview $wpf.CSVGrid.CurrentCell.Item.ID})
+$wpf.CSVGrid.Add_Keyup({Set-Preview $wpf.CSVGrid.CurrentCell.Item.ID})
 
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Editing-related actions
@@ -67,7 +67,7 @@ $wpf.CommitReturn.Add_Click({
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Debugger
 $wpf.Debug.Add_Click({
-    Write-Host 'SF7N Debugger - Enter "break" to exit section'
+    Write-Host 'SF7N Debugger - Enter "break" to exit session'
     Write-Host '---------------------------------------------'
     while ($true) {
         Write-Host "SF7N > " -NoNewLine
