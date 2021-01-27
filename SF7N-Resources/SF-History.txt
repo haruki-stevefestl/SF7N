@@ -1,0 +1,19 @@
+This document records this history of the SF Series.
+----------------------------------------------------
+[The Originals]
+2020.04.06 - Windows Tags       - Data collection started & categorized by Windows Tags
+
+
+[Google Sheets]
+2020.06.18 - SF Tag/Search Form - Implment spreadsheet-based datalogging
+2020.07.01 - S4 Interface       - Next generation database
+                                -     Modern interface
+                                -     More advanced search features
+                                -     Compatible with SF Tag/Search Form
+
+
+[Powershell/WPF]
+2020.10.05 - SF5 Interface      - Implment Powershell/WPF-based datalogging
+2020.10.31 - SF6 Interface      - Next generation database
+2020.11.26 - SF7 Interface      - Next generation database
+2021.02.?? - SF7N Interface     - Next generation database
