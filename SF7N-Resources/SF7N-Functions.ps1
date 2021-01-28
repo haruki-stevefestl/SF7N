@@ -1,6 +1,6 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 function Update-GUI {
-    $wpf.$formName.Dispatcher.Invoke("Render",[action][scriptblock]{})
+    $wpf.SF7N.Dispatcher.Invoke("Render",[action][scriptblock]{})
 }
 
 function Show-MessageBox {
