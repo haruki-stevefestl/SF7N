@@ -17,277 +17,304 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridCell}">
                         <Grid Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center" />
+                            <ContentPresenter VerticalAlignment="Center"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="TabControl">
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Height" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="42"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="32"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <!-- Header -->
-
-        <!-- Header Toolbar -->
-        <TabControl Name="Toolbar" BorderThickness="0" Margin="10,10,10,0" Background="#F1EDED">
-            <!-- Search Toolbar -->
-            <TabItem Margin="0" Height="0">
-                <Grid Margin="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="0.4*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.4*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.4*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button   Name="Search" Content="Filter CSV" Margin="0"/>
-                    <CheckBox Grid.Column="2" Name="AliasMode" Content="Alias Mode" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
-                    <CheckBox Grid.Column="4" Name="InputAssist" Content="Input Assist" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
-                    <Button   Grid.Column="6" Name="ResetSorting" Content="Reset Sorting" Margin="0"/>
-                </Grid>
-            </TabItem>
-            <!-- Editing toolbar -->
-            <TabItem Margin="0" Height="0">
-                <UniformGrid Columns="6">
-                    <UniformGrid Columns="2" Margin="0,0,8,0">
-                        <Button Name="InsertLast" Content="Append"/>
-                        <TextBox Name="InsertLastCount" Margin="8,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                    </UniformGrid>
-
-                    <Button Name="InsertAbove" Content="Insert Above" Margin="16,0,8,0"/>
-                    <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0"/>
-                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,16,0"/>
-
-                    <Button Name="Commit" Content="Commit" Margin="16,0,8,0"/>
-                    <Button Name="CommitReturn" Content="Commit &amp; Return" Margin="8,0,0,0"/>
-                </UniformGrid>
-            </TabItem>
-        </TabControl>
-
-        <!-- Main Grid -->
-        <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
-        EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
-        HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal"
-        RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1"
-        CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
-        >
-            <!-- Datagrid Styling -->
-            <DataGrid.Resources>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="MinWidth" Value="128"/>
-                    <Setter Property="Padding" Value="8"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                </Style>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#E7F0FD"/>
-                            <Setter Property="Foreground" Value="#000000"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#F5F5F5" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Resources>
-            <!-- -->
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ID, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_ID" Text="ID"/>
-                            <TextBox Name="TextBox_ID"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Viewpoint, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Viewpoint" Text="Viewpoint"/>
-                            <TextBox Name="TextBox_Viewpoint"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Location, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Location" Text="Location"/>
-                            <TextBox Name="TextBox_Location"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Collar, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Collar" Text="Collar"/>
-                            <TextBox Name="TextBox_Collar"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Tie, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Tie" Text="Tie"/>
-                            <TextBox Name="TextBox_Tie"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Skirt, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Skirt" Text="Skirt"/>
-                            <TextBox Name="TextBox_Skirt"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Uniform, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Uniform" Text="Uniform"/>
-                            <TextBox Name="TextBox_Uniform"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Sleeve, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Sleeve" Text="Sleeve"/>
-                            <TextBox Name="TextBox_Sleeve"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding NSFW, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_NSFW" Text="NSFW"/>
-                            <TextBox Name="TextBox_NSFW"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Mood, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Mood" Text="Mood"/>
-                            <TextBox Name="TextBox_Mood"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Subject, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Subject" Text="Subject"/>
-                            <TextBox Name="TextBox_Subject"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Gender, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Gender" Text="Gender"/>
-                            <TextBox Name="TextBox_Gender"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Time" Text="Time"/>
-                            <TextBox Name="TextBox_Time"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Author, Mode=TwoWay}">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Author" Text="Author"/>
-                            <TextBox Name="TextBox_Author"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Remarks}" Width="*">
-                    <DataGridTextColumn.Header>
-                        <StackPanel>
-                            <TextBlock Name="Header_Remarks" Text="Remarks"/>
-                            <TextBox Name="TextBox_Remarks"/>
-                        </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <!-- Gridsplitter -->
-        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="4" HorizontalAlignment="Center"/>
-
-        <!-- Preview -->
-        <Button Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
-            <Grid>
-                <TextBlock Text="Image Preview"/>
-                <Image Name="Preview"/>
-            </Grid>
-        </Button>
-
-        <!-- Statusbar -->
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" FontFamily="Courier New" FontSize="14">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem>
-                <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,0,0"/>
-            </StatusBarItem>
-            <Separator Grid.Column="1" />
-            <StatusBarItem Grid.Column="2">
-                <TextBlock Name="TotalRows" Text="Total Rows:" Margin="16,0,0,0"/>
-            </StatusBarItem>
-            <Separator Grid.Column="3" />
-            <StatusBarItem Grid.Column="4">
-                <TextBlock Name="ActiveCell" Text="Active Cell:" Margin="16,0,0,0"/>
-            </StatusBarItem>
-            <Separator Grid.Column="5" />
-            <StatusBarItem Grid.Column="7">
-                <Button Content="Development Portal" Name="Debug" Width="256"/>
-            </StatusBarItem>
-        </StatusBar>
-
-        <!-- Splashscreen -->
-        <Grid Name="Splashscreen" Grid.ColumnSpan="3" Grid.RowSpan="3" Background="White" Visibility="Hidden">
-            <VirtualizingStackPanel VerticalAlignment="Center">
+    <TabControl Name="TabControl">
+        <TabItem>
+            <!-- Splashscreen -->
+            <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold"/>
                 <TextBlock Text="Naming convention is not based on N700 Series Shinkansen!" HorizontalAlignment="Center"/>
-            </VirtualizingStackPanel>
-        </Grid>
-    </Grid>
+            </StackPanel>
+        </TabItem>
+        <TabItem>
+            <!-- Main Interface -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="42"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="32"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Header Toolbar -->
+                <TabControl Name="Toolbar"  Margin="10,10,10,0" Background="#F1EDED">
+                    <!-- Search Toolbar -->
+                    <TabItem>
+                        <Grid Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button   Name="Search" Content="Filter CSV" Margin="0"/>
+                            <CheckBox Grid.Column="2" Name="AliasMode" Content="Alias Mode" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
+                            <CheckBox Grid.Column="4" Name="InputAssist" Content="Input Assist" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
+                            <Button   Grid.Column="6" Name="ResetSorting" Content="Reset Sorting" Margin="0"/>
+                        </Grid>
+                    </TabItem>
+                    <!-- Editing toolbar -->
+                    <TabItem Margin="0" Height="0">
+                        <UniformGrid Columns="6">
+                            <UniformGrid Columns="2" Margin="0,0,8,0">
+                                <Button Name="InsertLast" Content="Append"/>
+                                <TextBox Name="InsertLastCount" Margin="8,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            </UniformGrid>
+
+                            <Button Name="InsertAbove" Content="Insert Above" Margin="16,0,8,0"/>
+                            <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0"/>
+                            <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,16,0"/>
+
+                            <Button Name="Commit" Content="Commit" Margin="16,0,8,0"/>
+                            <Button Name="CommitReturn" Content="Commit &amp; Return" Margin="8,0,0,0"/>
+                        </UniformGrid>
+                    </TabItem>
+                </TabControl>
+
+                <!-- Main Grid -->
+                <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
+                EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
+                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal"
+                RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1"
+                CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
+                    <!-- Datagrid Styling -->
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="MinWidth" Value="128"/>
+                            <Setter Property="Padding" Value="8"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#E7F0FD"/>
+                                    <Setter Property="Foreground" Value="#000000"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#F5F5F5" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <!-- -->
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding ID, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="ID"/>
+                                    <TextBox Name="TextBox_ID"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Viewpoint, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Viewpoint"/>
+                                    <TextBox Name="TextBox_Viewpoint"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Location, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Location"/>
+                                    <TextBox Name="TextBox_Location"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Collar, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Collar"/>
+                                    <TextBox Name="TextBox_Collar"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Tie, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Tie"/>
+                                    <TextBox Name="TextBox_Tie"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Skirt, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Skirt"/>
+                                    <TextBox Name="TextBox_Skirt"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Uniform, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Uniform"/>
+                                    <TextBox Name="TextBox_Uniform"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Sleeve, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Sleeve"/>
+                                    <TextBox Name="TextBox_Sleeve"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding NSFW, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="NSFW"/>
+                                    <TextBox Name="TextBox_NSFW"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Mood, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Mood"/>
+                                    <TextBox Name="TextBox_Mood"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Subject, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Subject"/>
+                                    <TextBox Name="TextBox_Subject"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Gender, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Gender"/>
+                                    <TextBox Name="TextBox_Gender"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Time"/>
+                                    <TextBox Name="TextBox_Time"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Author, Mode=TwoWay}">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Author"/>
+                                    <TextBox Name="TextBox_Author"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Remarks}" Width="*">
+                            <DataGridTextColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="Remarks"/>
+                                    <TextBox Name="TextBox_Remarks"/>
+                                </StackPanel>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Gridsplitter -->
+                <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="4" HorizontalAlignment="Center"/>
+
+                <!-- Preview -->
+                <Button Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
+                    <Grid>
+                        <TextBlock Text="Image Preview"/>
+                        <Image Name="Preview"/>
+                    </Grid>
+                </Button>
+
+                <!-- Statusbar -->
+                <StatusBar Grid.Row="2" Grid.ColumnSpan="3" FontFamily="Courier New" FontSize="14">
+                    <StatusBar.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </ItemsPanelTemplate>
+                    </StatusBar.ItemsPanel>
+                    <StatusBarItem>
+                        <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,0,0"/>
+                    </StatusBarItem>
+                    <Separator Grid.Column="1" />
+                    <StatusBarItem Grid.Column="2">
+                        <TextBlock Name="TotalRows" Text="Total Rows:" Margin="16,0,0,0"/>
+                    </StatusBarItem>
+                    <Separator Grid.Column="3" />
+                    <StatusBarItem Grid.Column="4">
+                        <TextBlock Name="ActiveCell" Text="Active Cell:" Margin="16,0,0,0"/>
+                    </StatusBarItem>
+                    <StatusBarItem Grid.Column="5" HorizontalAlignment="Right">
+                        <Button Content="Development Portal" Name="GotoDebug" Width="256"/>
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
+        </TabItem>
+        <TabItem>
+            <StackPanel Margin="10" VerticalAlignment="Top">
+                <Button DockPanel.Dock="Top" Name="GotoDefault" Content="GO BACK" FontWeight="Bold" Foreground="Green" FontSize="24" Height="56"/>
+                <TextBlock Text="If you are unsure of what you are doing, PRESS GO BACK IMMEDIATELY." Foreground="DarkRed" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,16,0,8"/>
+                <TextBlock Text="Inappropriate operations on this page can lead to total data loss!" HorizontalAlignment="Center" Margin="0,0,0,96"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" Name="Debug" Content="Start Debug Console" Height="32"/>
+                    <ScrollViewer Grid.Column="3" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                        <TextBlock Name="uiLog" Text="Logs appear here as they generate."/>
+                    </ScrollViewer>
+                </Grid>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
 </Window>
