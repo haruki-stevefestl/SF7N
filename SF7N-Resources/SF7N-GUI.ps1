@@ -32,7 +32,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         $wpf.CSVGrid.ScrollIntoView($(
             $wpf.CSVGrid.Items | Where-Object {$_.ID -eq $CurrentCell.Item.ID}
         ))
-        $wpf.CSVGrid.SelectedCells.Add($wpf.CSVGrid.CurrentCell[0])
+        ######################## $wpf.CSVGrid.SelectedCells.Add($wpf.CSVGrid.CurrentCell[0])
         $wpf.CSVGrid.BeginEdit() 
     }
 })

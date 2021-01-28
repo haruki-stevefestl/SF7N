@@ -93,17 +93,23 @@
                 </TabControl>
 
                 <!-- Main Grid -->
-                <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
-                EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
-                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal"
-                RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1"
-                CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
+                <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" AutoGenerateColumns="True" CanUserSortColumns="True">
                     <!-- Datagrid Styling -->
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="MinWidth" Value="128"/>
                             <Setter Property="Padding" Value="8"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding}"/>
+                                            <TextBox/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -125,129 +131,6 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.Resources>
-                    <!-- -->
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding ID, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="ID"/>
-                                    <TextBox Name="TextBox_ID"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Viewpoint, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Viewpoint"/>
-                                    <TextBox Name="TextBox_Viewpoint"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Location, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Location"/>
-                                    <TextBox Name="TextBox_Location"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Collar, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Collar"/>
-                                    <TextBox Name="TextBox_Collar"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Tie, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Tie"/>
-                                    <TextBox Name="TextBox_Tie"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Skirt, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Skirt"/>
-                                    <TextBox Name="TextBox_Skirt"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Uniform, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Uniform"/>
-                                    <TextBox Name="TextBox_Uniform"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Sleeve, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Sleeve"/>
-                                    <TextBox Name="TextBox_Sleeve"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding NSFW, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="NSFW"/>
-                                    <TextBox Name="TextBox_NSFW"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Mood, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Mood"/>
-                                    <TextBox Name="TextBox_Mood"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Subject, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Subject"/>
-                                    <TextBox Name="TextBox_Subject"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Gender, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Gender"/>
-                                    <TextBox Name="TextBox_Gender"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Time"/>
-                                    <TextBox Name="TextBox_Time"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Author, Mode=TwoWay}">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Author"/>
-                                    <TextBox Name="TextBox_Author"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Remarks}" Width="*">
-                            <DataGridTextColumn.Header>
-                                <StackPanel>
-                                    <TextBlock Text="Remarks"/>
-                                    <TextBox Name="TextBox_Remarks"/>
-                                </StackPanel>
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
                 </DataGrid>
 
                 <!-- Gridsplitter -->

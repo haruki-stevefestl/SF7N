@@ -49,8 +49,10 @@ $wpf.SF7N.Add_ContentRendered({
 
 # Cleanup on close
 $wpf.SF7N.Add_Closing({
+    Write-Log 'INF' 'Remove Modules'
     Remove-Module 'SF7N-*'
     # // Get-Module "SF7N-*" | Remove-Module // also works
+    Write-Log 'INF' 'Remove Variables'
     Remove-Variable * -ErrorAction SilentlyContinue
 })
 
