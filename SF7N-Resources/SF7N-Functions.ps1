@@ -43,17 +43,18 @@ function Import-CustomCSV ($ImportFrom) {
 function Set-Preview ($InputObject) {
     # Set preview image of illustration
     $InputObject = "S:\PNG\$InputObject.png"
-    write-host $inputObject | out-host
-    if (($null -ne $InputObject) -and (Test-Path $InputObject)) {
-        $wpf.Preview.Source = $InputObject
-    }
+    if (Test-Path $InputObject) {$wpf.Preview.Source = $InputObject}
 
     # Update Active Cell
     $wpf.ActiveCell.Text =
         "Active Cell: (" +
-        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.CurrentCell[0].Item) +
+        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[0].Item) +
         "," +
-        $($wpf.CSVGrid.Currentcell.Column.DisplayIndex) +
+        $wpf.CSVGrid.SelectedCells[0].Column.DisplayIndex +
+        ") ~ (" +
+        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[-1].Item) +
+        "," +
+        $wpf.CSVGrid.SelectedCells[-1].Column.DisplayIndex +
         ")"
 }
 
