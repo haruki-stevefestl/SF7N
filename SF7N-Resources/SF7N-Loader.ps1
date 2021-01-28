@@ -3,16 +3,13 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-# Initialization work; clear previous session
-Remove-Module "SF7N-.*"
-Remove-Variable * -ErrorAction SilentlyContinue
-$PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
 # Variables
 $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
 # Import basic functions
+$PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
@@ -32,7 +29,6 @@ $tempform = [Windows.Markup.XamlReader]::Load($reader)
 $wpf = @{}
 $namedNodes = $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]")
 $namedNodes.Name.ForEach({$wpf.Add($_, $tempform.FindName($_))})
-$formName = $namedNodes[0].Name
 
 # Import GUI Control functions & Prepare splash screen
 Write-Log 'INF' 'Import GUI Control Module'
@@ -42,7 +38,7 @@ Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
 $wpf.Splashscreen.Visibility = "Visible"
 
 # Initialzation work after splashscreen show
-$wpf.$formName.Add_ContentRendered({
+$wpf.SF7N.Add_ContentRendered({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
@@ -52,10 +48,16 @@ $wpf.$formName.Add_ContentRendered({
     Write-Log 'DBG'
 })
 
+# Cleanup on close
+$wpf.SF7N.Add_Closing({
+
+    Remove-Module "SF7N-*"
+    # // Get-Module "SF7N-*" | Remove-Module // also works
+    Remove-Variable * -ErrorAction SilentlyContinue
+})
+
 # Load WPF Form:
 # Old way >> .ShowDialog() | Out-Null >> crashes if run multiple times
 # New way >> Using method from https://gist.github.com/altrive/6227237
-$async = $wpf.$formName.Dispatcher.InvokeAsync({
-    $wpf.$formName.ShowDialog() | Out-Null
-})
+$async = $wpf.SF7N.Dispatcher.InvokeAsync({$wpf.SF7N.ShowDialog() | Out-Null})
 $async.Wait() | Out-Null
