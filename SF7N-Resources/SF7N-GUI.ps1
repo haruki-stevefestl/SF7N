@@ -1,4 +1,9 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
+# Intertab movements
+$wpf.GotoDebug.Add_Click({$wpf.TabControl.SelectedIndex = 2})
+$wpf.GotoDefault.Add_Click({$wpf.TabControl.SelectedIndex = 1})
+
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
 $wpf.Search.Add_Click({Search-CSV})
 
