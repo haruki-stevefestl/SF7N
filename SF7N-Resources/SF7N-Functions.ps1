@@ -14,11 +14,23 @@ function Show-MessageBox {
 
 function Write-Log {
     param (
-        [ValidateSet('INF','DBG','ERR')] $Type,
-        $Log
+        [ValidateSet('INF','DBG','ERR')][String] $Type,
+        [String] $Content
     )
-    if ($Type -eq 'ERR') {Show-MessageBox $Log 'OK' 'Error'}
-    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Log" | Out-Host
+
+    # Create/append to $log variable
+    if ($null -eq $log) {[System.Collections.ArrayList] $script:log = @()}
+    $script:log.Add([PSCustomObject] @{
+        Time = Get-Date -Format 'HH:mm:ss.fff'
+        Type = $Type
+        Log  = $Content
+    }) | Out-Null
+
+    if ($Type -eq 'ERR') {Show-MessageBox $Content 'OK' 'Error'}
+
+    # Actual outputt
+    Write-Host "[$($script:log[-1].Time)][$Type] $Content" | Out-Host
+    if ($null -ne $wpf.uiLog) {$wpf.uiLog.Text = $script:log | Format-Table * | Out-String}
 }
 
 function Import-CustomCSV ($ImportFrom) {
