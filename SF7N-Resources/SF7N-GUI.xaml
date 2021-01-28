@@ -29,7 +29,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="28"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -77,12 +77,11 @@
             </TabItem>
         </TabControl>
 
-
-
         <!-- Main Grid -->
         <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
         EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
-        HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" RowHeaderWidth="0" MinRowHeight="24"
+        HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal"
+        RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1"
         CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
         >
             <!-- Datagrid Styling -->
@@ -249,7 +248,7 @@
         </Button>
 
         <!-- Statusbar -->
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" FontFamily="Courier New">
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" FontFamily="Courier New" FontSize="14">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -267,15 +266,15 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem>
-                <TextBlock Name="CurrentMode" Text="Search Mode"/>
+                <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,0,0"/>
             </StatusBarItem>
             <Separator Grid.Column="1" />
             <StatusBarItem Grid.Column="2">
-                <TextBlock Name="TotalRows" Text="Total Rows: "/>
+                <TextBlock Name="TotalRows" Text="Total Rows:" Margin="16,0,0,0"/>
             </StatusBarItem>
             <Separator Grid.Column="3" />
             <StatusBarItem Grid.Column="4">
-                <TextBlock Name="ActiveCell" Text="Active Cell: "/>
+                <TextBlock Name="ActiveCell" Text="Active Cell:" Margin="16,0,0,0"/>
             </StatusBarItem>
             <Separator Grid.Column="5" />
             <StatusBarItem Grid.Column="7">
