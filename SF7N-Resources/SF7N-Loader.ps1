@@ -35,7 +35,6 @@ Write-Log 'INF' 'Import GUI Control Module'
 Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
 Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
 Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
-$wpf.Splashscreen.Visibility = "Visible"
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
@@ -44,14 +43,13 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
     Import-Configuration
 
-    $wpf.Splashscreen.Visibility = "Hidden"
+    $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG'
 })
 
 # Cleanup on close
 $wpf.SF7N.Add_Closing({
-
-    Remove-Module "SF7N-*"
+    Remove-Module 'SF7N-*'
     # // Get-Module "SF7N-*" | Remove-Module // also works
     Remove-Variable * -ErrorAction SilentlyContinue
 })
