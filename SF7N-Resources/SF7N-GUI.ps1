@@ -32,7 +32,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         $wpf.CSVGrid.ScrollIntoView($(
             $wpf.CSVGrid.Items | Where-Object {$_.ID -eq $CurrentCell.Item.ID}
         ))
-        $wpf.CSVGrid.SelectedCells.Add($wpf.CSVGrid.CurrentCell[0])
+        ######################## $wpf.CSVGrid.SelectedCells.Add($wpf.CSVGrid.CurrentCell[0])
         $wpf.CSVGrid.BeginEdit() 
     }
 })
@@ -70,7 +70,6 @@ $wpf.CommitReturn.Add_Click({
 
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
-    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.Toolbar.SelectedIndex = 0
 })
 
