@@ -9,6 +9,7 @@ $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
 # Import basic functions
+$startTime = Get-Date
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
 Clear-Host
@@ -31,29 +32,38 @@ $namedNodes = $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Nam
 $namedNodes.Name.ForEach({$wpf.Add($_, $tempform.FindName($_))})
 
 # Import GUI Control functions & Prepare splash screen
-Write-Log 'INF' 'Import GUI Control Module'
+Write-Log 'INF' 'Import GUI control modules'
 Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1"
 Import-Module "$PSScriptRoot\SF7N-Functions-Search.ps1"
 Import-Module "$PSScriptRoot\SF7N-GUI.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
+    Write-Log 'INF' 'Build  Datagrid columns'
+    $csvHeader.ForEach({
+        $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
+        $NewColumn.Binding = [System.Windows.Data.Binding]::New($_)
+        $NewColumn.Header  = $_
+        $wpf.CSVGrid.Columns.Add($NewColumn)
+    })
+
     Import-CustomCSV $csvLocation
-    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
     Import-Configuration
 
     $wpf.TabControl.SelectedIndex = 1
+    Write-Log 'DBG' "Startup: $(((Get-Date) - $startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 })
 
 # Cleanup on close
 $wpf.SF7N.Add_Closing({
+    Write-Log 'DBG'
     Write-Log 'INF' 'Remove Modules'
     Remove-Module 'SF7N-*'
     # // Get-Module "SF7N-*" | Remove-Module // also works
-    Write-Log 'INF' 'Remove Variables'
-    Remove-Variable * -ErrorAction SilentlyContinue
+    # Write-Log 'INF' 'Remove Variables'
+    # Remove-Variable * -ErrorAction SilentlyContinue
 })
 
 # Load WPF Form:
