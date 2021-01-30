@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="SF7N Interface" Height="720" Width="1920" FontFamily="Courier New" FontSize="16">
     <Window.Resources>
-        <Style TargetType="TextBox">
+        <!-- <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="Background" Value="#00000000"/>
-        </Style>
+        </Style> -->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -55,23 +55,39 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Header Toolbar -->
-                <TabControl Name="Toolbar"  Margin="10,10,10,0" Background="#F1EDED">
+                <TabControl Name="Toolbar" Margin="10,10,10,0" Background="#F1EDED">
                     <!-- Search Toolbar -->
                     <TabItem>
                         <Grid Margin="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.1*"/>
                                 <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.05*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.1*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="0.4*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="0.4*"/>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="0.05*"/>
+                                <ColumnDefinition Width="0.6*"/>
                             </Grid.ColumnDefinitions>
-                            <Button   Name="Search" Content="Filter CSV" Margin="0"/>
+                            <Button   Grid.Column="0" Name="ResetSorting" Content="Reset Sorting" Margin="0"/>
                             <CheckBox Grid.Column="2" Name="AliasMode" Content="Alias Mode" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
                             <CheckBox Grid.Column="4" Name="InputAssist" Content="Input Assist" IsChecked="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0"/>
-                            <Button   Grid.Column="6" Name="ResetSorting" Content="Reset Sorting" Margin="0"/>
+                            <Grid Grid.Column="6" Background="White" VerticalAlignment="Stretch">
+                                <TextBlock Foreground="Gray" Margin="8,0,8,0" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
+                                                    <Setter Property="Text" Value="Enter search conditions"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBox Name="SearchRules" VerticalContentAlignment="Center" Padding="4,0,8,0" Background="Transparent"/>
+                            </Grid>
+                            <Button Grid.Column="8" Name="Search" Content="Filter CSV" Margin="0"/>
                         </Grid>
                     </TabItem>
                     <!-- Editing toolbar -->
@@ -93,23 +109,27 @@
                 </TabControl>
 
                 <!-- Main Grid -->
-                <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" AutoGenerateColumns="True" CanUserSortColumns="True">
+                <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
+                EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
+                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal"
+                RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1"
+                CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
                     <!-- Datagrid Styling -->
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="MinWidth" Value="128"/>
                             <Setter Property="Padding" Value="8"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="ContentTemplate">
+                            <!-- <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate>
                                         <StackPanel>
                                             <TextBlock Text="{Binding}"/>
-                                            <TextBox/>
+                                            <TextBox Text="" Name="Textbox"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </Setter.Value>
-                            </Setter>
+                            </Setter> -->
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
