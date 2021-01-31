@@ -1,4 +1,4 @@
-This document records this history of the SF Series.
+This document records the history of this SF Series.
 ----------------------------------------------------
 [The Originals]
 2020.04.06 - Windows Tags       - Data collection started & categorized by Windows Tags
