@@ -28,7 +28,7 @@ function Write-Log {
 
     if ($Type -eq 'ERR') {Show-MessageBox $Content 'OK' 'Error'}
 
-    # Actual outputt
+    # Actual output
     Write-Host "[$($script:log[-1].Time)][$Type] $Content" | Out-Host
     if ($null -ne $wpf.uiLog) {$wpf.uiLog.Text = $script:log | Format-Table * | Out-String}
 }
