@@ -46,6 +46,25 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn.Header  = $_
         
         ## TESTING.START - DynamicFormatting
+
+        <#
+        // TODO: Make it so each column can have multiple triggers and setters
+        // Possible method:
+        
+        newStyle = new style
+        foreach (rule in allRules) {
+            thisSetter = new Setter
+            thisTrigger = new Trigger
+            newStyle.add(thisTrigger)
+        }
+        newColumn.style = newStyle
+
+        // TODO: Implment custom format for custom datagrid rules
+        // Possible method: csv
+
+        ColumnName, [Trigger1, Setter1, [Trigger2, Setter2, ...]]
+        #>
+
         $NewStyle  = [System.Windows.Style]::New([System.Windows.Controls.DataGridCell])
 
         $NewTrigger = [System.Windows.DataTrigger]::New()
@@ -59,7 +78,6 @@ $wpf.SF7N.Add_ContentRendered({
 
         $NewTrigger.Setters.Add($NewSetter)
         $NewStyle.Triggers.Add($NewTrigger)
-        # $NewStyle.Setters.Add($NewSetter)
         
         $NewColumn.CellStyle = $NewStyle
         ## TESTING.END - DynamicFormatting
