@@ -44,6 +44,26 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [System.Windows.Data.Binding]::New($_)
         $NewColumn.Header  = $_
+        
+        ## TESTING.START - DynamicFormatting
+        $NewStyle  = [System.Windows.Style]::New([System.Windows.Controls.DataGridCell])
+
+        $NewTrigger = [System.Windows.DataTrigger]::New()
+        $NewTrigger.Binding = [System.Windows.Data.Binding]::New($_)
+        $NewTrigger.Value = '20200406-1439'
+
+        $NewSetter = [System.Windows.Setter]::New(
+            [System.Windows.Controls.DataGridCell]::BackgroundProperty,
+            [System.Windows.Media.Brushes]::Red
+        )
+
+        $NewTrigger.Setters.Add($NewSetter)
+        $NewStyle.Triggers.Add($NewTrigger)
+        # $NewStyle.Setters.Add($NewSetter)
+        
+        $NewColumn.CellStyle = $NewStyle
+        ## TESTING.END - DynamicFormatting
+
         $wpf.CSVGrid.Columns.Add($NewColumn)
     })
 
