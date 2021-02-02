@@ -42,61 +42,39 @@ Import-Module "$baseLocation\Functions\Edit.ps1",
 $wpf.SF7N.Add_ContentRendered({
     Write-Log 'INF' 'Build  Datagrid columns'
     foreach ($Header in $csvHeader) {
+        # Generate new column
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [System.Windows.Data.Binding]::New($Header)
         $NewColumn.Header  = $Header
         
-        ## TESTING.START - DynamicFormatting
-
-        <#
-        // TODO: Make it so each column can have multiple triggers and setters
-        // Possible method:
-        
-        newStyle = new style
-        foreach (rule in allRules) {
-            thisSetter = new Setter
-            thisTrigger = new Trigger
-            newStyle.add(thisTrigger)
-        }
-        newColumn.style = newStyle
-
-        // TODO: Implment custom format for custom datagrid rules
-        // Possible method: csv
-
-        ColumnName, [TriggerValue1, SetterValue1, [TriggerValue2, SetterValue2, ...]]
-        #>
+        # Apply conditional formatting
         if ($null -eq $Formatting) {
-            $script:Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
+            [System.Collections.ArrayList] $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
         }
 
-        # Foreach Rule
-        #   If Rule is designed for ThisColumn
-        #       Foreach Trigger-Setter set
+        $NewStyle  = [System.Windows.Style]::New()
+        # Foreach Rule: (Rule.ColumnName = Header)
+        $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
+            # Foreach Trigger-Setter
+            $i = 0
+            while ($null -ne $_."Trigger$i") {
+                # Append Rule to Column
+                $NewTrigger = [System.Windows.DataTrigger]::New()
+                $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
+                $NewTrigger.Value = $_."Trigger$i"
 
-        $NewStyle  = [System.Windows.Style]::New([System.Windows.Controls.DataGridCell])
-        foreach ($Rule in $Formatting) {
-            if ($Formatting.ColumnName -eq $Header) {
-                $i = 0
-                while ($null -ne $Rule."Trigger$i") {
-                    $NewTrigger = [System.Windows.DataTrigger]::New()
-                    $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
-                    $NewTrigger.Value = $Rule."Trigger$i"
+                $NewSetter = [System.Windows.Setter]::New(
+                    [System.Windows.Controls.DataGridCell]::BackgroundProperty,
+                    [System.Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
+                )
 
-                    $NewSetter = [System.Windows.Setter]::New(
-                        [System.Windows.Controls.DataGridCell]::BackgroundProperty,
-                        [System.Windows.Media.BrushConverter]::New().ConvertFromString($Rule."Setter$i")
-                    )
+                $NewTrigger.Setters.Add($NewSetter)
+                $NewStyle.Triggers.Add($NewTrigger)
 
-                    $NewTrigger.Setters.Add($NewSetter)
-                    $NewStyle.Triggers.Add($NewTrigger)
-
-                    ++ $i
-                }
+                ++ $i
             }
-        }
-        
+        })
         $NewColumn.CellStyle = $NewStyle
-        ## TESTING.END - DynamicFormatting
 
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }

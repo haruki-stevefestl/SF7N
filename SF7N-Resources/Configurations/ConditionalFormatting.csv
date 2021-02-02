@@ -1,2 +1,6 @@
-ColumnName,Trigger0,Setter0,Trigger1,Setter1,Trigger2,Setter2,Trigger3,Setter3
-Sleeve,1,#B7E1CD,0,#FF0000
+ColumnName,Trigger0,Setter0,Trigger1,Setter1,Trigger2,Setter2,Trigger3,Setter3,Trigger4,Setter4,Trigger5,Setter5,Trigger6,Setter6,Trigger7,Setter7
+Sleeve,1,#B7E1CD
+NSFW,1,#FCE8B2,Ecchi,#FCE8B2,2,#F4C7C3,NSFW,#F4C7C3
+Mood,0,#F4CCCC,Negative,#F4CCCC,"0,1",#FCE5CD,"Negative,Neutral",#FCE5CD,"1,2",#D9EAD3,"Neutral,Positive",#D9EAD3,2,#B7E1CD,"Positive",#B7E1CD
+Gender,1,#B7E1CD
+Time,"0,1",#FFF2CC,"Day,Evening",#FFF2CC,1,#FCE8B2,Evening,#FCE8B2,"1,2",#F9CB9C,"Evening,Night",#F9CB9C,2,#F4C7C3,Night,#F4C7C3
