@@ -9,9 +9,10 @@ $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
 # Import the base fuction & Initialize
+$baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
 $startTime = Get-Date
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
-Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
+Import-Module "$baseLocation\Functions\Base.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
@@ -22,7 +23,7 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 Write-Log 'INF' 'Read   XAML'
 [Xml] $xaml =
-    (Get-Content "$PSScriptRoot\SF7N-GUI.xaml") -replace 'x:Class=".*?"',''
+    (Get-Content "$baseLocation\GUI.xaml") -replace 'x:Class=".*?"',''
 
 Write-Log 'INF' 'Parse  XAML'
 $reader = [System.Xml.XmlNodeReader]::New($xaml)
@@ -33,9 +34,9 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control functions & Prepare splash screen
 Write-Log 'INF' 'Import GUI control modules'
-Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1",
-    "$PSScriptRoot\SF7N-Functions-Search.ps1",
-    "$PSScriptRoot\SF7N-GUI.ps1"
+Import-Module "$baseLocation\Functions\Edit.ps1",
+    "$baseLocation\Functions\Search.ps1",
+    "$baseLocation\GUI.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
@@ -62,7 +63,7 @@ $wpf.SF7N.Add_ContentRendered({
         // TODO: Implment custom format for custom datagrid rules
         // Possible method: csv
 
-        ColumnName, [Trigger1, Setter1, [Trigger2, Setter2, ...]]
+        ColumnName, [TriggerValue1, SetterValue1, [TriggerValue2, SetterValue2, ...]]
         #>
 
         $NewStyle  = [System.Windows.Style]::New([System.Windows.Controls.DataGridCell])
@@ -87,7 +88,7 @@ $wpf.SF7N.Add_ContentRendered({
 
     Import-CustomCSV $csvLocation
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
-    Import-Configuration
+    Import-Configuration "$baseLocation\Configurations\Configurations.ini"
 
     $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "$(((Get-Date) - $startTime).TotalMilliseconds) ms elpased"

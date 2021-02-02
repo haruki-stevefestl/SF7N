@@ -72,11 +72,11 @@ function Set-Preview ($InputObject) {
         ")"
 }
 
-function Import-Configuration {
+function Import-Configuration ($ImportFrom) {
     Write-Log 'INF' 'Import Configuration'
     try {
         # Retrieve configurations from .ini
-        $script:configuration = Get-Content "$PSScriptRoot\SF7N-Configuration.ini" |
+        $script:configuration = Get-Content $ImportFrom |
             Select-Object -Skip 1 |
                 ConvertFrom-StringData
 
@@ -87,7 +87,7 @@ function Import-Configuration {
     } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 }
 
-function Export-Configuration {
+function Export-Configuration ($ExportTo) {
     Write-Log 'INF' 'Export Configuration'
     try {
         # Retrieve modifiable configurations from UI
@@ -96,10 +96,10 @@ function Export-Configuration {
         $configuration.InsertLastCount = $wpf.InsertLastCount.Text
 
         # Export them
-        '[SF7N-Configuration]' | Set-Content "$PSScriptRoot\SF7N-Configuration.ini"
+        '[SF7N-Configuration]' | Set-Content "$ExportTo"
         $configuration.GetEnumerator().ForEach({
             "$($_.Keys)=$($_.Values)" |
-                Add-Content "$PSScriptRoot\SF7N-Configuration.ini"
+                Add-Content "$ExportTo"
         })
     } catch {Write-Log 'ERR' "Exoprt Configuration Failed: $_"}
 }
