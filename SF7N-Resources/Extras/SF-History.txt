@@ -16,4 +16,4 @@ This document records the history of this SF Series.
 2020.10.05 - SF5 Interface      - Implment Powershell/WPF-based datalogging
 2020.10.31 - SF6 Interface      - Next generation database
 2020.11.26 - SF7 Interface      - Next generation database
-2021.02.?? - SF7N Interface     - Next generation database
+2021.02.02 - SF7N Interface     - Next generation database
