@@ -9,9 +9,10 @@ $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
 # Import the base fuction & Initialize
+$baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
 $startTime = Get-Date
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
-Import-Module "$PSScriptRoot\SF7N-Functions.ps1"
+Import-Module "$baseLocation\Functions\Base.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
@@ -22,7 +23,7 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 Write-Log 'INF' 'Read   XAML'
 [Xml] $xaml =
-    (Get-Content "$PSScriptRoot\SF7N-GUI.xaml") -replace 'x:Class=".*?"',''
+    (Get-Content "$baseLocation\GUI.xaml") -replace 'x:Class=".*?"',''
 
 Write-Log 'INF' 'Parse  XAML'
 $reader = [System.Xml.XmlNodeReader]::New($xaml)
@@ -33,23 +34,54 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control functions & Prepare splash screen
 Write-Log 'INF' 'Import GUI control modules'
-Import-Module "$PSScriptRoot\SF7N-Functions-Edit.ps1",
-    "$PSScriptRoot\SF7N-Functions-Search.ps1",
-    "$PSScriptRoot\SF7N-GUI.ps1"
+Import-Module "$baseLocation\Functions\Edit.ps1",
+    "$baseLocation\Functions\Search.ps1",
+    "$baseLocation\GUI.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
     Write-Log 'INF' 'Build  Datagrid columns'
-    $csvHeader.ForEach({
+    foreach ($Header in $csvHeader) {
+        # Generate new column
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
-        $NewColumn.Binding = [System.Windows.Data.Binding]::New($_)
-        $NewColumn.Header  = $_
+        $NewColumn.Binding = [System.Windows.Data.Binding]::New($Header)
+        $NewColumn.Header  = $Header
+        
+        # Apply conditional formatting
+        if ($null -eq $Formatting) {
+            [System.Collections.ArrayList] $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
+        }
+
+        $NewStyle  = [System.Windows.Style]::New()
+        # Foreach Rule: (Rule.ColumnName = Header)
+        $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
+            # Foreach Trigger-Setter
+            $i = 0
+            while ($null -ne $_."Trigger$i") {
+                # Append Rule to Column
+                $NewTrigger = [System.Windows.DataTrigger]::New()
+                $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
+                $NewTrigger.Value = $_."Trigger$i"
+
+                $NewSetter = [System.Windows.Setter]::New(
+                    [System.Windows.Controls.DataGridCell]::BackgroundProperty,
+                    [System.Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
+                )
+
+                $NewTrigger.Setters.Add($NewSetter)
+                $NewStyle.Triggers.Add($NewTrigger)
+
+                ++ $i
+            }
+        })
+        $NewColumn.CellStyle = $NewStyle
+
         $wpf.CSVGrid.Columns.Add($NewColumn)
-    })
+    }
 
     Import-CustomCSV $csvLocation
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
-    Import-Configuration
+    Import-Configuration "$baseLocation\Configurations\Configurations.ini"
 
     $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "$(((Get-Date) - $startTime).TotalMilliseconds) ms elpased"
@@ -61,6 +93,8 @@ $wpf.SF7N.Add_Closing({
     Write-Log 'DBG'
     Write-Log 'INF' 'Remove Modules'
     Remove-Module 'SF7N-*'
+    Write-Log 'INF' 'Remove Variables'
+    Remove-Variable '*' -ErrorAction SilentlyContinue
 })
 
 # Load WPF >> Using method from https://gist.github.com/altrive/6227237
