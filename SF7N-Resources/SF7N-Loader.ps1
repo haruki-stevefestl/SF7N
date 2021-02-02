@@ -9,7 +9,11 @@ $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $previewLocation = 'S:\PNG\'
 
 # Import the base fuction & Initialize
-$baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
+if ((Get-Location) -match 'SF7N-Resources') {
+	$baseLocation = Get-Location
+} else {
+	$baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
+}
 $startTime = Get-Date
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Import-Module "$baseLocation\Functions\SF7N-Base.ps1"
