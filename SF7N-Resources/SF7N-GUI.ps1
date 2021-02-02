@@ -69,6 +69,7 @@ $wpf.CommitReturn.Add_Click({
 
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
+    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.Toolbar.SelectedIndex = 0
 })
 

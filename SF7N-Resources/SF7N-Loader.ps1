@@ -12,7 +12,7 @@ $previewLocation = 'S:\PNG\'
 $baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
 $startTime = Get-Date
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
-Import-Module "$baseLocation\Functions\Base.ps1"
+Import-Module "$baseLocation\Functions\SF7N-Base.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
@@ -34,12 +34,15 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control functions & Prepare splash screen
 Write-Log 'INF' 'Import GUI control modules'
-Import-Module "$baseLocation\Functions\Edit.ps1",
-    "$baseLocation\Functions\Search.ps1",
-    "$baseLocation\GUI.ps1"
+Import-Module "$baseLocation\Functions\SF7N-Edit.ps1",
+    "$baseLocation\Functions\SF7N-Search.ps1",
+    "$baseLocation\SF7N-GUI.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
+    Import-CustomCSV $csvLocation
+    $wpf.CSVGrid.ItemsSource = $csv
+
     Write-Log 'INF' 'Build  Datagrid columns'
     foreach ($Header in $csvHeader) {
         # Generate new column
@@ -57,7 +60,7 @@ $wpf.SF7N.Add_ContentRendered({
         $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
             # Foreach Trigger-Setter
             $i = 0
-            while ($null -ne $_."Trigger$i") {
+            while (!([String]::IsNullOrEmpty($_."Trigger$i"))) {
                 # Append Rule to Column
                 $NewTrigger = [System.Windows.DataTrigger]::New()
                 $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
@@ -79,7 +82,6 @@ $wpf.SF7N.Add_ContentRendered({
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
 
-    Import-CustomCSV $csvLocation
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
     Import-Configuration "$baseLocation\Configurations\Configurations.ini"
 

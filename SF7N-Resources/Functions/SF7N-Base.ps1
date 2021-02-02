@@ -49,8 +49,6 @@ function Import-CustomCSV ($ImportFrom) {
         [System.Collections.ArrayList] $script:csv       = $csvRaw[8..$csvRaw.Count]
         [System.Collections.ArrayList] $script:csvAlias  = $csvRaw[0..7]
         [System.Collections.ArrayList] $script:csvSearch = @()
-
-        $wpf.CSVGrid.ItemsSource = $csv
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
