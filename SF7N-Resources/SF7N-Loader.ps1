@@ -41,10 +41,10 @@ Import-Module "$baseLocation\Functions\Edit.ps1",
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
     Write-Log 'INF' 'Build  Datagrid columns'
-    $csvHeader.ForEach({
+    foreach ($Header in $csvHeader) {
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
-        $NewColumn.Binding = [System.Windows.Data.Binding]::New($_)
-        $NewColumn.Header  = $_
+        $NewColumn.Binding = [System.Windows.Data.Binding]::New($Header)
+        $NewColumn.Header  = $Header
         
         ## TESTING.START - DynamicFormatting
 
@@ -65,26 +65,41 @@ $wpf.SF7N.Add_ContentRendered({
 
         ColumnName, [TriggerValue1, SetterValue1, [TriggerValue2, SetterValue2, ...]]
         #>
+        if ($null -eq $Formatting) {
+            $script:Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
+        }
+
+        # Foreach Rule
+        #   If Rule is designed for ThisColumn
+        #       Foreach Trigger-Setter set
 
         $NewStyle  = [System.Windows.Style]::New([System.Windows.Controls.DataGridCell])
+        foreach ($Rule in $Formatting) {
+            if ($Formatting.ColumnName -eq $Header) {
+                $i = 0
+                while ($null -ne $Rule."Trigger$i") {
+                    $NewTrigger = [System.Windows.DataTrigger]::New()
+                    $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
+                    $NewTrigger.Value = $Rule."Trigger$i"
 
-        $NewTrigger = [System.Windows.DataTrigger]::New()
-        $NewTrigger.Binding = [System.Windows.Data.Binding]::New($_)
-        $NewTrigger.Value = '20200406-1439'
+                    $NewSetter = [System.Windows.Setter]::New(
+                        [System.Windows.Controls.DataGridCell]::BackgroundProperty,
+                        [System.Windows.Media.BrushConverter]::New().ConvertFromString($Rule."Setter$i")
+                    )
 
-        $NewSetter = [System.Windows.Setter]::New(
-            [System.Windows.Controls.DataGridCell]::BackgroundProperty,
-            [System.Windows.Media.Brushes]::Red
-        )
+                    $NewTrigger.Setters.Add($NewSetter)
+                    $NewStyle.Triggers.Add($NewTrigger)
 
-        $NewTrigger.Setters.Add($NewSetter)
-        $NewStyle.Triggers.Add($NewTrigger)
+                    ++ $i
+                }
+            }
+        }
         
         $NewColumn.CellStyle = $NewStyle
         ## TESTING.END - DynamicFormatting
 
         $wpf.CSVGrid.Columns.Add($NewColumn)
-    })
+    }
 
     Import-CustomCSV $csvLocation
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
@@ -100,6 +115,8 @@ $wpf.SF7N.Add_Closing({
     Write-Log 'DBG'
     Write-Log 'INF' 'Remove Modules'
     Remove-Module 'SF7N-*'
+    Write-Log 'INF' 'Remove Variables'
+    Remove-Variable '*' -ErrorAction SilentlyContinue
 })
 
 # Load WPF >> Using method from https://gist.github.com/altrive/6227237

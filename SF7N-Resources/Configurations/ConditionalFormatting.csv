@@ -1,2 +1,2 @@
-ColumnName,TriggerValue1,SetterValue1,TriggerValue2,SetterValue2
-Sleeve,1,#B7E1CD
+ColumnName,Trigger0,Setter0,Trigger1,Setter1,Trigger2,Setter2,Trigger3,Setter3
+Sleeve,1,#B7E1CD,0,#FF0000
