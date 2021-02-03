@@ -30,7 +30,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
 
         # Refocus on captured cell
         $wpf.CSVGrid.ScrollIntoView($(
-            $wpf.CSVGrid.Items | Where-Object {$_.ID -eq $CurrentCell.Item.ID}
+            $wpf.CSVGrid.Items | Where-Object {$_.($csvHeader[0]) -eq $CurrentCell.Item.($csvHeader[0])}
         ))
         $wpf.CSVGrid.BeginEdit() 
     }
