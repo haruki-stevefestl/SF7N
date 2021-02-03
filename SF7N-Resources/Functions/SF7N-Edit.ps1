@@ -10,9 +10,6 @@ function Invoke-ChangeRow {
         [Parameter(Mandatory=$true)]
         [ValidateSet('InsertAbove','InsertBelow','InsertLast','Remove')]
         [String] $Action,
-
-        [Parameter(Mandatory=$false)][Int] $At,
-        [Parameter(Mandatory=$false)][Int] $Count,
         [Parameter(Mandatory=$false)][Int] $IDStart
     )
 
@@ -30,8 +27,22 @@ function Invoke-ChangeRow {
         $RowTemplate = [PSCustomObject] @{}
         $script:csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
 
+        $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
+        $Count = $wpf.CSVGrid.SelectedCells.Count
+
         # Log in the correct format
         if ($Action -eq 'InsertLast') {
+            $Count = $wpf.InsertLastCount.Text
+            # Get last character of last entry's leftmost item
+            [String] $IDStart = $csv[-1].($csvHeader[0])[-1]
+
+            # if IDStart is integer, add one; else set to zero
+            if ($IDStart -match '^\d+?$') {
+                ++ [Int] $IDStart
+            } else {
+                [Int] $IDStart = 0
+            }
+
             Write-Log 'INF' "Change Rows: InsertLast for $Count rows"
         } else {
             if ($Action -eq 'InsertBelow') {$At += $Count}
@@ -42,7 +53,7 @@ function Invoke-ChangeRow {
             if ($Action -eq 'InsertLast') {
                 # Add $Count rows at end with IDing
                 $ThisRow = $RowTemplate.PsObject.Copy()
-                $ThisRow.ID = "$(Get-Date -Format yyyyMMdd)-$I"
+                $ThisRow.($csvHeader[0]) = "$(Get-Date -Format yyyyMMdd)-$I"
                 $script:csv.Add($ThisRow)
             } else {
                 # Max & Min functions to prevent under/overflowing
