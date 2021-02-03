@@ -10,7 +10,7 @@ $wpf.Search.Add_Click({Search-CSV})
 $wpf.CSVGrid.Add_MouseUp({Set-Preview})
 $wpf.CSVGrid.Add_Keyup({Set-Preview})
 
-#—————————————————————————————————————————————————————————————————————————————+—————————————————————
+#——————————————————————————————————————————————————————————————————————————————+————————————————————
 # Editing-related actions
 # Enter edit mode
 $wpf.CSVGrid.Add_BeginningEdit({
@@ -30,7 +30,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
 
         # Refocus on captured cell
         $wpf.CSVGrid.ScrollIntoView($(
-            $wpf.CSVGrid.Items | Where-Object {$_.($csvHeader[0]) -eq $CurrentCell.Item.($csvHeader[0])}
+            $wpf.CSVGrid.Items | Where-Object {$_ -eq $CurrentCell.Item}
         ))
         $wpf.CSVGrid.BeginEdit() 
     }
