@@ -37,7 +37,6 @@ function Search-CSV {
     # Search
     :nextEntry foreach ($Entry in $csv) {
         foreach ($Term in $searchTerm.GetEnumerator()) {
-            # write-host "$($Entry.$($Term.Name))  -  $($Term.Value)"
             if (
                 $Entry.$($Term.Name) -notmatch
                 $Term.Value
