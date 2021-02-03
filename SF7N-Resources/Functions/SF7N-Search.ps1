@@ -9,7 +9,6 @@ function Search-CSV {
     # Parse SearchRules Text into $SearchTerms
     $SearchText = $wpf.SearchRules.Text
     $SplitRule  = '("?)(?(1)(.+?|[\S"]+?))\1:("?)(?(1)(.+?|[\S"]+?))\3(?:\s|$)'
-    # $SplitRule  = '(?<=\s|^)(?:([^\s"]+?)|"(.+?)"):(?:([^\s"]+?)|"(.+?)")(?:\s|$)'
     [Hashtable] $script:SearchTerm = @{}
 
     # Thanks my Computer Subject Teacher for teaching me
@@ -18,11 +17,10 @@ function Search-CSV {
 
     # Main parsing loop
     while ($SearchText -match $SplitRule) {
-        
-        $Key   = $Matches[2]
-        $Value = $Matches[4]
+        # .Add(Key, Value)
+        $script:searchTerm.Add($Matches[2], $Matches[4])
 
-        $script:searchTerm.Add($Key, $Value)
+        # .Replace(WholeMatch, '')
         $SearchText = $SearchText.Replace($Matches[0], '')
     }
 
