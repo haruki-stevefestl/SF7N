@@ -11,12 +11,12 @@ $script:previewColumn    = 'Train'
 $script:previewExtension = '.png'
 
 # Import the base fuction & Initialize
+$startTime = Get-Date
 if ((Get-Location) -match 'SF7N-Resources') {
 	$baseLocation = Get-Location
 } else {
 	$baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
 }
-$startTime = Get-Date
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Import-Module "$baseLocation\Functions\SF7N-Base.ps1"
 Clear-Host
