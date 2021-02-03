@@ -52,7 +52,7 @@ function Import-CustomCSV ($ImportFrom) {
 
 function Set-Preview {
     # Set preview image of illustration
-    $InputObject = $previewLocation +
+    $InputObject = $previewLocation + '\' +
         $wpf.CSVGrid.CurrentCell.Item.$previewColumn +
         $previewExtension
 
