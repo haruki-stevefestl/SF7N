@@ -13,14 +13,14 @@ $r = $csv.Count - 1
 while ($l -ne $r) {
     $m = [Math]::Ceiling(($l + $r)/ 2)
 
-    if ($csv[$m].ID -gt $key) {
+    if ($csv[$m].Train -gt $key) {
         $r = $m - 1
     } else {
         $l = $m
     }
 }
 
-if ($csv[$l].ID -eq $key) {
+if ($csv[$l].Train -eq $key) {
     Write-Host "Found at $l"
 } else {
     Write-Host 'Not found'
