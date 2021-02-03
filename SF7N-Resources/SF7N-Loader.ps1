@@ -6,9 +6,9 @@
 
 # Variables
 $csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
-# $previewLocation  = 'S:\PNG\'
-# $previewColumn    = 'ID'
-# $previewExtension = '.png'
+$script:previewLocation  = 'T:\SF7N\SF7N-Resources\CSVData\'
+$script:previewColumn    = 'Train'
+$script:previewExtension = '.png'
 
 # Import the base fuction & Initialize
 if ((Get-Location) -match 'SF7N-Resources') {
