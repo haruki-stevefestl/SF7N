@@ -18,7 +18,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
         $wpf.CurrentMode.Text = 'Edit Mode'
-        $wpf.TotalRows.Text = "Total rows: $($csvRaw.Count)"
+        $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
         
         # Capture current active cell
         $CurrentCell = $wpf.CSVGrid.CurrentCell[0]
@@ -26,7 +26,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         # Change Itemssource (to show all rows in CSV)
         $wpf.CSVGrid.ItemsSource = $null
         $wpf.CSVGrid.Items.Clear()
-        $wpf.CSVGrid.ItemsSource = $csvRaw
+        $wpf.CSVGrid.ItemsSource = $csv
 
         # Refocus on captured cell
         $wpf.CSVGrid.ScrollIntoView($(

@@ -5,7 +5,6 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 
 # Variables
-# $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
 $csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
 # $previewLocation  = 'S:\PNG\'
 # $previewColumn    = 'ID'

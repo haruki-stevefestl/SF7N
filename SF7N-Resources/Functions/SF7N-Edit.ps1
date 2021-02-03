@@ -1,7 +1,7 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 function Export-CustomCSV ($ExportTo) {
     try {
-        $csvRaw | Export-CSV $ExportTo -NoTypeInformation
+        $csv | Export-CSV $ExportTo -NoTypeInformation
     } catch {Write-Log 'Export CSV Failed'}
 }
 
@@ -43,16 +43,16 @@ function Invoke-ChangeRow {
                 # Add $Count rows at end with IDing
                 $ThisRow = $RowTemplate.PsObject.Copy()
                 $ThisRow.ID = "$(Get-Date -Format yyyyMMdd)-$I"
-                $script:csvRaw.Add($ThisRow)
+                $script:csv.Add($ThisRow)
             } else {
                 # Max & Min functions to prevent under/overflowing
-                $script:csvRaw.Insert([Math]::Max(0,[Math]::Min($At,$csvRaw.Count)), $RowTemplate)
+                $script:csv.Insert([Math]::Max(0,[Math]::Min($At,$csv.Count)), $RowTemplate)
             }
         }
 
     } else {
         Write-Log 'INF' "Change Rows: $Action selected rows"
-        @($wpf.CSVGrid.SelectedCells).ForEach{$script:csvRaw.Remove($_.Item)}
+        @($wpf.CSVGrid.SelectedCells).ForEach{$script:csv.Remove($_.Item)}
     }
 
     $wpf.CSVGrid.Items.Refresh()
