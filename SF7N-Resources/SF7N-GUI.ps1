@@ -7,8 +7,8 @@ $wpf.GotoDefault.Add_Click({$wpf.TabControl.SelectedIndex = 1})
 # Search-related actions
 $wpf.Search.Add_Click({Search-CSV})
 
-$wpf.CSVGrid.Add_MouseUp({Set-Preview $wpf.CSVGrid.CurrentCell.Item.ID})
-$wpf.CSVGrid.Add_Keyup({Set-Preview $wpf.CSVGrid.CurrentCell.Item.ID})
+$wpf.CSVGrid.Add_MouseUp({Set-Preview})
+$wpf.CSVGrid.Add_Keyup({Set-Preview})
 
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Editing-related actions

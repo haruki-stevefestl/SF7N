@@ -1,5 +1,4 @@
-<Window x:Class="SF7N.MainWindow"
-        Name="SF7N"
+<Window Name="SF7N"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SF7N Interface" Height="720" Width="1920" FontFamily="Courier New" FontSize="16">

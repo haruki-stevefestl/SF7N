@@ -52,22 +52,26 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
-function Set-Preview ($InputObject) {
+function Set-Preview {
     # Set preview image of illustration
-    $InputObject = "S:\PNG\$InputObject.png"
-    if (Test-Path $InputObject) {$wpf.Preview.Source = $InputObject}
+    $InputObject = $previewLocation +
+        $wpf.CSVGrid.CurrentCell.Item.$previewColumn +
+        '.' +
+        $previewExtension
+
+    if ((Test-Path $InputObject) -and ($InputObject -ne '.')) {$wpf.Preview.Source = $InputObject}
 
     # Update Active Cell
     $wpf.ActiveCell.Text =
-        "Active Cell: (" +
+        'Active Cell: (' +
         $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[0].Item) +
-        "," +
+        ',' +
         $wpf.CSVGrid.SelectedCells[0].Column.DisplayIndex +
-        ") ~ (" +
+        ') ~ (' +
         $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[-1].Item) +
-        "," +
+        ',' +
         $wpf.CSVGrid.SelectedCells[-1].Column.DisplayIndex +
-        ")"
+        ')'
 }
 
 function Import-Configuration ($ImportFrom) {

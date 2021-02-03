@@ -5,8 +5,11 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 
 # Variables
-$csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
-$previewLocation = 'S:\PNG\'
+# $csvLocation = "$PSScriptRoot\S4 Interface - FFCutdown.csv"
+$csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
+# $previewLocation  = 'S:\PNG\'
+# $previewColumn    = 'ID'
+# $previewExtension = '.png'
 
 # Import the base fuction & Initialize
 if ((Get-Location) -match 'SF7N-Resources') {
@@ -26,8 +29,7 @@ Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 Write-Log 'INF' 'Read   XAML'
-[Xml] $xaml =
-    (Get-Content "$baseLocation\GUI.xaml") -replace 'x:Class=".*?"',''
+[Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
 
 Write-Log 'INF' 'Parse  XAML'
 $reader = [System.Xml.XmlNodeReader]::New($xaml)
@@ -48,6 +50,8 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.CSVGrid.ItemsSource = $csv
 
     Write-Log 'INF' 'Build  Datagrid columns'
+    $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
+    
     foreach ($Header in $csvHeader) {
         # Generate new column
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
@@ -55,11 +59,7 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn.Header  = $Header
         
         # Apply conditional formatting
-        if ($null -eq $Formatting) {
-            [System.Collections.ArrayList] $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
-        }
-
-        $NewStyle  = [System.Windows.Style]::New()
+        $NewStyle = [System.Windows.Style]::New()
         # Foreach Rule: (Rule.ColumnName = Header)
         $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
             # Foreach Trigger-Setter
