@@ -54,10 +54,9 @@ function Set-Preview {
     # Set preview image of illustration
     $InputObject = $previewLocation +
         $wpf.CSVGrid.CurrentCell.Item.$previewColumn +
-        '.' +
         $previewExtension
 
-    if ((Test-Path $InputObject) -and ($InputObject -ne '.')) {$wpf.Preview.Source = $InputObject}
+    if ((Test-Path $InputObject) -and ($null -ne $InputObject)) {$wpf.Preview.Source = $InputObject}
 
     # Update Active Cell
     $wpf.ActiveCell.Text =
