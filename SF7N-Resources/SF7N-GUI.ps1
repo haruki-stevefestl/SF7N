@@ -38,25 +38,10 @@ $wpf.CSVGrid.Add_BeginningEdit({
 
 # Invoke-ChangeRow actions
 $wpf.InsertLast.Add_Click({
-    Invoke-ChangeRow 'InsertLast' -Count $wpf.InsertLastCount.Text
+    Invoke-ChangeRow 'InsertLast' $wpf.InsertLastCount.Text
 })
-
-$wpf.InsertAbove.Add_Click({
-    $Params = @{
-        At    = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
-        Count = $wpf.CSVGrid.SelectedCells.Count
-    }
-    Invoke-ChangeRow 'InsertAbove' @Params
-})
-
-$wpf.InsertBelow.Add_Click({
-    $Params = @{
-        At    = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
-        Count = $wpf.CSVGrid.SelectedCells.Count
-    }
-    Invoke-ChangeRow 'InsertBelow' @Params
-})
-
+$wpf.InsertAbove.Add_Click({Invoke-ChangeRow 'InsertAbove'})
+$wpf.InsertBelow.Add_Click({Invoke-ChangeRow 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({Invoke-ChangeRow 'Remove'})
 
 # Export CSV on Commit
