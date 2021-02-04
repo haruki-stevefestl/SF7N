@@ -1,4 +1,24 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
+function ConvertFrom-AliasMode ($Row) {
+    $Row.PSObject.Properties.Foreach({
+        $_.Value = $_.Value -ireplace
+            ($csvAlias[1].($_.Name), $csvAlias[0].($_.Name)) -ireplace
+            ($csvAlias[3].($_.Name), $csvAlias[2].($_.Name)) -ireplace
+            ($csvAlias[5].($_.Name), $csvAlias[4].($_.Name))
+    })
+    return $Row
+}
+
+function ConvertTo-AliasMode ($Row) {
+    $Row.PSObject.Properties.Foreach({
+        $_.Value = $_.Value -ireplace
+            ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
+            ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
+            ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
+    })
+    return $Row
+}
+
 function Search-CSV {
     # Initialize
     Write-Log 'INF' 'Search CSV'
@@ -8,17 +28,19 @@ function Search-CSV {
 
     # Parse SearchRules Text into $SearchTerms
     $SearchText = $wpf.SearchRules.Text
-    $SplitRule  = '("?)(?(1)(.+?|[\S"]+?))\1:("?)(?(1)(.+?|[\S"]+?))\3(?:\s|$)'
-    [Hashtable] $script:SearchTerm = @{}
+    $script:SearchTerm = [PSCustomObject] @{}
 
     # Thanks my Computer Subject Teacher for teaching me
     # how to parse text with a WHILE loop (but in Pascal).
     # Also Powershell why do you not support the GLOBAL regex flag?
 
     # Main parsing loop
-    while ($SearchText -match $SplitRule) {
+    while (
+        $SearchText -match
+        '("?)(?(1)(.+?|[\S"]+?))\1:("?)(?(1)(.+?|[\S"]+?))\3(?:\s|$)'
+    ) {
         # .Add(Key, Value)
-        $script:searchTerm.Add($Matches[2], $Matches[4])
+        $script:searchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
 
         # .Replace(WholeMatch, '')
         $SearchText = $SearchText.Replace($Matches[0], '')
@@ -26,32 +48,22 @@ function Search-CSV {
 
     # Apply input assist
     if ($wpf.InputAssist.IsChecked) {
-        $SearchTerm.Keys.Clone() | ForEach-Object {
-            $SearchTerm[$_] = $SearchTerm[$_] -ireplace
-                ($csvAlias[1].($SearchTerm.Keys), $csvAlias[0].($SearchTerm.Keys)) -ireplace
-                ($csvAlias[3].($SearchTerm.Keys), $csvAlias[2].($SearchTerm.Keys)) -ireplace
-                ($csvAlias[5].($SearchTerm.Keys), $csvAlias[4].($SearchTerm.Keys))
-        }
+        $SearchTerm = ConvertFrom-AliasMode $SearchTerm
     }
     
     # Search
     :nextEntry foreach ($Entry in $csv) {
-        foreach ($Term in $searchTerm.GetEnumerator()) {
+        $searchTerm.PSObject.Properties.ForEach({
             if (
-                $Entry.$($Term.Name) -notmatch
-                $Term.Value
+                $Entry.($_.Name) -notmatch
+                $_.Value
             ) {continue nextEntry}
-        }
+        })
 
         # Apply alias if AliasMode is on; else add raw content
         if ($wpf.AliasMode.IsChecked) {
             $TempRow = $Entry.PsObject.Copy()
-            $TempRow.PSObject.Properties.Foreach({
-                $_.Value = $_.Value -replace
-                    $csvAlias[0].($_.Name),$csvAlias[1].($_.Name) -replace
-                    $csvAlias[2].($_.Name),$csvAlias[3].($_.Name) -replace
-                    $csvAlias[4].($_.Name),$csvAlias[5].($_.Name)
-            })
+            $TempRow = ConvertTo-AliasMode $TempRow
             $script:csvSearch.Add($TempRow)
         } else {
             $script:csvSearch.Add($Entry)
@@ -60,6 +72,7 @@ function Search-CSV {
 
     $wpf.CSVGrid.ItemsSource = $script:csvSearch
     $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
-    Update-GUI
     Write-Log 'DBG' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches"
+    Update-GUI
+    # Export-Configuration
 }
