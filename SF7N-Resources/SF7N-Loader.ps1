@@ -3,7 +3,6 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-
 # Variables
 $csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
 $script:previewLocation  = 'T:\SF7N\SF7N-Resources\CSVData\'
@@ -12,10 +11,9 @@ $script:previewExtension = '.png'
 
 # Import the base fuction & Initialize
 $startTime = Get-Date
-if ((Get-Location) -match 'SF7N-Resources') {
-	$baseLocation = Get-Location
-} else {
-	$baseLocation = Join-Path $(Get-Location) 'SF7N-Resources'
+$baseLocation = Get-Location
+if (Test-path "$baseLocation\SF7N-Resources") {
+	$baseLocation = Join-Path $baseLocation 'SF7N-Resources'
 }
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Import-Module "$baseLocation\Functions\SF7N-Base.ps1"
@@ -76,12 +74,10 @@ $wpf.SF7N.Add_ContentRendered({
 
                 $NewTrigger.Setters.Add($NewSetter)
                 $NewStyle.Triggers.Add($NewTrigger)
-
                 ++ $i
             }
         })
         $NewColumn.CellStyle = $NewStyle
-
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
 
@@ -98,10 +94,7 @@ $wpf.SF7N.Add_Closing({
     Write-Log 'DBG'
     Write-Log 'INF' 'Remove Modules'
     Remove-Module 'SF7N-*'
-    Write-Log 'INF' 'Remove Variables'
-    Remove-Variable '*' -ErrorAction SilentlyContinue
 })
 
 # Load WPF >> Using method from https://gist.github.com/altrive/6227237
-$async = $wpf.SF7N.Dispatcher.InvokeAsync({$wpf.SF7N.ShowDialog() | Out-Null})
-$async.Wait() | Out-Null
+$wpf.SF7N.Dispatcher.InvokeAsync({$wpf.SF7N.ShowDialog()}).Wait() | Out-Null
