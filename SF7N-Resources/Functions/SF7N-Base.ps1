@@ -1,8 +1,4 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-function Update-GUI {
-    $wpf.SF7N.Dispatcher.Invoke("Render",[action][scriptblock]{})
-}
-
 function Show-MessageBox {
     param (
         [Parameter(Mandatory=$true)][String] $Prompt,
@@ -50,27 +46,6 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
-function Set-Preview {
-    # Set preview image of illustration
-    $InputObject = $previewLocation + '\' +
-        $wpf.CSVGrid.CurrentCell.Item.$previewColumn +
-        $previewExtension
-
-    if ((Test-Path $InputObject) -and ($null -ne $InputObject)) {$wpf.Preview.Source = $InputObject}
-
-    # Update Active Cell
-    $wpf.ActiveCell.Text =
-        'Active Cell: (' +
-        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[0].Item) +
-        ',' +
-        $wpf.CSVGrid.SelectedCells[0].Column.DisplayIndex +
-        ') ~ (' +
-        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[-1].Item) +
-        ',' +
-        $wpf.CSVGrid.SelectedCells[-1].Column.DisplayIndex +
-        ')'
-}
-
 function Import-Configuration ($ImportFrom) {
     Write-Log 'INF' 'Import Configuration'
     try {
@@ -100,5 +75,5 @@ function Export-Configuration ($ExportTo) {
             "$($_.Keys)=$($_.Values)" |
                 Add-Content "$ExportTo"
         })
-    } catch {Write-Log 'ERR' "Exoprt Configuration Failed: $_"}
+    } catch {Write-Log 'ERR' "Export Configuration Failed: $_"}
 }
