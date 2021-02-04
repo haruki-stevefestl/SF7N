@@ -21,16 +21,18 @@ $wpf.CSVGrid.Add_BeginningEdit({
         $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
         
         # Capture current active cell
-        $CurrentCell = $wpf.CSVGrid.CurrentCell[0]
+        $script:CurrentCell = $wpf.CSVGrid.CurrentCell[0]
         
         # Change Itemssource (to show all rows in CSV)
         $wpf.CSVGrid.ItemsSource = $null
         $wpf.CSVGrid.Items.Clear()
         $wpf.CSVGrid.ItemsSource = $csv
 
+        # PROBLEM: CSVGRID ITEMS MAY BE ALIAS MODED
+
         # Refocus on captured cell
         $wpf.CSVGrid.ScrollIntoView($(
-            $wpf.CSVGrid.Items | Where-Object {$_ -eq $CurrentCell.Item}
+            $wpf.CSVGrid.Items.($csvHeader[0]) | Where-Object {$_ -eq $CurrentCell.Item.($csvHeader[0])}
         ))
         $wpf.CSVGrid.BeginEdit() 
     }
@@ -45,17 +47,22 @@ $wpf.InsertBelow.Add_Click({Invoke-ChangeRow 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({Invoke-ChangeRow 'Remove'})
 
 # Export CSV on Commit
-$wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
+$wpf.Commit.Add_Click({
+    # Export-Configuration
+    Export-CustomCSV $csvLocation
+})
 
 # Reload CSV on Commit & Return
 $wpf.CommitReturn.Add_Click({
     $wpf.CurrentMode.Text = 'Search Mode'
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
+    # Export-Configuration
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.Toolbar.SelectedIndex = 0
+    # Search-CSV
 })
 
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
