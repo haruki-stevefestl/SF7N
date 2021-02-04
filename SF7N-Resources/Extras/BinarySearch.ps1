@@ -5,7 +5,7 @@ if ($null -eq $csv) {
 
 # Binary search for ID column of CSV
 
-$key = Read-Host 'Enter search ID'
+$key = Read-Host "Enter search $($csvHeader[0])"
 
 $l = 0
 $r = $csv.Count - 1
@@ -13,14 +13,14 @@ $r = $csv.Count - 1
 while ($l -ne $r) {
     $m = [Math]::Ceiling(($l + $r)/ 2)
 
-    if ($csv[$m].Train -gt $key) {
+    if ($csv[$m].($csvHeader[0]) -gt $key) {
         $r = $m - 1
     } else {
         $l = $m
     }
 }
 
-if ($csv[$l].Train -eq $key) {
+if ($csv[$l].($csvHeader[0]) -eq $key) {
     Write-Host "Found at $l"
 } else {
     Write-Host 'Not found'
