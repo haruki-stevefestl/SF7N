@@ -14,19 +14,11 @@ function Write-Log {
         [String] $Content
     )
 
-    # Create/append to $log variable
-    if ($null -eq $log) {[System.Collections.ArrayList] $script:log = @()}
-    $script:log.Add([PSCustomObject] @{
-        Time = Get-Date -Format 'HH:mm:ss.fff'
-        Type = $Type
-        Log  = $Content
-    }) | Out-Null
-
     if ($Type -eq 'ERR') {Show-MessageBox $Content 'OK' 'Error'}
 
-    # Actual output
-    Write-Host "[$($script:log[-1].Time)][$Type] $Content" | Out-Host
-    if ($null -ne $wpf.uiLog) {$wpf.uiLog.Text = $script:log | Format-Table * | Out-String}
+    # Output log to Host and Progressbar
+    Write-Host "[$(Get-Date -Format 'HH:mm:ss.fff')][$Type] $Content" | Out-Host
+    if ($null -ne $wpf.LoadingText) {$wpf.LoadingText.Text = $Content}
 }
 
 function Import-CustomCSV ($ImportFrom) {
@@ -46,34 +38,27 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
-function Import-Configuration ($ImportFrom) {
-    Write-Log 'INF' 'Import Configuration'
-    try {
-        # Retrieve configurations from .ini
-        $script:configuration = Get-Content $ImportFrom |
-            Select-Object -Skip 1 |
-                ConvertFrom-StringData
-
-        # Apply them
-        $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
-        $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
-        $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
-    } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
-}
-
-function Export-Configuration ($ExportTo) {
+function Export-Configuration {
     Write-Log 'INF' 'Export Configuration'
     try {
-        # Retrieve modifiable configurations from UI
-        $configuration.AliasMode       = $wpf.AliasMode.IsChecked
-        $configuration.InputAssist     = $wpf.InputAssist.IsChecked
-        $configuration.InsertLastCount = $wpf.InsertLastCount.Text
+        # Export configurations if changed
+        if (!(
+            $configuration.AliasMode       -ieq ([String] $wpf.AliasMode.IsChecked)   -and
+            $configuration.InputAssist     -ieq ([String] $wpf.InputAssist.IsChecked) -and
+            $configuration.InsertLastCount -ieq ([String] $wpf.InsertLastCount.Text)
+        )) {
+            $configuration.AliasMode       = $wpf.AliasMode.IsChecked
+            $configuration.InputAssist     = $wpf.InputAssist.IsChecked
+            $configuration.InsertLastCount = $wpf.InsertLastCount.Text
 
-        # Export them
-        '[SF7N-Configuration]' | Set-Content "$ExportTo"
-        $configuration.GetEnumerator().ForEach({
-            "$($_.Keys)=$($_.Values)" |
-                Add-Content "$ExportTo"
-        })
+            # Export them
+            '[SF7N-Configuration]' | Set-Content "$baseLocation\Configurations\Configurations.ini"
+            $configuration.GetEnumerator().ForEach({
+                "$($_.Keys)=$($_.Values)" |
+                    Add-Content "$baseLocation\Configurations\Configurations.ini"
+            })
+        } else {
+            Write-Log 'INF' 'Export Configuration Cancelled: Settings unchanged'
+        }
     } catch {Write-Log 'ERR' "Export Configuration Failed: $_"}
 }
