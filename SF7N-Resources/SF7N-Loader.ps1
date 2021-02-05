@@ -37,7 +37,8 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control functions & Prepare splash screen
 Write-Log 'INF' 'Import GUI control modules'
-Import-Module "$baseLocation\Functions\SF7N-Edit.ps1",
+Import-Module "$baseLocation\Functions\SF7N-UX.ps1",
+    "$baseLocation\Functions\SF7N-Edit.ps1",
     "$baseLocation\Functions\SF7N-Search.ps1",
     "$baseLocation\SF7N-GUI.ps1"
 
