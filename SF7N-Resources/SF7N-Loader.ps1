@@ -5,7 +5,7 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Variables
 $csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
-$script:previewLocation  = 'T:\SF7N\SF7N-Resources\CSVData\'
+$script:previewLocation  = '$PSScriptRoot\CSVData\'
 $script:previewColumn    = 'Train'
 $script:previewExtension = '.png'
 
@@ -36,26 +36,29 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach({$wpf.Add($_, $tempform.FindName($_))})
 
 # Import GUI Control functions & Prepare splash screen
-Write-Log 'INF' 'Import GUI control modules'
+Write-Log 'INF' 'Import GUI Control Modules'
 Import-Module "$baseLocation\Functions\SF7N-UX.ps1",
     "$baseLocation\Functions\SF7N-Edit.ps1",
     "$baseLocation\Functions\SF7N-Search.ps1",
     "$baseLocation\SF7N-GUI.ps1"
 
+
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
+    $wpf.LoadingBar.Value = 71
+    Update-GUI
 
-    Write-Log 'INF' 'Build  Datagrid columns'
+
+    Write-Log 'INF' 'Build  Datagrid Columns'
     $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
-    
     foreach ($Header in $csvHeader) {
         # Generate new column
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [System.Windows.Data.Binding]::New($Header)
         $NewColumn.Header  = $Header
-        
+
         # Apply conditional formatting
         $NewStyle = [System.Windows.Style]::New()
         # Foreach Rule: (Rule.ColumnName = Header)
@@ -68,12 +71,10 @@ $wpf.SF7N.Add_ContentRendered({
                 $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
                 $NewTrigger.Value = $_."Trigger$i"
 
-                $NewSetter = [System.Windows.Setter]::New(
+                $NewTrigger.Setters.Add([System.Windows.Setter]::New(
                     [System.Windows.Controls.DataGridCell]::BackgroundProperty,
                     [System.Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
-                )
-
-                $NewTrigger.Setters.Add($NewSetter)
+                ))
                 $NewStyle.Triggers.Add($NewTrigger)
                 ++ $i
             }
@@ -83,7 +84,24 @@ $wpf.SF7N.Add_ContentRendered({
     }
 
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
-    Import-Configuration "$baseLocation\Configurations\Configurations.ini"
+    $wpf.LoadingBar.Value = 86
+    Update-GUI
+
+
+    Write-Log 'INF' 'Import Configuration'
+    # Retrieve configurations from .ini
+    $script:configuration = Get-Content "$baseLocation\Configurations\Configurations.ini" |
+        Select-Object -Skip 1 |
+            ConvertFrom-StringData
+
+    # Apply them
+    $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
+    $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
+    $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
+    
+    $wpf.LoadingBar.Value = 100
+    Update-GUI
+
 
     $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "$(((Get-Date) - $startTime).TotalMilliseconds) ms elpased"
