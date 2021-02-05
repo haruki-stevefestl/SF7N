@@ -101,8 +101,8 @@
 
                 <!-- Main Grid -->
                 <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
-                EnableColumnVirtualization="True" EnableRowVirtualization="True" SelectionUnit="CellOrRowHeader"
-                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal"
+                EnableColumnVirtualization="True" EnableRowVirtualization="True"
+                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" SelectionUnit="CellOrRowHeader"
                 RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1" CanUserAddRows="False"
                 CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
                     <!-- Datagrid Styling -->
