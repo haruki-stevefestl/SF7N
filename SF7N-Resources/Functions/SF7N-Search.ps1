@@ -24,11 +24,11 @@ function Search-CSV {
     Write-Log 'INF' 'Search CSV'
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.CSVGrid.Items.Clear()
-    $script:csvSearch = @()
+    [System.Collections.ArrayList] $script:csvSearch = @()
 
     # Parse SearchRules Text into $SearchTerms
     $SearchText = $wpf.SearchRules.Text
-    $script:SearchTerm = [PSCustomObject] @{}
+    $SearchTerm = [PSCustomObject] @{}
 
     # Thanks my Computer Subject Teacher for teaching me
     # how to parse text with a WHILE loop (but in Pascal).
@@ -40,7 +40,7 @@ function Search-CSV {
         '("?)(?(1)(.+?|[\S"]+?))\1:("?)(?(1)(.+?|[\S"]+?))\3(?:\s|$)'
     ) {
         # .Add(Key, Value)
-        $script:searchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
+        $searchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
 
         # .Replace(WholeMatch, '')
         $SearchText = $SearchText.Replace($Matches[0], '')
@@ -64,13 +64,13 @@ function Search-CSV {
         if ($wpf.AliasMode.IsChecked) {
             $TempRow = $Entry.PsObject.Copy()
             $TempRow = ConvertTo-AliasMode $TempRow
-            $script:csvSearch.Add($TempRow)
+            $csvSearch.Add($TempRow)
         } else {
-            $script:csvSearch.Add($Entry)
+            $csvSearch.Add($Entry)
         }
     }
 
-    $wpf.CSVGrid.ItemsSource = $script:csvSearch
+    $wpf.CSVGrid.ItemsSource = $csvSearch
     $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
     Write-Log 'DBG' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches"
     Update-GUI
