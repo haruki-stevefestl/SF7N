@@ -21,20 +21,28 @@ $wpf.CSVGrid.Add_BeginningEdit({
         $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
         
         # Capture current active cell
-        $script:CurrentCell = $wpf.CSVGrid.CurrentCell[0]
+        $script:CurrentCell = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
+        $script:CurrentCellColumn = $wpf.CSVGrid.CurrentCell[0].Column.DisplayIndex
         
-        # Change Itemssource (to show all rows in CSV)
-        $wpf.CSVGrid.ItemsSource = $null
-        $wpf.CSVGrid.Items.Clear()
+        # Show all rows in CSV
         $wpf.CSVGrid.ItemsSource = $csv
 
-        # PROBLEM: CSVGRID ITEMS MAY BE ALIAS MODED
-
         # Refocus on captured cell
-        $wpf.CSVGrid.ScrollIntoView($(
-            $wpf.CSVGrid.Items.($csvHeader[0]) | Where-Object {$_ -eq $CurrentCell.Item.($csvHeader[0])}
-        ))
-        $wpf.CSVGrid.BeginEdit() 
+       for ($i = 0; $i -lt $csv.count; $i++) {
+            if (
+                $wpf.CSVGrid.Items[$i].($csvHeader[0]) -eq
+                $CurrentCell.($csvHeader[0])
+            ) {
+                write-host $i
+                $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[$i])
+                $wpf.csvgrid.currentcell = [System.Windows.Controls.DataGridCellInfo]::New(
+                    $wpf.CSVGrid.Items[$i],
+                    $wpf.CSVGrid.Columns[$CurrentCellColumn]
+                )
+                $wpf.CSVGrid.BeginEdit()
+                break
+            }
+        }
     }
 })
 
