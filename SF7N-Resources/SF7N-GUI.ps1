@@ -1,9 +1,4 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-# Intertab movements
-$wpf.GotoDebug.Add_Click({$wpf.TabControl.SelectedIndex = 2})
-$wpf.GotoDefault.Add_Click({$wpf.TabControl.SelectedIndex = 1})
-
-#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
 $wpf.Search.Add_Click({Search-CSV})
 
@@ -56,7 +51,6 @@ $wpf.RemoveSelected.Add_Click({Invoke-ChangeRow 'Remove'})
 
 # Export CSV on Commit
 $wpf.Commit.Add_Click({
-    # Export-Configuration
     Export-CustomCSV $csvLocation
 })
 
@@ -70,19 +64,6 @@ $wpf.CommitReturn.Add_Click({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.Toolbar.SelectedIndex = 0
-    # Search-CSV
-})
-
-#—————————————————————————————————————————————————————————————————————————————+—————————————————————
-# Debugger
-$wpf.Debug.Add_Click({
-    $PreviousMode = $wpf.CurrentMode.Text
-    $wpf.CurrentMode.Text = 'Debug Mode'
-    Write-Host 'SF7N Debugger - Enter "break" to exit session'
-    Write-Host '---------------------------------------------'
-    while ($true) {
-        Write-Host "SF7N > " -NoNewLine
-        $Host.UI.ReadLine() | Invoke-Expression | Out-Host
-    }
-    $wpf.CurrentMode.Text = $PreviousMode
+    Export-Configuration
+    Search-CSV
 })
