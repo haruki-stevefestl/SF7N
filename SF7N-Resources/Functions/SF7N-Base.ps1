@@ -38,27 +38,27 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
-function Export-Configuration {
-    Write-Log 'INF' 'Export Configuration'
-    try {
+# function Export-Configuration {
+#     Write-Log 'INF' 'Export Configuration'
+#     try {
         # Export configurations if changed
-        if (!(
-            $configuration.AliasMode       -ieq ([String] $wpf.AliasMode.IsChecked)   -and
-            $configuration.InputAssist     -ieq ([String] $wpf.InputAssist.IsChecked) -and
-            $configuration.InsertLastCount -ieq ([String] $wpf.InsertLastCount.Text)
-        )) {
-            $configuration.AliasMode       = $wpf.AliasMode.IsChecked
-            $configuration.InputAssist     = $wpf.InputAssist.IsChecked
-            $configuration.InsertLastCount = $wpf.InsertLastCount.Text
+        # if (!(
+        #     $configuration.AliasMode       -ieq ([String] $wpf.AliasMode.IsChecked)   -and
+        #     $configuration.InputAssist     -ieq ([String] $wpf.InputAssist.IsChecked) -and
+        #     $configuration.InsertLastCount -ieq ([String] $wpf.InsertLastCount.Text)
+        # )) {
+        #     $configuration[0] = [String] $wpf.AliasMode.IsChecked
+        #     $configuration[1] = [String] $wpf.InputAssist.IsChecked
+        #     $configuration[2] = $wpf.InsertLastCount.Text
 
             # Export them
-            '[SF7N-Configuration]' | Set-Content "$baseLocation\Configurations\Configurations.ini"
-            $configuration.GetEnumerator().ForEach({
-                "$($_.Keys)=$($_.Values)" |
-                    Add-Content "$baseLocation\Configurations\Configurations.ini"
-            })
-        } else {
-            Write-Log 'INF' 'Export Configuration Cancelled: Settings unchanged'
-        }
-    } catch {Write-Log 'ERR' "Export Configuration Failed: $_"}
-}
+#             '[SF7N-Configuration]' | Set-Content "$baseLocation\Configurations\Configurations.ini"
+#             $configuration.GetEnumerator().ForEach({
+#                 "$($_.Keys)=$($_.Values)" |
+#                     Add-Content "$baseLocation\Configurations\Configurations.ini"
+#             })
+#         } else {
+#             Write-Log 'INF' 'Export Configuration Cancelled: Settings unchanged'
+#         }
+#     } catch {Write-Log 'ERR' "Export Configuration Failed: $_"}
+# }

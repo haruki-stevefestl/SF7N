@@ -90,15 +90,16 @@ $wpf.SF7N.Add_ContentRendered({
 
     Write-Log 'INF' 'Import Configuration'
     # Retrieve configurations from .ini
-    $script:configuration = Get-Content "$baseLocation\Configurations\Configurations.ini" |
-        Select-Object -Skip 1 |
-            ConvertFrom-StringData
+    $script:configuration =
+        Get-Content "$baseLocation\Configurations\Configurations.ini" |
+            Select-Object -Skip 1 |
+                ConvertFrom-StringData
 
     # Apply them
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
     $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
-    
+
     $wpf.LoadingBar.Value = 100
     Update-GUI
 

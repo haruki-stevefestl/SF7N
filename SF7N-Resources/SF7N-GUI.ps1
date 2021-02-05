@@ -59,11 +59,10 @@ $wpf.CommitReturn.Add_Click({
     $wpf.CurrentMode.Text = 'Search Mode'
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
-    # Export-Configuration
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.Toolbar.SelectedIndex = 0
-    Export-Configuration
+    # Export-Configuration
     Search-CSV
 })
