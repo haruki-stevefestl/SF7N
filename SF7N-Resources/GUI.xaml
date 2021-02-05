@@ -27,8 +27,9 @@
         <TabItem>
             <!-- Splashscreen -->
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold"/>
-                <TextBlock Text="Naming convention is not based on N700 Series Shinkansen!" HorizontalAlignment="Center"/>
+                <TextBlock   Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
+                <TextBlock   Name="LoadingText" HorizontalAlignment="Center"/>
+                <ProgressBar Name="LoadingBar" Orientation="Horizontal" Height="16" Width="600"/>
             </StackPanel>
         </TabItem>
         <TabItem>
@@ -187,28 +188,6 @@
                     </StatusBarItem>
                 </StatusBar>
             </Grid>
-        </TabItem>
-        <TabItem>
-            <StackPanel Margin="10" VerticalAlignment="Top">
-                <Button DockPanel.Dock="Top" Name="GotoDefault" Content="GO BACK" FontWeight="Bold" Foreground="Green" FontSize="24" Height="56"/>
-                <TextBlock Text="If you are unsure of what you are doing, PRESS GO BACK IMMEDIATELY." Foreground="DarkRed" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,16,0,8"/>
-                <TextBlock Text="Inappropriate operations on this page can lead to total data loss!" HorizontalAlignment="Center" Margin="0,0,0,96"/>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Button Grid.Column="1" Name="Debug" Content="Start Debug Console" Height="32"/>
-                    <ScrollViewer Grid.Column="3" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                        <TextBlock Name="uiLog" Text="Logs appear here as they generate."/>
-                    </ScrollViewer>
-                </Grid>
-            </StackPanel>
         </TabItem>
     </TabControl>
 </Window>
