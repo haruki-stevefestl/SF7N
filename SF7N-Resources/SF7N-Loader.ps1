@@ -5,7 +5,7 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Variables
 $csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
-$script:previewLocation  = '$PSScriptRoot\CSVData\'
+$script:previewLocation  = "$PSScriptRoot\CSVData\"
 $script:previewColumn    = 'Train'
 $script:previewExtension = '.png'
 
