@@ -166,8 +166,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="6*"/>
                                 </Grid.ColumnDefinitions>
                             </Grid>
                         </ItemsPanelTemplate>
@@ -182,9 +181,6 @@
                     <Separator Grid.Column="3" />
                     <StatusBarItem Grid.Column="4">
                         <TextBlock Name="ActiveCell" Text="Active Cell:" Margin="16,0,0,0"/>
-                    </StatusBarItem>
-                    <StatusBarItem Grid.Column="5" HorizontalAlignment="Right">
-                        <Button Content="Development Portal" Name="GotoDebug" Width="256"/>
                     </StatusBarItem>
                 </StatusBar>
             </Grid>
