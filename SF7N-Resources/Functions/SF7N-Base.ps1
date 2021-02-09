@@ -39,31 +39,9 @@ function Import-CustomCSV ($ImportFrom) {
 }
 
 function Import-Configuration ($ImportFrom) {
-    $script:configuration =
-        Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
+    Write-Log 'INF' "Import Configuration - $(Split-Path $ImportFrom -Leaf)"
+    try {
+        $script:configuration =
+            Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
+    } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 }
-
-# function Export-Configuration {
-#     Write-Log 'INF' 'Export Configuration'
-#     try {
-        # Export configurations if changed
-        # if (!(
-        #     $configuration.AliasMode       -ieq ([String] $wpf.AliasMode.IsChecked)   -and
-        #     $configuration.InputAssist     -ieq ([String] $wpf.InputAssist.IsChecked) -and
-        #     $configuration.InsertLastCount -ieq ([String] $wpf.InsertLastCount.Text)
-        # )) {
-        #     $configuration[0] = [String] $wpf.AliasMode.IsChecked
-        #     $configuration[1] = [String] $wpf.InputAssist.IsChecked
-        #     $configuration[2] = $wpf.InsertLastCount.Text
-
-            # Export them
-#             '[SF7N-Configuration]' | Set-Content "$baseLocation\Configurations\Configurations.ini"
-#             $configuration.GetEnumerator().ForEach({
-#                 "$($_.Keys)=$($_.Values)" |
-#                     Add-Content "$baseLocation\Configurations\Configurations.ini"
-#             })
-#         } else {
-#             Write-Log 'INF' 'Export Configuration Cancelled: Settings unchanged'
-#         }
-#     } catch {Write-Log 'ERR' "Export Configuration Failed: $_"}
-# }
