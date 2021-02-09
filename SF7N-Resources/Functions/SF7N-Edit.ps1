@@ -2,7 +2,7 @@
 function Export-CustomCSV ($ExportTo) {
     try {
         $csv | Export-CSV $ExportTo -NoTypeInformation
-    } catch {Write-Log 'ERR' 'Export CSV Failed'}
+    } catch {Write-Log 'ERR' "Export CSV Failed: $_"}
 }
 
 function Add-Row {
