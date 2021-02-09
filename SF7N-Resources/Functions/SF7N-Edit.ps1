@@ -2,69 +2,59 @@
 function Export-CustomCSV ($ExportTo) {
     try {
         $csv | Export-CSV $ExportTo -NoTypeInformation
-    } catch {Write-Log 'Export CSV Failed'}
+    } catch {Write-Log 'ERR' 'Export CSV Failed'}
 }
 
 function Invoke-ChangeRow {
     param(
         [Parameter(Mandatory=$true)]
-        [ValidateSet('InsertAbove','InsertBelow','InsertLast','Remove')]
-        [String] $Action,
-        [Parameter(Mandatory=$false)][Int] $IDStart
+        [ValidateSet('InsertAbove','InsertBelow','InsertLast')]
+        [String] $Action
     )
 
-    <#
-        Major Logic Flow
-        If Insert?
-            - InsertLast
-            - InsertAbove/Below
-        Else
-            - Remove
-    #>
+    # Prepare blank template for inserting
+    $SCRIPT:RowTemplate = [PSCustomObject] @{}
+    $script:csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
 
-    if ($Action -match 'Insert') {
-        # Prepare blank template for inserting
-        $RowTemplate = [PSCustomObject] @{}
-        $script:csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
+    $SCRIPT:At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
 
-        $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
-        $Count = $wpf.CSVGrid.SelectedCells.Count
+    # Log in the correct format
+    # if ($Action -eq 'InsertLast') {
+    #     $SCRIPT:Count = $wpf.InsertLastCount.Text
+        # Get index of last entry's leftmost item
+        # e.g. 12345678-9 -> 9
+        # [String] $SCRIPT:IDStart = $csv[-1].($csvHeader[0]).Split('-')[1]
 
-        # Log in the correct format
-        if ($Action -eq 'InsertLast') {
-            $Count = $wpf.InsertLastCount.Text
-            # Get last character of last entry's leftmost item
-            [String] $IDStart = $csv[-1].($csvHeader[0])[-1]
+        # if IDStart is integer, add one; else set to zero
+        # if ($SCRIPT:IDStart -match '^\d+?$') {
+        #     ++ [Int] $SCRIPT:IDStart
+        # } else {
+        #     [Int] $SCRIPT:IDStart = 0
+        # }
 
-            # if IDStart is integer, add one; else set to zero
-            if ($IDStart -match '^\d+?$') {
-                ++ [Int] $IDStart
-            } else {
-                [Int] $IDStart = 0
-            }
+        # Write-Log 'INF' "Change Rows: InsertLast for $Count rows"
+    # } else {
+        $SCRIPT:Count = $wpf.CSVGrid.SelectedCells.Count
+        if ($Action -eq 'InsertBelow') {$At = $At + $Count} # $At += $Count doesn't work
+        Write-Log 'INF' "Change Rows: $Action at $At for $Count rows"
+    # }
 
-            Write-Log 'INF' "Change Rows: InsertLast for $Count rows"
-        } else {
-            if ($Action -eq 'InsertBelow') {$At += $Count}
-            Write-Log 'INF' "Change Rows: $Action at $At for $Count rows"
-        }
-
-        for ($I = $IDStart; $I -lt $ID+$Count; $I++) {
-            if ($Action -eq 'InsertLast') {
-                # Add $Count rows at end with IDing
-                $ThisRow = $RowTemplate.PsObject.Copy()
-                $ThisRow.($csvHeader[0]) = "$(Get-Date -Format yyyyMMdd)-$I"
-                $script:csv.Add($ThisRow)
-            } else {
-                # Max & Min functions to prevent under/overflowing
-                $script:csv.Insert([Math]::Max(0,[Math]::Min($At,$csv.Count)), $RowTemplate)
-            }
-        }
-
-    } else {
-        Write-Log 'INF' "Change Rows: $Action selected rows"
-        @($wpf.CSVGrid.SelectedCells).ForEach{$script:csv.Remove($_.Item)}
+    write-log 'DBG' "$Action"
+    for ($I = 0; $I -lt $Count; $I++) {
+        write-log 'DBG' "$Action" | out-host
+        # if ($Action -eq 'InsertLast') {
+            # Add $Count rows at end with IDing
+            # $ThisRow = $RowTemplate.PsObject.Copy()
+            # $ThisRow.($csvHeader[0]) = "$(Get-Date -Format yyyyMMdd)-$I"
+            # $script:csv.Add($ThisRow)
+            # $script:csv.Add($RowTemplate)
+        # } else {
+            # Max & Min functions to prevent under/overflowing
+            $script:csv.Insert([Math]::Max(0,[Math]::Min($At,$script:csv.Count)), $RowTemplate)
+        # }
     }
 
+    $wpf.CSVGrid.ItemsSource = $script:csv
     $wpf.CSVGrid.Items.Refresh()
+    Update-GUI
 }
