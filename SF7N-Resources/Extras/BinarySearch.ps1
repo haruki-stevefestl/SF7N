@@ -3,8 +3,7 @@ if ($null -eq $csv) {
     exit
 }
 
-# Binary search for ID column of CSV
-
+# Binary search for leftmost column of CSV
 $key = Read-Host "Enter search $($csvHeader[0])"
 
 $l = 0
