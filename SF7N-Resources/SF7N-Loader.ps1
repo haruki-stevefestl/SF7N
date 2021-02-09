@@ -98,7 +98,7 @@ $wpf.SF7N.Add_ContentRendered({
     # Apply them
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
-    $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
+    # $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
 
     $wpf.LoadingBar.Value = 100
     Update-GUI
