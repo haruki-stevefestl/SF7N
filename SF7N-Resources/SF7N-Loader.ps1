@@ -3,12 +3,6 @@
     Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #>
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-# Variables
-$csvLocation = "$PSScriptRoot\CSVData\shinkansen.csv"
-$script:previewLocation  = "$PSScriptRoot\CSVData\"
-$script:previewColumn    = 'Train'
-$script:previewExtension = '.png'
-
 # Import the base fuction & Initialize
 $startTime = Get-Date
 $baseLocation = Get-Location
@@ -16,10 +10,18 @@ if (Test-path "$baseLocation\SF7N-Resources") {
 	$baseLocation = Join-Path $baseLocation 'SF7N-Resources'
 }
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
+
 Import-Module "$baseLocation\Functions\SF7N-Base.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
+
+Write-Log 'INF' 'Import Configuration - Base'
+Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
+$configuration.GetEnumerator().ForEach({
+    Set-Variable $_.Keys $(
+        $ExecutionContext.InvokeCommand.ExpandString($_.Values))
+})
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Import WPF'
@@ -42,14 +44,12 @@ Import-Module "$baseLocation\Functions\SF7N-UX.ps1",
     "$baseLocation\Functions\SF7N-Search.ps1",
     "$baseLocation\SF7N-GUI.ps1"
 
-
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.LoadingBar.Value = 71
     Update-GUI
-
 
     Write-Log 'INF' 'Build  Datagrid Columns'
     $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
@@ -87,23 +87,14 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.LoadingBar.Value = 86
     Update-GUI
 
-
-    Write-Log 'INF' 'Import Configuration'
-    # Retrieve configurations from .ini
-    $script:configuration =
-        Get-Content "$baseLocation\Configurations\Configurations.ini" |
-            Select-Object -Skip 1 |
-                ConvertFrom-StringData
-
-    # Apply them
+    Write-Log 'INF' 'Import Configuration - GUI'
+    Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
     $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
 
     $wpf.LoadingBar.Value = 100
     Update-GUI
-
-
     $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "$(((Get-Date) - $startTime).TotalMilliseconds) ms elpased"
     Write-Log 'DBG'
