@@ -70,6 +70,5 @@ $wpf.CommitReturn.Add_Click({
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
     $wpf.Toolbar.SelectedIndex = 0
-    # Export-Configuration
     Search-CSV
 })
