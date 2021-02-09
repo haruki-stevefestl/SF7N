@@ -42,12 +42,16 @@ $wpf.CSVGrid.Add_BeginningEdit({
 })
 
 # Invoke-ChangeRow actions
-$wpf.InsertLast.Add_Click({
-    Invoke-ChangeRow 'InsertLast' $wpf.InsertLastCount.Text
-})
+# $wpf.InsertLast.Add_Click({ Invoke-ChangeRow 'InsertLast'})
 $wpf.InsertAbove.Add_Click({Invoke-ChangeRow 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Invoke-ChangeRow 'InsertBelow'})
-$wpf.RemoveSelected.Add_Click({Invoke-ChangeRow 'Remove'})
+$wpf.RemoveSelected.Add_Click({
+    Write-Log 'INF' "Change Rows: Remove selected rows"
+    @($wpf.CSVGrid.SelectedCells).ForEach{$script:csv.Remove($_.Item)}
+    $wpf.CSVGrid.ItemsSource = $script:csv
+    $wpf.CSVGrid.Items.Refresh()
+    Update-GUI
+})
 
 # Export CSV on Commit
 $wpf.Commit.Add_Click({
@@ -61,7 +65,6 @@ $wpf.CommitReturn.Add_Click({
 
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
-    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.Toolbar.SelectedIndex = 0
     # Export-Configuration
     Search-CSV
