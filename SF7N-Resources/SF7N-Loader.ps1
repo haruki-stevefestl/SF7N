@@ -16,6 +16,9 @@ Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
 
+Write-Log 'INF' 'Import WPF'
+Add-Type -AssemblyName PresentationFramework, PresentationCore
+
 Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
 $configuration.GetEnumerator().ForEach({
     Set-Variable $_.Keys $(
@@ -23,9 +26,6 @@ $configuration.GetEnumerator().ForEach({
 })
 
 # Load a WPF GUI from a XAML file
-Write-Log 'INF' 'Import WPF'
-Add-Type -AssemblyName PresentationFramework, PresentationCore
-
 Write-Log 'INF' 'Read   XAML'
 [Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
 
