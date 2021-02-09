@@ -85,11 +85,14 @@
                     <!-- Editing toolbar -->
                     <TabItem Margin="0" Height="0">
                         <UniformGrid Columns="6">
+                            <UniformGrid Columns="2" Margin="0,0,0,0">
+                                <Button Name="InsertLast" Content="Append" Margin="0,0,8,0"/>
+                                <TextBox Name="InsertLastCount" Margin="8,0,48,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            </UniformGrid>
                             <Button Name="InsertAbove" Content="Insert Above" Margin="0,0,8,0"/>
                             <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0"/>
-                            <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,0,0"/>
-                            <TextBlock/>
-                            <Button Name="Commit" Content="Commit" Margin="0,0,8,0"/>
+                            <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,8,0"/>
+                            <Button Name="Commit" Content="Commit" Margin="8,0,8,0"/>
                             <Button Name="CommitReturn" Content="Commit &amp; Return" Margin="8,0,0,0"/>
                         </UniformGrid>
                     </TabItem>

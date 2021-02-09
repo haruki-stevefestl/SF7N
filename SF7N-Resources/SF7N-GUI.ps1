@@ -33,9 +33,8 @@ $wpf.CSVGrid.Add_BeginningEdit({
                 $wpf.CSVGrid.Items[$i].($csvHeader[0]) -eq
                 $CurrentCell.($csvHeader[0])
             ) {
-                write-host $i
                 $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[$i])
-                $wpf.csvgrid.currentcell = [System.Windows.Controls.DataGridCellInfo]::New(
+                $wpf.CSVGrid.CurrentCell = [System.Windows.Controls.DataGridCellInfo]::New(
                     $wpf.CSVGrid.Items[$i],
                     $wpf.CSVGrid.Columns[$CurrentCellColumn]
                 )
@@ -46,10 +45,10 @@ $wpf.CSVGrid.Add_BeginningEdit({
     }
 })
 
-# Invoke-ChangeRow actions
-# $wpf.InsertLast.Add_Click({ Invoke-ChangeRow 'InsertLast'})
-$wpf.InsertAbove.Add_Click({Invoke-ChangeRow 'InsertAbove'})
-$wpf.InsertBelow.Add_Click({Invoke-ChangeRow 'InsertBelow'})
+# Add-Row actions
+$wpf.InsertLast.Add_Click({ Add-Row 'InsertLast' })
+$wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
+$wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
     Write-Log 'INF' "Change Rows: Remove selected rows"
     @($wpf.CSVGrid.SelectedCells).ForEach{$script:csv.Remove($_.Item)}
