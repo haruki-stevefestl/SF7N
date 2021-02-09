@@ -16,7 +16,6 @@ Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
 
-Write-Log 'INF' 'Import Configuration - Base'
 Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
 $configuration.GetEnumerator().ForEach({
     Set-Variable $_.Keys $(
@@ -87,7 +86,6 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.LoadingBar.Value = 86
     Update-GUI
 
-    Write-Log 'INF' 'Import Configuration - GUI'
     Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
