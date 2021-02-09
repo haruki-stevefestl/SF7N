@@ -38,6 +38,11 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
+function Import-Configuration ($ImportFrom) {
+    $script:configuration =
+        Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
+}
+
 # function Export-Configuration {
 #     Write-Log 'INF' 'Export Configuration'
 #     try {
