@@ -50,7 +50,7 @@ function Search-CSV {
     if ($wpf.InputAssist.IsChecked) {
         $SearchTerm = ConvertFrom-AliasMode $SearchTerm
     }
-    
+
     # Search
     :nextEntry foreach ($Entry in $csv) {
         $searchTerm.PSObject.Properties.ForEach({
@@ -74,5 +74,4 @@ function Search-CSV {
     $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
     Write-Log 'DBG' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches"
     Update-GUI
-    # Export-Configuration
 }
