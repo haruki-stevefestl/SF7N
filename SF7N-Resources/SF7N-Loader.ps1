@@ -21,17 +21,13 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
 $configuration.GetEnumerator().ForEach({
-    Set-Variable $_.Keys $(
-        $ExecutionContext.InvokeCommand.ExpandString($_.Values))
+    Set-Variable $_.Keys $($ExecutionContext.InvokeCommand.ExpandString($_.Values))
 })
 
 # Load a WPF GUI from a XAML file
-Write-Log 'INF' 'Read   XAML'
-[Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
-
 Write-Log 'INF' 'Parse  XAML'
-$reader = [System.Xml.XmlNodeReader]::New($xaml)
-$tempform = [Windows.Markup.XamlReader]::Load($reader)
+[Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
+$tempform = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::New($xaml))
 $wpf = @{}
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach({$wpf.Add($_, $tempform.FindName($_))})
@@ -47,13 +43,12 @@ Import-Module "$baseLocation\Functions\SF7N-UX.ps1",
 $wpf.SF7N.Add_ContentRendered({
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
-    $wpf.LoadingBar.Value = 71
-    Update-GUI
 
+    # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid Columns'
     $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
     foreach ($Header in $csvHeader) {
-        # Generate new column
+        # Generate new column & its binding
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [System.Windows.Data.Binding]::New($Header)
         $NewColumn.Header  = $Header
@@ -65,7 +60,7 @@ $wpf.SF7N.Add_ContentRendered({
             # Foreach Trigger-Setter
             $i = 0
             while (!([String]::IsNullOrEmpty($_."Trigger$i"))) {
-                # Append Rule to Column
+                # Append Trigger-Setter to Column
                 $NewTrigger = [System.Windows.DataTrigger]::New()
                 $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
                 $NewTrigger.Value = $_."Trigger$i"
@@ -83,16 +78,12 @@ $wpf.SF7N.Add_ContentRendered({
     }
 
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
-    $wpf.LoadingBar.Value = 86
-    Update-GUI
 
     Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
-    $wpf.InsertLastCount.Text  = $configuration.InsertLastCount
+    $wpf.InsertLastCount.Text  = $configuration.InsertLast
 
-    $wpf.LoadingBar.Value = 100
-    Update-GUI
     $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "$(((Get-Date) - $startTime).TotalMilliseconds) ms elpased"
     Write-Log 'DBG'
