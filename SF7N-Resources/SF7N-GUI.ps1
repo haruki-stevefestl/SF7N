@@ -21,8 +21,8 @@ $wpf.CSVGrid.Add_BeginningEdit({
         $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
         
         # Capture current active cell
-        $script:CurrentCell = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
-        $script:CurrentCellColumn = $wpf.CSVGrid.CurrentCell[0].Column.DisplayIndex
+        $CurrentCell = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
+        $CurrentCellColumn = $wpf.CSVGrid.CurrentCell[0].Column.DisplayIndex
         
         # Show all rows in CSV
         $wpf.CSVGrid.ItemsSource = $csv
@@ -30,8 +30,8 @@ $wpf.CSVGrid.Add_BeginningEdit({
         # Refocus on captured cell
        for ($i = 0; $i -lt $csv.count; $i++) {
             if (
-                $wpf.CSVGrid.Items[$i].($csvHeader[0]) -eq
-                $CurrentCell.($csvHeader[0])
+                $wpf.CSVGrid.Items[$i] -eq
+                $CurrentCell
             ) {
                 $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[$i])
                 $wpf.CSVGrid.CurrentCell = [System.Windows.Controls.DataGridCellInfo]::New(
@@ -51,7 +51,7 @@ $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
     Write-Log 'INF' "Change Rows: Remove selected rows"
-    @($wpf.CSVGrid.SelectedCells).ForEach{$script:csv.Remove($_.Item)}
+    @($wpf.CSVGrid.SelectedCells).ForEach({$script:csv.Remove($_.Item)})
     $wpf.CSVGrid.ItemsSource = $script:csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
