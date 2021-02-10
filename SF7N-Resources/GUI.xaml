@@ -29,7 +29,6 @@
             <StackPanel VerticalAlignment="Center">
                 <TextBlock   Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
                 <TextBlock   Name="LoadingText" HorizontalAlignment="Center"/>
-                <ProgressBar Name="LoadingBar" Orientation="Horizontal" Height="16" Width="600"/>
             </StackPanel>
         </TabItem>
         <TabItem>
