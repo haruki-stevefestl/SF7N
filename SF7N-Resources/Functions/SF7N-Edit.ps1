@@ -16,15 +16,16 @@ function Add-Row {
     $RowTemplate = [PSCustomObject] @{}
     $csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
 
+    # Execute preparations for each type of insert
     $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
-
-    # Log in the correct format
     if ($Action -eq 'InsertLast') {
+        # Scroll bottom into view
         $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[-1], $wpf.CSVGrid.Columns[0])
         $Count = $wpf.InsertLastCount.Text
 
         # Get starting index
         # If there already are entries, add 1 to the starting index; else 0
+        # e.g. If 20200409 = Today --> Index += 1 else Index = 0
         $LastIndex = $csv[-1].($csvHeader[0])
         if ($LastIndex.Split('-')[0] -eq (Get-Date -Format yyyyMMdd)) {
             $LastIndex = [Int] ($LastIndex.Split('-')[1]) + 1
@@ -41,7 +42,7 @@ function Add-Row {
     }
 
     Write-Log 'INF' "Change Rows: $Action at $At for $Count rows"
-    for ($I = $LastIndex; $I -lt ($LastIndex + $Count); $I++) {
+    for ($I = $LastIndex; $I -lt ($LastIndex+$Count); $I++) {
         if ($Action -eq 'InsertLast') {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
