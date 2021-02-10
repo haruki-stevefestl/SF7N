@@ -1,0 +1,14 @@
+<DataGrid.Resources>
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding}"/>
+                        <TextBox Text="" Name="Textbox"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</DataGrid.Resources>

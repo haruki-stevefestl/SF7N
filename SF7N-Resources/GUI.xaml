@@ -28,7 +28,7 @@
             <!-- Splashscreen -->
             <StackPanel VerticalAlignment="Center">
                 <TextBlock   Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
-                <TextBlock   Name="LoadingText" HorizontalAlignment="Center"/>
+                <TextBlock   Name="LoadingText" Text="Lorem ipsum dolor sit amet" HorizontalAlignment="Center"/>
             </StackPanel>
         </TabItem>
         <TabItem>
@@ -46,7 +46,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Header Toolbar -->
-                <TabControl Name="Toolbar" Margin="10,10,10,0" Background="#F1EDED">
+                <TabControl Name="Toolbar" Margin="10,0,10,10" Background="#F1EDED">
                     <!-- Search Toolbar -->
                     <TabItem>
                         <Grid Margin="0">
@@ -98,7 +98,7 @@
                 </TabControl>
 
                 <!-- Main Grid -->
-                <DataGrid Grid.Row="1" Margin="10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
+                <DataGrid Grid.Row="1" Margin="10,0,10,10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
                 EnableColumnVirtualization="True" EnableRowVirtualization="True"
                 HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" SelectionUnit="CellOrRowHeader"
                 RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1" CanUserAddRows="False"
@@ -109,16 +109,6 @@
                             <Setter Property="MinWidth" Value="128"/>
                             <Setter Property="Padding" Value="8"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <!-- <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding}"/>
-                                            <TextBox Text="" Name="Textbox"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter> -->
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
