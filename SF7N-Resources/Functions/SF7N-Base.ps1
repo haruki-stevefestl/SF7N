@@ -1,20 +1,13 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-function Show-MessageBox {
-    param (
-        [Parameter(Mandatory=$true)][String] $Prompt,
-        [Parameter(Mandatory=$true)][String] $Button,
-        [Parameter(Mandatory=$true)][String] $Image
-    )
-    return [System.Windows.MessageBox]::Show($Prompt,'SF7N Interface',$Button)
-}
-
 function Write-Log {
     param (
         [ValidateSet('INF','DBG','ERR')][String] $Type,
         [String] $Content
     )
 
-    if ($Type -eq 'ERR') {Show-MessageBox $Content 'OK' 'Error'}
+    if ($Type -eq 'ERR') {
+        [System.Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
+    }
 
     # Output log to Host and Progressbar
     Write-Host "[$(Get-Date -Format 'HH:mm:ss.fff')][$Type] $Content" | Out-Host
