@@ -37,7 +37,7 @@ function Search-CSV {
     # Main parsing loop
     while (
         $SearchText -match
-        '("?)(?(1)(.+?|[\S"]+?))\1:("?)(?(1)(.+?|[\S"]+?))\3(?:\s|$)'
+        '(["'']?)(?(1)(.+?|[\S"'']+?))\1:(["'']?)(?(1)(.+?|[\S"'']+?))\3(?:\s|$)'
     ) {
         # .Add(Key, Value)
         $searchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
@@ -52,12 +52,12 @@ function Search-CSV {
     }
 
     # Search
-    :nextEntry foreach ($Entry in $csv) {
+    :next foreach ($Entry in $csv) {
         $searchTerm.PSObject.Properties.ForEach({
             if (
                 $Entry.($_.Name) -notmatch
                 $_.Value
-            ) {continue nextEntry}
+            ) {continue next}
         })
 
         # Apply alias if AliasMode is on; else add raw content
