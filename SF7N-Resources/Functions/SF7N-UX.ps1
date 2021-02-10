@@ -9,17 +9,13 @@ function Set-Preview {
         $wpf.CSVGrid.CurrentCell.Item.$previewColumn +
         $previewExtension
 
-    if ((Test-Path $InputObject) -and ($null -ne $InputObject)) {$wpf.Preview.Source = $InputObject}
+    if (($null -ne $InputObject) -and (Test-Path $InputObject)) {$wpf.Preview.Source = $InputObject}
 
     # Update Active Cell
-    $wpf.ActiveCell.Text =
-        'Active Cell: (' +
-        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[0].Item) +
-        ',' +
-        $wpf.CSVGrid.SelectedCells[0].Column.DisplayIndex +
-        ') ~ (' +
-        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[-1].Item) +
-        ',' +
-        $wpf.CSVGrid.SelectedCells[-1].Column.DisplayIndex +
-        ')'
+    $wpf.ActiveCell.Text = 'Active Cell: ({0},{1}) ~ ({2},{3})' -f (
+        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[0].Item),
+        $wpf.CSVGrid.SelectedCells[0].Column.DisplayIndex,
+        $wpf.CSVGrid.Items.Indexof($wpf.CSVGrid.SelectedCells[-1].Item),
+        $wpf.CSVGrid.SelectedCells[-1].Column.DisplayIndex
+    )
 }
