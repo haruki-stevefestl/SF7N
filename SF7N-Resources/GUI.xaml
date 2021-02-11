@@ -3,17 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SF7N Interface" Height="720" Width="1920" FontFamily="Courier New" FontSize="16">
     <Window.Resources>
-        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Grid Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <Style TargetType="TabControl">
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
@@ -98,12 +87,11 @@
                 </TabControl>
 
                 <!-- Main Grid -->
+                <!-- Columns are dynamically generated on launch -->
                 <DataGrid Grid.Row="1" Margin="10,0,10,10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
                 EnableColumnVirtualization="True" EnableRowVirtualization="True"
                 HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" SelectionUnit="CellOrRowHeader"
-                RowHeaderWidth="0" MinRowHeight="24" FrozenColumnCount="1" CanUserAddRows="False"
-                CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
-                    <!-- Datagrid Styling -->
+                RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="MinWidth" Value="128"/>
@@ -112,15 +100,6 @@
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        </Style>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#E7F0FD"/>
-                                    <Setter Property="Foreground" Value="#000000"/>
-                                </Trigger>
-                            </Style.Triggers>
                         </Style>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
