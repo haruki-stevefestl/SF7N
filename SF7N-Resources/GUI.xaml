@@ -123,32 +123,20 @@
                 </Button>
 
                 <!-- Statusbar -->
-                <StatusBar Grid.Row="2" Grid.ColumnSpan="3" FontFamily="Courier New" FontSize="14">
-                    <StatusBar.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="6*"/>
-                                </Grid.ColumnDefinitions>
-                            </Grid>
-                        </ItemsPanelTemplate>
-                    </StatusBar.ItemsPanel>
-                    <StatusBarItem>
-                        <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,0,0"/>
-                    </StatusBarItem>
-                    <Separator Grid.Column="1" />
-                    <StatusBarItem Grid.Column="2">
-                        <TextBlock Name="TotalRows" Text="Total Rows:" Margin="16,0,0,0"/>
-                    </StatusBarItem>
-                    <Separator Grid.Column="3" />
-                    <StatusBarItem Grid.Column="4">
-                        <TextBlock Name="ActiveCell" Text="Active Cell:" Margin="16,0,0,0"/>
-                    </StatusBarItem>
-                </StatusBar>
+                <Grid Grid.Row="2" Grid.ColumnSpan="3" Background="#F1EDED">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="7*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Background="#363636" Width="1" Margin="0,4,0,4"/>
+                    <TextBlock Grid.Column="2" Name="TotalRows" Text="Total Rows:" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Background="#363636" Width="1" Margin="0,4,0,4"/>
+                    <TextBlock Grid.Column="4" Name="ActiveCell" Text="Active Cell:" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                </Grid>
             </Grid>
         </TabItem>
     </TabControl>
