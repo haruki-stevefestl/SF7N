@@ -26,6 +26,15 @@ function Search-CSV {
     $wpf.CSVGrid.Items.Clear()
     [System.Collections.ArrayList] $script:csvSearch = @()
 
+    if ($wpf.SearchRules.Text -eq '') {
+        $csvSearch = $csv
+        $wpf.CSVGrid.ItemsSource = $csvSearch
+        $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
+        Write-Log 'DBG' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches; Search terms are empty"
+        Update-GUI
+        return
+    }
+
     # Parse SearchRules Text into $SearchTerms
     $SearchText = $wpf.SearchRules.Text
     $SearchTerm = [PSCustomObject] @{}
