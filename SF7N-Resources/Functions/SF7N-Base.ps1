@@ -24,7 +24,7 @@ function Import-CustomCSV ($ImportFrom) {
     #>
     Write-Log 'INF' 'Import CSV'
     try {
-        [Array] $script:csvHeader = ((Get-Content $ImportFrom -First 1) -replace '"','') -split ','
+        $script:csvHeader = ((Get-Content $ImportFrom -First 1) -replace '"','') -split ','
         [System.Collections.ArrayList] $script:csv       = [System.IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
         [System.Collections.ArrayList] $script:csvAlias  = Get-Content "$baseLocation\Configurations\CSVAlias.csv" | ConvertFrom-CSV
         [System.Collections.ArrayList] $script:csvSearch = @()
@@ -34,7 +34,6 @@ function Import-CustomCSV ($ImportFrom) {
 function Import-Configuration ($ImportFrom) {
     Write-Log 'INF' "Import Configuration - $(Split-Path $ImportFrom -Leaf)"
     try {
-        $script:configuration =
-            Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
+        return Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
     } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 }
