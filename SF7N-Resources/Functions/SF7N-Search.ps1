@@ -26,32 +26,18 @@ function Search-CSV {
     $wpf.CSVGrid.Items.Clear()
     [System.Collections.ArrayList] $script:csvSearch = @()
 
-    if ($wpf.SearchRules.Text -eq '') {
-        $csvSearch = $csv
-        $wpf.CSVGrid.ItemsSource = $csvSearch
-        $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
-        Write-Log 'DBG' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches; Search terms are empty"
-        Update-GUI
-        return
-    }
-
-    # Parse SearchRules Text into $SearchTerms
+    # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchText = $wpf.SearchRules.Text
     $SearchTerm = [PSCustomObject] @{}
 
-    # Thanks my Computer Subject Teacher for teaching me
-    # how to parse text with a WHILE loop (but in Pascal).
-    # Also Powershell why do you not support the GLOBAL regex flag?
-
-    # Main parsing loop
+    # While there are search terms in $SearchText
+    #     Add to $SearchTerm
+    #     Remove from $SearchText
     while (
         $SearchText -match
         '(["'']?)(?(1)(.+?|[\S"'']+?))\1:(["'']?)(?(1)(.+?|[\S"'']+?))\3(?:\s|$)'
     ) {
-        # .Add(Key, Value)
         $searchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
-
-        # .Replace(WholeMatch, '')
         $SearchText = $SearchText.Replace($Matches[0], '')
     }
 
@@ -62,18 +48,14 @@ function Search-CSV {
 
     # Search
     :next foreach ($Entry in $csv) {
-        $searchTerm.PSObject.Properties.ForEach({
-            if (
-                $Entry.($_.Name) -notmatch
-                $_.Value
-            ) {continue next}
+        # If notMatch, goto next iteration
+        $SearchTerm.PSObject.Properties.ForEach({
+            if ($Entry.($_.Name) -notmatch $_.Value) {continue next}
         })
 
         # Apply alias if AliasMode is on; else add raw content
         if ($wpf.AliasMode.IsChecked) {
-            $TempRow = $Entry.PsObject.Copy()
-            $TempRow = ConvertTo-AliasMode $TempRow
-            $csvSearch.Add($TempRow)
+            $csvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
         } else {
             $csvSearch.Add($Entry)
         }
