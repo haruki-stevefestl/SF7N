@@ -19,7 +19,8 @@ Write-Log 'DBG'
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
-Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
+# Read and evaluate path configurations
+$configuration = Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
 $configuration.GetEnumerator().ForEach({
     Set-Variable $_.Keys $($ExecutionContext.InvokeCommand.ExpandString($_.Values))
 })
@@ -79,7 +80,7 @@ $wpf.SF7N.Add_ContentRendered({
 
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
-    Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
+    $configuration = Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
     $wpf.InsertLastCount.Text  = $configuration.InsertLast
