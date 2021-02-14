@@ -18,6 +18,8 @@ function Add-Row {
 
     # Execute preparations for each type of insert
     $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
+    $LastIndex = 0
+
     if ($Action -eq 'InsertLast') {
         # Scroll bottom into view
         $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[-1], $wpf.CSVGrid.Columns[0])
@@ -29,15 +31,12 @@ function Add-Row {
         $LastIndex = $csv[-1].($csvHeader[0])
         if ($LastIndex.Split('-')[0] -eq (Get-Date -Format yyyyMMdd)) {
             $LastIndex = [Int] ($LastIndex.Split('-')[1]) + 1
-        } else {
-            $LastIndex = 0
         }
 
     } else {
         $Count = $wpf.CSVGrid.SelectedCells.Count
-        $LastIndex = 0
 
-        # $At += $Count doesn't work
+        # $At += $Count doesn't work somehow
         if ($Action -eq 'InsertBelow') {$At = $At + $Count} 
     }
 
