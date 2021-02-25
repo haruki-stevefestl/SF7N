@@ -1,21 +1,25 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 function ConvertFrom-AliasMode ($Row) {
-    $Row.PSObject.Properties.Foreach({
-        $_.Value = $_.Value -ireplace
-            ($csvAlias[1].($_.Name), $csvAlias[0].($_.Name)) -ireplace
-            ($csvAlias[3].($_.Name), $csvAlias[2].($_.Name)) -ireplace
-            ($csvAlias[5].($_.Name), $csvAlias[4].($_.Name))
-    })
+    if ($null -ne $csvAlias) {
+        $Row.PSObject.Properties.Foreach({
+            $_.Value = $_.Value -ireplace
+                ($csvAlias[1].($_.Name), $csvAlias[0].($_.Name)) -ireplace
+                ($csvAlias[3].($_.Name), $csvAlias[2].($_.Name)) -ireplace
+                ($csvAlias[5].($_.Name), $csvAlias[4].($_.Name))
+        })
+    }
     return $Row
 }
 
 function ConvertTo-AliasMode ($Row) {
-    $Row.PSObject.Properties.Foreach({
-        $_.Value = $_.Value -ireplace
-            ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
-            ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
-            ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
-    })
+    if ($null -ne $csvAlias) {
+        $Row.PSObject.Properties.Foreach({
+            $_.Value = $_.Value -ireplace
+                ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
+                ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
+                ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
+        })
+    }
     return $Row
 }
 

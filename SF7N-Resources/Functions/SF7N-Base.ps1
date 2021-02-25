@@ -25,8 +25,13 @@ function Import-CustomCSV ($ImportFrom) {
     Write-Log 'INF' 'Import CSV'
     try {
         $script:csvHeader = ((Get-Content $ImportFrom -First 1) -replace '"','') -split ','
-        [System.Collections.ArrayList] $script:csv       = [System.IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
-        [System.Collections.ArrayList] $script:csvAlias  = Get-Content "$baseLocation\Configurations\CSVAlias.csv" | ConvertFrom-CSV
+        [System.Collections.ArrayList] $script:csv = [System.IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
+        
+        $AliasLocation = "$baseLocation\Configurations\CSVAlias.csv"
+        if (Test-Path $AliasLocation) {
+            [System.Collections.ArrayList] $script:csvAlias = Get-Content $AliasLocation | ConvertFrom-CSV
+        }
+    
         [System.Collections.ArrayList] $script:csvSearch = @()
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }

@@ -47,7 +47,11 @@ $wpf.SF7N.Add_ContentRendered({
 
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid Columns'
-    $Formatting = Get-Content "$baseLocation\Configurations\ConditionalFormatting.csv" | ConvertFrom-CSV
+    $FormattingLocation = "$baseLocation\Configurations\ConditionalFormatting.csv"
+    if (Test-Path $FormattingLocation) {
+        $Formatting = Get-Content $FormattingLocation | ConvertFrom-CSV
+    }
+
     foreach ($Header in $csvHeader) {
         # Generate new column & its binding
         $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
