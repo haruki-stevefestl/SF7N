@@ -85,8 +85,10 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
     $configuration = Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
-    $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -eq 'true'
-    $wpf.InputAssist.IsChecked = $configuration.InputAssist -eq 'true'
+    $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -ieq 'true'
+    $wpf.InputAssist.IsChecked = $configuration.InputAssist -ieq 'true'
+    $wpf.ReadOnly.IsChecked    = $configuration.ReadOnly    -ieq 'true'
+    $wpf.CSVGrid.IsReadOnly    = $wpf.ReadOnly.IsChecked
     $wpf.InsertLastCount.Text  = $configuration.InsertLast
 
     $wpf.TabControl.SelectedIndex = 1
