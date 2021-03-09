@@ -10,7 +10,7 @@ function Set-Preview {
         $previewExtension
 
     if (($null -ne $InputObject) -and (Test-Path $InputObject)) {
-        $wpf.Preview.Source = $InputObject
+        $wpf.PreviewImage.Source = $InputObject
     }
 
     # Update Active Cell
