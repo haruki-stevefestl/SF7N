@@ -18,6 +18,8 @@ Write-Log 'DBG'
 
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
+Write-Log 'INF' 'Import WinForms'
+Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # Read and evaluate path configurations
 $configuration = Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
