@@ -115,10 +115,11 @@
                 <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="4" HorizontalAlignment="Center"/>
 
                 <!-- Preview -->
-                <Button Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
+                <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
                     <Grid>
-                        <TextBlock Text="Image Preview"/>
-                        <Image Name="Preview"/>
+                        <TextBlock Text="Image Preview" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Click to copy to clipboard" Margin="0,20"/>
+                        <Image Name="PreviewImage"/>
                     </Grid>
                 </Button>
 
