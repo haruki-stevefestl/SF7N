@@ -67,7 +67,7 @@
                                 </TextBlock>
                                 <TextBox Name="SearchRules" VerticalContentAlignment="Center" Padding="4,0,8,0" Background="Transparent"/>
                             </Grid>
-                            <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" MaxHeight="24" VerticalAlignment="Top"/>
+                            <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" Height="24" MaxHeight="24" VerticalAlignment="Top"/>
                         </Grid>
                     </TabItem>
                     <!-- Editing toolbar -->
