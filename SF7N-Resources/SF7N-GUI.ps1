@@ -1,4 +1,14 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
+# Global actions
+$wpf.PreviewCopy.Add_Click({
+    if ($null -ne $wpf.PreviewImage.Source) {
+        [Windows.Forms.Clipboard]::SetImage([System.Drawing.Image]::FromFile(
+            $wpf.PreviewImage.Source -replace "file:///",""
+        ))
+    }
+})
+
+#—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
 $wpf.Search.Add_Click({Search-CSV})
 
