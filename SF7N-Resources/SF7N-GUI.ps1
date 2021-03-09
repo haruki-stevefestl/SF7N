@@ -20,7 +20,11 @@ $wpf.ResetSorting.Add_Click({
     $wpf.CSVGrid.Columns.ForEach({$_.SortDirection = $null})
 })
 
-$wpf.ReadOnly.Add_Click({$wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked})
+$wpf.ReadOnly.Add_Click({
+    $wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked
+    $wpf.CurrentMode.Text = 'Search Mode'
+    if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
+})
 
 #——————————————————————————————————————————————————————————————————————————————+————————————————————
 # Editing-related actions
@@ -77,6 +81,7 @@ $wpf.Commit.Add_Click({
 # Reload CSV on Commit & Return
 $wpf.CommitReturn.Add_Click({
     $wpf.CurrentMode.Text = 'Search Mode'
+    if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
     Export-CustomCSV $csvLocation

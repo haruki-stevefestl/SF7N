@@ -130,7 +130,7 @@
                         <ColumnDefinition Width="1"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="1"/>
-                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,16,0" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="1" Background="#363636" Width="1" Margin="0,4,0,4"/>

@@ -91,6 +91,8 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $configuration.ReadOnly    -ieq 'true'
     $wpf.CSVGrid.IsReadOnly    = $wpf.ReadOnly.IsChecked
+    $wpf.CurrentMode.Text = 'Search Mode'
+    if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
     $wpf.InsertLastCount.Text  = $configuration.InsertLast
 
     $wpf.TabControl.SelectedIndex = 1
