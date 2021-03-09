@@ -10,6 +10,8 @@ $wpf.ResetSorting.Add_Click({
     $wpf.CSVGrid.Columns.ForEach({$_.SortDirection = $null})
 })
 
+$wpf.ReadOnly.Add_Click({$wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked})
+
 #——————————————————————————————————————————————————————————————————————————————+————————————————————
 # Editing-related actions
 # Enter edit mode
