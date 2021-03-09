@@ -12,6 +12,9 @@ function Add-Row {
         [String] $Action
     )
 
+    # Make editor dirty
+    $wpf.SF7N.Title = 'SF7N Interface  (Changes Unsaved)'
+
     # Prepare blank template for inserting
     $RowTemplate = [PSCustomObject] @{}
     $csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}

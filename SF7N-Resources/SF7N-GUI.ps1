@@ -46,8 +46,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         # Refocus on captured cell
        for ($i = 0; $i -lt $csv.count; $i++) {
             if (
-                $wpf.CSVGrid.Items[$i] -eq
-                $CurrentCell
+                $wpf.CSVGrid.Items[$i] -eq $CurrentCell
             ) {
                 $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[$i])
                 $wpf.CSVGrid.CurrentCell = [System.Windows.Controls.DataGridCellInfo]::New(
@@ -67,15 +66,21 @@ $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
     Write-Log 'INF' "Change Rows: Remove selected rows"
+    $wpf.SF7N.Title = 'SF7N Interface  (Changes Unsaved)'
     @($wpf.CSVGrid.SelectedCells).ForEach({$script:csv.Remove($_.Item)})
     $wpf.CSVGrid.ItemsSource = $script:csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
 })
 
+$wpf.CSVGrid.Add_CellEditEnding({
+    $wpf.SF7N.Title = 'SF7N Interface  (Changes Unsaved)'
+})
+
 # Export CSV on Commit
 $wpf.Commit.Add_Click({
     Export-CustomCSV $csvLocation
+    $wpf.SF7N.Title = 'SF7N Interface'
 })
 
 # Reload CSV on Commit & Return
@@ -87,5 +92,6 @@ $wpf.CommitReturn.Add_Click({
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
     $wpf.Toolbar.SelectedIndex = 0
+    $wpf.SF7N.Title = 'SF7N Interface'
     Search-CSV
 })

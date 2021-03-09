@@ -102,9 +102,29 @@ $wpf.SF7N.Add_ContentRendered({
 
 # Cleanup on close
 $wpf.SF7N.Add_Closing({
-    Write-Log 'DBG'
-    Write-Log 'INF' 'Remove Modules'
-    Remove-Module 'SF7N-*'
+    if ($wpf.SF7N.Title -eq 'SF7N Interface  (Changes Unsaved)') {
+        $SavePrompt = [System.Windows.MessageBox]::Show(
+            'Would you like to commit unsaved changes before exiting?',
+            'SF7N Interface',
+            3
+        )
+
+        if ($SavePrompt -eq 'Cancel') {
+            $_.Cancel = $true
+        } elseif ($SavePrompt -eq 'Yes') {
+            Export-CustomCSV $csvLocation
+        }
+
+        if (($SavePrompt -eq 'Yes') -or ($SavePrompt -eq 'No')) {
+            Write-Log 'DBG'
+            Write-Log 'INF' 'Remove Modules'
+            Remove-Module 'SF7N-*'
+        }
+    } else {
+        Write-Log 'DBG'
+        Write-Log 'INF' 'Remove Modules'
+        Remove-Module 'SF7N-*'
+    }
 })
 
 # Load WPF >> Using method from https://gist.github.com/altrive/6227237
