@@ -2,6 +2,7 @@
 function Export-CustomCSV ($ExportTo) {
     try {
         $csv | Export-CSV $ExportTo -NoTypeInformation
+        $wpf.SF7N.Title = 'SF7N Interface'
     } catch {Write-Log 'ERR' "Export CSV Failed: $_"}
 }
 

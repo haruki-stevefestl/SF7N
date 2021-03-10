@@ -80,7 +80,6 @@ $wpf.CSVGrid.Add_CellEditEnding({
 # Export CSV on Commit
 $wpf.Commit.Add_Click({
     Export-CustomCSV $csvLocation
-    $wpf.SF7N.Title = 'SF7N Interface'
 })
 
 # Reload CSV on Commit & Return
@@ -92,6 +91,5 @@ $wpf.CommitReturn.Add_Click({
     Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
     $wpf.Toolbar.SelectedIndex = 0
-    $wpf.SF7N.Title = 'SF7N Interface'
     Search-CSV
 })
