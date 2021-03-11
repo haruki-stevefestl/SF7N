@@ -41,7 +41,7 @@ function Search-CSV {
         $SearchText -match
         '(["'']?)(?(1)(.+?|[\S"'']+?))\1:(["'']?)(?(1)(.+?|[\S"'']+?))\3(?:\s|$)'
     ) {
-        $searchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
+        $SearchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
         $SearchText = $SearchText.Replace($Matches[0], '')
     }
 

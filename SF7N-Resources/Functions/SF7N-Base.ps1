@@ -17,14 +17,15 @@ function Write-Log {
 function Import-CustomCSV ($ImportFrom) {
     <#
         Creates following variables:
+        - csvSearch    [AList] Matching results in searching
         - csvHeader    [Array] Header of the CSV
         - csv          [AList] Content from CSV
         - csvAlias     [AList] Aliases for CSV
-        - csvSearch    [AList] Matching results in searching
     #>
     Write-Log 'INF' 'Import CSV'
     try {
-        $script:csvHeader = ((Get-Content $ImportFrom -First 1) -replace '"','') -split ','
+        [System.Collections.ArrayList] $script:csvSearch = @()
+        $script:csvHeader = (Get-Content $ImportFrom -First 1) -replace '"','' -split ','
         [System.Collections.ArrayList] $script:csv = [System.IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
         
         $AliasLocation = "$baseLocation\Configurations\CSVAlias.csv"
@@ -32,7 +33,6 @@ function Import-CustomCSV ($ImportFrom) {
             [System.Collections.ArrayList] $script:csvAlias = Get-Content $AliasLocation | ConvertFrom-CSV
         }
     
-        [System.Collections.ArrayList] $script:csvSearch = @()
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 }
 
