@@ -54,6 +54,7 @@
                             </Expander>
 
                             <Grid Grid.Column="1" Background="White" VerticalAlignment="Top" Height="24" MaxHeight="24">
+                                <TextBox Name="SearchRules" VerticalContentAlignment="Center" Padding="4,0,8,0"/>
                                 <TextBlock Foreground="Gray" Margin="8,0,8,0" VerticalAlignment="Center">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
@@ -65,7 +66,6 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBox Name="SearchRules" VerticalContentAlignment="Center" Padding="4,0,8,0" Background="Transparent"/>
                             </Grid>
                             <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" Height="24" MaxHeight="24" VerticalAlignment="Top"/>
                         </Grid>
@@ -88,7 +88,7 @@
 
                 <!-- Main Grid -->
                 <!-- Columns are dynamically generated on launch -->
-                <DataGrid Grid.Row="1" Margin="10,0,10,10" Name="CSVGrid" IsReadOnly="False" AutoGenerateColumns="False"
+                <DataGrid Grid.Row="1" Margin="10,0,10,10" Name="CSVGrid" AutoGenerateColumns="False"
                 EnableColumnVirtualization="True" EnableRowVirtualization="True"
                 HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" SelectionUnit="CellOrRowHeader"
                 RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False">
@@ -104,7 +104,7 @@
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#F5F5F5" />
+                                    <Setter Property="Background" Value="#F5F5F5"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
