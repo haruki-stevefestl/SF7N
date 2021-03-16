@@ -35,6 +35,8 @@ function Add-Row {
         $LastIndex = $csv[-1].($csvHeader[0])
         if ($LastIndex.Split('-')[0] -eq (Get-Date -Format yyyyMMdd)) {
             $LastIndex = [Int] ($LastIndex.Split('-')[1]) + 1
+        } else {
+            $LastIndex = 0
         }
 
     } else {
