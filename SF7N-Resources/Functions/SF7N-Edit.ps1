@@ -51,7 +51,11 @@ function Add-Row {
         if ($Action -eq 'InsertLast') {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
-            $ThisRow.($csvHeader[0]) = "$(Get-Date -Format yyyyMMdd)-$I"
+            $ThisString = $configuration.AppendFormat
+            $ThisString = $ThisString.Replace('%D', (Get-Date).ToString('yyyyMMdd'))
+            $ThisString = $ThisString.Replace('%T', (Get-Date).ToString('HHmmss'))
+            $ThisString = $ThisString.Replace('%#', $I)
+            $ThisRow.($csvHeader[0]) = $ThisString
             $script:csv.Add($ThisRow)
 
         } else {
