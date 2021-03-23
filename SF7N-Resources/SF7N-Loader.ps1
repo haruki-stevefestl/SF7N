@@ -30,7 +30,7 @@ $configuration.GetEnumerator().ForEach({
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
 [Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
-$tempform = [Windows.Markup.XamlReader]::Load([System.Xml.XmlNodeReader]::New($xaml))
+$tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = @{}
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach({$wpf.Add($_, $tempform.FindName($_))})
@@ -56,25 +56,25 @@ $wpf.SF7N.Add_ContentRendered({
 
     foreach ($Header in $csvHeader) {
         # Generate new column & its binding
-        $NewColumn = [System.Windows.Controls.DataGridTextColumn]::New()
-        $NewColumn.Binding = [System.Windows.Data.Binding]::New($Header)
+        $NewColumn = [Windows.Controls.DataGridTextColumn]::New()
+        $NewColumn.Binding = [Windows.Data.Binding]::New($Header)
         $NewColumn.Header  = $Header
 
         # Apply conditional formatting
-        $NewStyle = [System.Windows.Style]::New()
+        $NewStyle = [Windows.Style]::New()
         # Foreach Rule: (Rule.ColumnName = Header)
         $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
             # Foreach Trigger-Setter
             $i = 0
             while (!([String]::IsNullOrEmpty($_."Trigger$i"))) {
                 # Append Trigger-Setter to Column
-                $NewTrigger = [System.Windows.DataTrigger]::New()
-                $NewTrigger.Binding = [System.Windows.Data.Binding]::New($Header)
+                $NewTrigger = [Windows.DataTrigger]::New()
+                $NewTrigger.Binding = [Windows.Data.Binding]::New($Header)
                 $NewTrigger.Value = $_."Trigger$i"
 
-                $NewTrigger.Setters.Add([System.Windows.Setter]::New(
-                    [System.Windows.Controls.DataGridCell]::BackgroundProperty,
-                    [System.Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
+                $NewTrigger.Setters.Add([Windows.Setter]::New(
+                    [Windows.Controls.DataGridCell]::BackgroundProperty,
+                    [Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
                 ))
                 $NewStyle.Triggers.Add($NewTrigger)
                 ++ $i
@@ -102,8 +102,8 @@ $wpf.SF7N.Add_ContentRendered({
 
 # Cleanup on close
 $wpf.SF7N.Add_Closing({
-    if ($wpf.SF7N.Title -eq 'SF7N Interface  (Changes Unsaved)') {
-        $SavePrompt = [System.Windows.MessageBox]::Show(
+    if ($wpf.Commit.IsEnabled) {
+        $SavePrompt = [Windows.MessageBox]::Show(
             'Would you like to commit unsaved changes before exiting?',
             'SF7N Interface',
             3
@@ -114,13 +114,9 @@ $wpf.SF7N.Add_Closing({
         } elseif ($SavePrompt -eq 'Yes') {
             Export-CustomCSV $csvLocation
         }
+    }
 
-        if (($SavePrompt -eq 'Yes') -or ($SavePrompt -eq 'No')) {
-            Write-Log 'DBG'
-            Write-Log 'INF' 'Remove Modules'
-            Remove-Module 'SF7N-*'
-        }
-    } else {
+    if (!$_.Cancel) {
         Write-Log 'DBG'
         Write-Log 'INF' 'Remove Modules'
         Remove-Module 'SF7N-*'
