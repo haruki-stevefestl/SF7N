@@ -28,7 +28,7 @@ function Search-CSV {
     Write-Log 'INF' 'Search CSV'
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.CSVGrid.Items.Clear()
-    [System.Collections.ArrayList] $script:csvSearch = @()
+    [Collections.ArrayList] $script:csvSearch = @()
 
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchText = $wpf.SearchRules.Text
