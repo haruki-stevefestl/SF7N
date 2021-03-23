@@ -2,7 +2,7 @@
 # Global actions
 $wpf.PreviewCopy.Add_Click({
     if ($null -ne $wpf.PreviewImage.Source) {
-        [Windows.Forms.Clipboard]::SetImage([System.Drawing.Image]::FromFile(
+        [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
             $wpf.PreviewImage.Source -replace "file:///",""
         ))
     }
@@ -49,7 +49,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
                 $wpf.CSVGrid.Items[$i] -eq $CurrentCell
             ) {
                 $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[$i])
-                $wpf.CSVGrid.CurrentCell = [System.Windows.Controls.DataGridCellInfo]::New(
+                $wpf.CSVGrid.CurrentCell = [Windows.Controls.DataGridCellInfo]::New(
                     $wpf.CSVGrid.Items[$i],
                     $wpf.CSVGrid.Columns[$CurrentCellColumn]
                 )
@@ -66,7 +66,7 @@ $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
     Write-Log 'INF' "Change Rows: Remove selected rows"
-    $wpf.SF7N.Title = 'SF7N Interface  (Changes Unsaved)'
+    $wpf.Commit.IsEnabled = $true
     @($wpf.CSVGrid.SelectedCells).ForEach({$script:csv.Remove($_.Item)})
     $wpf.CSVGrid.ItemsSource = $script:csv
     $wpf.CSVGrid.Items.Refresh()
@@ -74,7 +74,7 @@ $wpf.RemoveSelected.Add_Click({
 })
 
 $wpf.CSVGrid.Add_CellEditEnding({
-    $wpf.SF7N.Title = 'SF7N Interface  (Changes Unsaved)'
+    $wpf.Commit.IsEnabled = $true
 })
 
 # Export CSV on Commit
@@ -82,14 +82,14 @@ $wpf.Commit.Add_Click({
     Export-CustomCSV $csvLocation
 })
 
-# Reload CSV on Commit & Return
-$wpf.CommitReturn.Add_Click({
+# Reload CSV on Return
+$wpf.Return.Add_Click({
     $wpf.CurrentMode.Text = 'Search Mode'
     if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
-    $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
+    $wpf.Commit.IsEnabled = $false
 
-    Export-CustomCSV $csvLocation
     Import-CustomCSV $csvLocation
+    $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
     $wpf.Toolbar.SelectedIndex = 0
     Search-CSV
 })
