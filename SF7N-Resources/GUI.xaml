@@ -16,8 +16,8 @@
         <TabItem>
             <!-- Splashscreen -->
             <StackPanel VerticalAlignment="Center">
-                <TextBlock   Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
-                <TextBlock   Name="LoadingText" Text="Lorem ipsum dolor sit amet" HorizontalAlignment="Center"/>
+                <TextBlock Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
+                <TextBlock Name="LoadingText" Text="It's time to go basic!" HorizontalAlignment="Center"/>
             </StackPanel>
         </TabItem>
         <TabItem>
@@ -53,21 +53,19 @@
                                 </UniformGrid>
                             </Expander>
 
-                            <Grid Grid.Column="1" Background="White" VerticalAlignment="Top" Height="24" MaxHeight="24">
-                                <TextBox Name="SearchRules" VerticalContentAlignment="Center" Padding="4,0,8,0"/>
-                                <TextBlock Foreground="Gray" Margin="8,0,8,0" VerticalAlignment="Center">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                                    <Setter Property="Text" Value="Enter filter conditions, e.g. ID:2020.*"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </Grid>
-                            <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" Height="24" MaxHeight="24" VerticalAlignment="Top"/>
+                            <Label Grid.Column="1" Foreground="Gray" Background="White" Height="24" Margin="0,-2,0,2" VerticalAlignment="Top" VerticalContentAlignment="Top">
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
+                                                <Setter Property="Content" Value="Enter filter conditions, e.g. ID:2021.*"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+                            <TextBox Grid.Column="1" Name="SearchRules" VerticalContentAlignment="Center" VerticalAlignment="Top" Height="24" Background="Transparent"/>
+                            <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" Height="24" VerticalAlignment="Top"/>
                         </Grid>
                     </TabItem>
                     <!-- Editing toolbar -->
@@ -98,9 +96,6 @@
                             <Setter Property="Padding" Value="8"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        </Style>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -117,8 +112,7 @@
                 <!-- Preview -->
                 <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
                     <Grid>
-                        <TextBlock Text="Image Preview" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Click to copy to clipboard" Margin="0,20"/>
+                        <TextBlock Text="Click to image preview to clipboard"/>
                         <Image Name="PreviewImage"/>
                     </Grid>
                 </Button>
