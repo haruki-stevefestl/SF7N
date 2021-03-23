@@ -6,7 +6,7 @@ function Write-Log {
     )
 
     if ($Type -eq 'ERR') {
-        [System.Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
+        [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
     }
 
     # Output log to Host and Progressbar
@@ -24,13 +24,13 @@ function Import-CustomCSV ($ImportFrom) {
     #>
     Write-Log 'INF' 'Import CSV'
     try {
-        [System.Collections.ArrayList] $script:csvSearch = @()
+        [Collections.ArrayList] $script:csvSearch = @()
         $script:csvHeader = (Get-Content $ImportFrom -First 1) -replace '"','' -split ','
-        [System.Collections.ArrayList] $script:csv = [System.IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
+        [Collections.ArrayList] $script:csv = [IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
         
         $AliasLocation = "$baseLocation\Configurations\CSVAlias.csv"
         if (Test-Path $AliasLocation) {
-            [System.Collections.ArrayList] $script:csvAlias = Get-Content $AliasLocation | ConvertFrom-CSV
+            [Collections.ArrayList] $script:csvAlias = Get-Content $AliasLocation | ConvertFrom-CSV
         }
     
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
