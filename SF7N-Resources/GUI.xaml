@@ -78,8 +78,8 @@
                             <Button Name="InsertAbove" Content="Insert Above" Margin="0,0,8,0"/>
                             <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0"/>
                             <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,8,0"/>
-                            <Button Name="Commit" Content="Commit" Margin="8,0,8,0"/>
-                            <Button Name="CommitReturn" Content="Commit &amp; Return" Margin="8,0,0,0"/>
+                            <Button Name="Commit" Content="Commit" Margin="8,0,8,0" IsEnabled="False"/>
+                            <Button Name="Return" Content="Return" Margin="32,0,0,0"/>
                         </UniformGrid>
                     </TabItem>
                 </TabControl>
@@ -112,7 +112,7 @@
                 <!-- Preview -->
                 <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
                     <Grid>
-                        <TextBlock Text="Click to image preview to clipboard"/>
+                        <TextBlock Text="Click to copy image to clipboard"/>
                         <Image Name="PreviewImage"/>
                     </Grid>
                 </Button>
