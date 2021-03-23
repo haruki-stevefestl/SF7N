@@ -37,7 +37,7 @@ function Import-CustomCSV ($ImportFrom) {
 }
 
 function Import-Configuration ($ImportFrom) {
-    Write-Log 'INF' "Import Configuration - $(Split-Path $ImportFrom -Leaf)"
+    Write-Log 'INF' "Import Configuration - $(($ImportFrom -Split '-')[-1])"
     try {
         return Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
     } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
