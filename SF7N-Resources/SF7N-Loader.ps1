@@ -5,13 +5,9 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Import the base fuction & Initialize
 $startTime = Get-Date
-$baseLocation = Get-Location
-if (Test-path "$baseLocation\SF7N-Resources") {
-	$baseLocation = Join-Path $baseLocation 'SF7N-Resources'
-}
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
-Import-Module "$baseLocation\Functions\SF7N-Base.ps1"
+Import-Module "$PSScriptRoot\Functions\SF7N-Base.ps1"
 Clear-Host
 Write-Log 'INF' 'SF7N Startup'
 Write-Log 'DBG'
@@ -22,14 +18,14 @@ Write-Log 'INF' 'Import WinForms'
 Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # Read and evaluate path configurations
-$configuration = Import-Configuration "$baseLocation\Configurations\Configurations-Base.ini"
+$configuration = Import-Configuration "$PSScriptRoot\Configurations\Configurations-Base.ini"
 $configuration.GetEnumerator().ForEach({
     Set-Variable $_.Keys $($ExecutionContext.InvokeCommand.ExpandString($_.Values))
 })
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
-[Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
+[Xml] $xaml = Get-Content "$PSScriptRoot\GUI.xaml"
 $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = @{}
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
@@ -37,10 +33,10 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control functions & Prepare splash screen
 Write-Log 'INF' 'Import GUI Control Modules'
-Import-Module "$baseLocation\Functions\SF7N-UX.ps1",
-    "$baseLocation\Functions\SF7N-Edit.ps1",
-    "$baseLocation\Functions\SF7N-Search.ps1",
-    "$baseLocation\SF7N-GUI.ps1"
+Import-Module "$PSScriptRoot\Functions\SF7N-UX.ps1",
+    "$PSScriptRoot\Functions\SF7N-Edit.ps1",
+    "$PSScriptRoot\Functions\SF7N-Search.ps1",
+    "$PSScriptRoot\SF7N-GUI.ps1"
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
@@ -49,7 +45,7 @@ $wpf.SF7N.Add_ContentRendered({
 
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid Columns'
-    $FormattingLocation = "$baseLocation\Configurations\ConditionalFormatting.csv"
+    $FormattingLocation = "$PSScriptRoot\Configurations\ConditionalFormatting.csv"
     if (Test-Path $FormattingLocation) {
         $Formatting = Get-Content $FormattingLocation | ConvertFrom-CSV
     }
@@ -86,7 +82,7 @@ $wpf.SF7N.Add_ContentRendered({
 
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
-    $script:configuration = Import-Configuration "$baseLocation\Configurations\Configurations-GUI.ini"
+    $script:configuration = Import-Configuration "$PSScriptRoot\Configurations\Configurations-GUI.ini"
     $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $configuration.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $configuration.ReadOnly    -ieq 'true'
