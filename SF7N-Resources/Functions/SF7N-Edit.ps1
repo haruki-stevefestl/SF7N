@@ -3,6 +3,7 @@ function Export-CustomCSV ($ExportTo) {
     try {
         $csv | Export-CSV $ExportTo -NoTypeInformation
         $wpf.SF7N.Title = 'SF7N Interface'
+        $wpf.Commit.IsEnabled = $false
     } catch {Write-Log 'ERR' "Export CSV Failed: $_"}
 }
 
@@ -14,7 +15,7 @@ function Add-Row {
     )
 
     # Make editor dirty
-    $wpf.SF7N.Title = 'SF7N Interface  (Changes Unsaved)'
+    $wpf.Commit.IsEnabled = $true
 
     # Prepare blank template for inserting
     $RowTemplate = [PSCustomObject] @{}
@@ -22,40 +23,24 @@ function Add-Row {
 
     # Execute preparations for each type of insert
     $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
-    $LastIndex = 0
+    $Count = $wpf.CSVGrid.SelectedCells.Count
 
     if ($Action -eq 'InsertLast') {
-        # Scroll bottom into view
         $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[-1], $wpf.CSVGrid.Columns[0])
-        $Count = $wpf.InsertLastCount.Text
-
-        # Get starting index
-        # If there already are entries, add 1 to the starting index; else 0
-        # e.g. If 20200409 = Today --> Index += 1 else Index = 0
-        $LastIndex = $csv[-1].($csvHeader[0])
-        if ($LastIndex.Split('-')[0] -eq (Get-Date -Format yyyyMMdd)) {
-            $LastIndex = [Int] ($LastIndex.Split('-')[1]) + 1
-        } else {
-            $LastIndex = 0
-        }
-
-    } else {
-        $Count = $wpf.CSVGrid.SelectedCells.Count
-
-        # $At += $Count doesn't work somehow
-        if ($Action -eq 'InsertBelow') {$At = $At + $Count} 
+    
+    } elseif ($Action -eq 'InsertBelow') {
+        $At += $Count
     }
 
     Write-Log 'INF' "Change Rows: $Action at $At for $Count rows"
-    for ($I = $LastIndex; $I -lt ($LastIndex+$Count); $I++) {
+    for ($I = 0; $I -lt $Count; $I++) {
         if ($Action -eq 'InsertLast') {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
-            $ThisString = $configuration.AppendFormat
-            $ThisString = $ThisString.Replace('%D', (Get-Date).ToString('yyyyMMdd'))
-            $ThisString = $ThisString.Replace('%T', (Get-Date).ToString('HHmmss'))
-            $ThisString = $ThisString.Replace('%#', $I)
-            $ThisRow.($csvHeader[0]) = $ThisString
+            $ThisRow.($csvHeader[0]) = $configuration.AppendFormat -replace
+                '%D', (Get-Date).ToString('yyyyMMdd') -replace
+                '%T', (Get-Date).ToString('HHmmss')   -replace
+                '%#', $I
             $script:csv.Add($ThisRow)
 
         } else {
