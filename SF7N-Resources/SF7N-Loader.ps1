@@ -1,7 +1,5 @@
-<#
-    Cloned from SammyKrosoft/Powershell/How-To-Load-WPF-Form-XAML.ps1
-    Modified & used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
-#>
+# Cloned from SammyKrosoft/Powershell/How-To-Load-WPF-Form-XAML.ps1
+# Used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Import the base fuction & Initialize
 $startTime = Get-Date
@@ -9,19 +7,18 @@ $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
 Import-Module "$PSScriptRoot\Functions\SF7N-Base.ps1"
 Clear-Host
-Write-Log 'INF' 'SF7N Startup'
-Write-Log 'DBG'
+Write-Log 'INF' '-- SF7N Initialization --'
 
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
-Write-Log 'INF' 'Import WinForms'
-Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # Read and evaluate path configurations
-$configuration = Import-Configuration "$PSScriptRoot\Configurations\Configurations-Base.ini"
-$configuration.GetEnumerator().ForEach({
-    Set-Variable $_.Keys $($ExecutionContext.InvokeCommand.ExpandString($_.Values))
-})
+Write-Log 'INF' 'Import Configurations'
+try {
+    $config = Get-Content "$PSScriptRoot\Configurations\General.ini" | ConvertFrom-StringData
+    $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
+    $script:previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewLocation)
+} catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
@@ -31,23 +28,25 @@ $wpf = @{}
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach({$wpf.Add($_, $tempform.FindName($_))})
 
-# Import GUI Control functions & Prepare splash screen
-Write-Log 'INF' 'Import GUI Control Modules'
-Import-Module "$PSScriptRoot\Functions\SF7N-UX.ps1",
-    "$PSScriptRoot\Functions\SF7N-Edit.ps1",
-    "$PSScriptRoot\Functions\SF7N-Search.ps1",
-    "$PSScriptRoot\SF7N-GUI.ps1"
+# Import GUI Control code
+Write-Log 'INF' 'Import Modules'
+Get-ChildItem "$PSScriptRoot\*.ps1" -Recurse -Exclude 'SF7N-Loader.ps1' | Import-Module
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
+    Write-Log 'DBG' 'Launch GUI'
+    Write-Log 'DBG'
+    Write-Log 'INF' 'Import WinForms'
+    Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
+
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $csv
 
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid Columns'
-    $FormattingLocation = "$PSScriptRoot\Configurations\ConditionalFormatting.csv"
-    if (Test-Path $FormattingLocation) {
-        $Formatting = Get-Content $FormattingLocation | ConvertFrom-CSV
+    $Formatting = "$PSScriptRoot\Configurations\Formatting.csv"
+    if (Test-Path $Formatting){
+        $Formatting = Get-Content $Formatting | ConvertFrom-CSV
     }
 
     foreach ($Header in $csvHeader) {
@@ -79,20 +78,17 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
-
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
 
-    $script:configuration = Import-Configuration "$PSScriptRoot\Configurations\Configurations-GUI.ini"
-    $wpf.AliasMode.IsChecked   = $configuration.AliasMode   -ieq 'true'
-    $wpf.InputAssist.IsChecked = $configuration.InputAssist -ieq 'true'
-    $wpf.ReadOnly.IsChecked    = $configuration.ReadOnly    -ieq 'true'
+    $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
+    $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
+    $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
     $wpf.CSVGrid.IsReadOnly    = $wpf.ReadOnly.IsChecked
-    $wpf.InsertLastCount.Text  = $configuration.InsertLast
+    $wpf.InsertLastCount.Text  = $config.InsertLast
     $wpf.CurrentMode.Text = 'Search Mode'
-    if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
 
     $wpf.TabControl.SelectedIndex = 1
-    Write-Log 'DBG' "$(((Get-Date) - $startTime).TotalMilliseconds) ms elpased"
+    Write-Log 'DBG' "Total  $(((Get-Date) - $startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 })
 
@@ -100,9 +96,7 @@ $wpf.SF7N.Add_ContentRendered({
 $wpf.SF7N.Add_Closing({
     if ($wpf.Commit.IsEnabled) {
         $SavePrompt = [Windows.MessageBox]::Show(
-            'Would you like to commit unsaved changes before exiting?',
-            'SF7N Interface',
-            3
+            'Commit unsaved changes before exiting?', 'SF7N Interface', 3
         )
 
         if ($SavePrompt -eq 'Cancel') {
@@ -112,7 +106,7 @@ $wpf.SF7N.Add_Closing({
         }
     }
 
-    if (!$_.Cancel) {
+    if (!$wpf.Cancel) {
         Write-Log 'DBG'
         Write-Log 'INF' 'Remove Modules'
         Remove-Module 'SF7N-*'

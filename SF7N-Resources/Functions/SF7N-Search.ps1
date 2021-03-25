@@ -23,15 +23,12 @@ function ConvertTo-AliasMode ($Row) {
     return $Row
 }
 
-function Search-CSV {
+function Search-CSV ($SearchText) {
     # Initialize
-    Write-Log 'INF' 'Search CSV'
-    $wpf.CSVGrid.ItemsSource = $null
-    $wpf.CSVGrid.Items.Clear()
     [Collections.ArrayList] $script:csvSearch = @()
+    $wpf.CSVGrid.ItemsSource = $csvSearch
 
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
-    $SearchText = $wpf.SearchRules.Text
     $SearchTerm = [PSCustomObject] @{}
 
     # While there are search terms in $SearchText
@@ -51,10 +48,10 @@ function Search-CSV {
     }
 
     # Search
-    :next foreach ($Entry in $csv) {
+    foreach ($Entry in $csv) {
         # If notMatch, goto next iteration
         $SearchTerm.PSObject.Properties.ForEach({
-            if ($Entry.($_.Name) -notmatch $_.Value) {continue next}
+            if ($Entry.($_.Name) -notmatch $_.Value) {continue}
         })
 
         # Apply alias if AliasMode is on; else add raw content
@@ -65,8 +62,7 @@ function Search-CSV {
         }
     }
 
-    $wpf.CSVGrid.ItemsSource = $csvSearch
     $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
-    Write-Log 'DBG' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches"
+    Write-Log 'INF' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches"
     Update-GUI
 }

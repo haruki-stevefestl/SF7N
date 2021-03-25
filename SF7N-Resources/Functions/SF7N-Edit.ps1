@@ -7,13 +7,7 @@ function Export-CustomCSV ($ExportTo) {
     } catch {Write-Log 'ERR' "Export CSV Failed: $_"}
 }
 
-function Add-Row {
-    param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('InsertAbove','InsertBelow','InsertLast')]
-        [String] $Action
-    )
-
+function Add-Row ($Action) {
     # Make editor dirty
     $wpf.Commit.IsEnabled = $true
 
@@ -26,18 +20,19 @@ function Add-Row {
     $Count = $wpf.CSVGrid.SelectedCells.Count
 
     if ($Action -eq 'InsertLast') {
+        $Count = $wpf.InsertLastCount.Text
         $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[-1], $wpf.CSVGrid.Columns[0])
     
     } elseif ($Action -eq 'InsertBelow') {
         $At += $Count
     }
 
-    Write-Log 'INF' "Change Rows: $Action at $At for $Count rows"
+    Write-Log 'INF' "Edit   CSV: $Action at $At for $Count rows"
     for ($I = 0; $I -lt $Count; $I++) {
         if ($Action -eq 'InsertLast') {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
-            $ThisRow.($csvHeader[0]) = $configuration.AppendFormat -replace
+            $ThisRow.($csvHeader[0]) = $config.AppendFormat -replace
                 '%D', (Get-Date).ToString('yyyyMMdd') -replace
                 '%T', (Get-Date).ToString('HHmmss')   -replace
                 '%#', $I

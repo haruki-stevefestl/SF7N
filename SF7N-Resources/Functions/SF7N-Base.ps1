@@ -1,17 +1,9 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
-function Write-Log {
-    param (
-        [ValidateSet('INF','DBG','ERR')][String] $Type,
-        [String] $Content
-    )
-
+function Write-Log ($Type, $Content) {
     if ($Type -eq 'ERR') {
         [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
     }
-
-    # Output log to Host and Progressbar
     Write-Host "[$(Get-Date -Format 'HH:mm:ss.fff')][$Type] $Content" | Out-Host
-    if ($null -ne $wpf.LoadingText) {$wpf.LoadingText.Text = $Content}
 }
 
 function Import-CustomCSV ($ImportFrom) {
@@ -34,11 +26,4 @@ function Import-CustomCSV ($ImportFrom) {
         }
     
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
-}
-
-function Import-Configuration ($ImportFrom) {
-    Write-Log 'INF' "Import Configuration - $(($ImportFrom -Split '-')[-1])"
-    try {
-        return Get-Content $ImportFrom | Select-Object -Skip 1 | ConvertFrom-StringData
-    } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 }

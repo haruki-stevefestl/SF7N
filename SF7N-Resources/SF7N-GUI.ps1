@@ -10,7 +10,7 @@ $wpf.PreviewCopy.Add_Click({
 
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
-$wpf.Search.Add_Click({Search-CSV})
+$wpf.Search.Add_Click({Search-CSV $wpf.SearchRules.Text})
 
 $wpf.CSVGrid.Add_MouseUp({Set-Preview})
 $wpf.CSVGrid.Add_Keyup({Set-Preview})
@@ -23,7 +23,6 @@ $wpf.ResetSorting.Add_Click({
 $wpf.ReadOnly.Add_Click({
     $wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked
     $wpf.CurrentMode.Text = 'Search Mode'
-    if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
 })
 
 #——————————————————————————————————————————————————————————————————————————————+————————————————————
@@ -61,6 +60,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
 })
 
 # Add-Row actions
+$wpf.CSVGrid.Add_CellEditEnding({$wpf.Commit.IsEnabled = $true})
 $wpf.InsertLast.Add_Click({ Add-Row 'InsertLast' })
 $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
@@ -73,23 +73,15 @@ $wpf.RemoveSelected.Add_Click({
     Update-GUI
 })
 
-$wpf.CSVGrid.Add_CellEditEnding({
-    $wpf.Commit.IsEnabled = $true
-})
 
-# Export CSV on Commit
-$wpf.Commit.Add_Click({
-    Export-CustomCSV $csvLocation
-})
+$wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 
 # Reload CSV on Return
 $wpf.Return.Add_Click({
     $wpf.CurrentMode.Text = 'Search Mode'
-    if ($wpf.ReadOnly.IsChecked) {$wpf.CurrentMode.Text += ' (Read-only)'}
-    $wpf.Commit.IsEnabled = $false
 
     Import-CustomCSV $csvLocation
     $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
     $wpf.Toolbar.SelectedIndex = 0
-    Search-CSV
+    Search-CSV $wpf.SearchRules.Text
 })
