@@ -27,6 +27,7 @@ function Search-CSV ($SearchText) {
     # Initialize
     [Collections.ArrayList] $script:csvSearch = @()
     $wpf.CSVGrid.ItemsSource = $csvSearch
+    $wpf.CSVGrid.Items.Refresh()
 
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchTerm = [PSCustomObject] @{}
