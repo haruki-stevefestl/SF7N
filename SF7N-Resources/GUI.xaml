@@ -38,13 +38,13 @@
                 <TabControl Name="Toolbar" Margin="10,0,10,10" Background="#F1EDED">
                     <!-- Search Toolbar -->
                     <TabItem>
-                        <Grid Margin="0">
+                        <Grid Margin="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
-                            <Expander Header="Settings" Grid.ColumnSpan="4" Margin="16,0,0,0">
+                            <Expander Header="Settings" Grid.ColumnSpan="4" Margin="16,-1,0,0">
                                 <UniformGrid Columns="6" Margin="0,16,0,0">
                                     <Button   Name="ResetSorting" Content="Reset Sorting" Margin="0,0,32,0"/>
                                     <CheckBox Name="AliasMode" Content="  Alias Mode" IsChecked="True" VerticalContentAlignment="Center" Margin="0"/>
@@ -53,25 +53,25 @@
                                 </UniformGrid>
                             </Expander>
 
-                            <Label Grid.Column="1" Foreground="Gray" Background="White" Height="24" Margin="0,-2,0,2" VerticalAlignment="Top" VerticalContentAlignment="Top">
-                                <Label.Style>
-                                    <Style TargetType="Label">
+                            <TextBlock Grid.Column="1" Foreground="Gray" Background="White" Padding="3,2"  VerticalAlignment="Top" Height="22">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                                <Setter Property="Content" Value="Enter filter conditions, e.g. ID:2021.*"/>
+                                                <Setter Property="Text" Value="Enter filter conditions, e.g. ID:2021.*"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </Label.Style>
-                            </Label>
-                            <TextBox Grid.Column="1" Name="SearchRules" VerticalContentAlignment="Center" VerticalAlignment="Top" Height="24" Background="Transparent"/>
-                            <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" Height="24" VerticalAlignment="Top"/>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBox Grid.Column="1" Name="SearchRules" VerticalContentAlignment="Center" Height="22" VerticalAlignment="Top" Background="Transparent"/>
+                            <Button Grid.Column="2" Name="Search" Content="Filter CSV" Margin="16,0,0,0" VerticalAlignment="Top"/>
                         </Grid>
                     </TabItem>
                     <!-- Editing toolbar -->
-                    <TabItem Margin="0" Height="0">
-                        <UniformGrid Columns="6">
-                            <UniformGrid Columns="2" Margin="0,0,0,0">
+                    <TabItem>
+                        <UniformGrid Columns="6" Margin="4">
+                            <UniformGrid Columns="2" Margin="0">
                                 <Button Name="InsertLast" Content="Append" Margin="0,0,8,0"/>
                                 <TextBox Name="InsertLastCount" Margin="8,0,48,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </UniformGrid>
@@ -112,7 +112,7 @@
                 <!-- Preview -->
                 <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Column="2" Grid.RowSpan="2" Background="White" BorderThickness="0">
                     <Grid>
-                        <TextBlock Text="Click to copy image to clipboard"/>
+                        <TextBlock Text="Click to image preview to clipboard"/>
                         <Image Name="PreviewImage"/>
                     </Grid>
                 </Button>
