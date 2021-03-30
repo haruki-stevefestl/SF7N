@@ -78,10 +78,27 @@ $wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 
 # Reload CSV on Return
 $wpf.Return.Add_Click({
-    $wpf.CurrentMode.Text = 'Search Mode'
+    $Return = $true
+    if ($wpf.Commit.IsEnabled) {
+        $SavePrompt = [Windows.MessageBox]::Show(
+            'Commit unsaved changes before returning?', 'SF7N Interface', 3
+        )
+    
+        if ($SavePrompt -eq 'Yes') {
+            Export-CustomCSV $csvLocation
+        } elseif ($SavePrompt -eq 'Cancel') {
+            $Return = $false
+        }
+    }
 
-    Import-CustomCSV $csvLocation
-    $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
-    $wpf.Toolbar.SelectedIndex = 0
-    Search-CSV $wpf.SearchRules.Text
+    if ($Return) {
+        $wpf.CurrentMode.Text = 'Search Mode'
+        $wpf.Commit.IsEnabled = $false
+
+        Import-CustomCSV $csvLocation
+        Search-CSV $wpf.SearchRules.Text
+        $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
+
+        $wpf.Toolbar.SelectedIndex = 0
+    }
 })
