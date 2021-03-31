@@ -20,7 +20,7 @@ function Import-CustomCSV ($ImportFrom) {
         $script:csvHeader = (Get-Content $ImportFrom -First 1) -replace '"','' -split ','
         [Collections.ArrayList] $script:csv = [IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
         
-        $AliasLocation = "$PSScriptRoot\Configurations\CSVAlias.csv"
+        $AliasLocation = "$baseLocation\Configurations\CSVAlias.csv"
         if (Test-Path $AliasLocation) {
             [Collections.ArrayList] $script:csvAlias = Get-Content $AliasLocation | ConvertFrom-CSV
         }
