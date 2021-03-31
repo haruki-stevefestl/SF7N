@@ -3,9 +3,10 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Import the base fuction & Initialize
 $startTime = Get-Date
+$baseLocation = $PSScriptRoot
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
-Import-Module "$PSScriptRoot\Functions\SF7N-Base.ps1"
+Import-Module ".\Functions\SF7N-Base.ps1"
 Clear-Host
 Write-Log 'INF' '-- SF7N Initialization --'
 
@@ -15,14 +16,14 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 # Read and evaluate path configurations
 Write-Log 'INF' 'Import Configurations'
 try {
-    $config = Get-Content "$PSScriptRoot\Configurations\General.ini" | ConvertFrom-StringData
+    $config = Get-Content "$baseLocation\Configurations\General.ini" | ConvertFrom-StringData
     $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
     $script:previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewLocation)
 } catch {Write-Log 'ERR' "Import Configuration Failed: $_"}
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
-[Xml] $xaml = Get-Content "$PSScriptRoot\GUI.xaml"
+[Xml] $xaml = Get-Content "$baseLocation\GUI.xaml"
 $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = @{}
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
@@ -30,7 +31,7 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control code
 Write-Log 'INF' 'Import Modules'
-Get-ChildItem "$PSScriptRoot\*.ps1" -Recurse -Exclude 'SF7N-Loader.ps1' | Import-Module
+Get-ChildItem "$baseLocation\*.ps1" -Recurse -Exclude 'SF7N-Loader.ps1' | Import-Module
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
@@ -44,7 +45,7 @@ $wpf.SF7N.Add_ContentRendered({
 
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid Columns'
-    $Formatting = "$PSScriptRoot\Configurations\Formatting.csv"
+    $Formatting = "$baseLocation\Configurations\Formatting.csv"
     if (Test-Path $Formatting){
         $Formatting = Get-Content $Formatting | ConvertFrom-CSV
     }
