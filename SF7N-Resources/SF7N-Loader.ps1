@@ -8,7 +8,7 @@ Set-Location $baseLocation
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
 Import-Module '.\Functions\F-Base.ps1'
-# Clear-Host
+Clear-Host
 Write-Log 'INF' '-- SF7N Initialization --'
 
 Write-Log 'INF' 'Import WPF'
@@ -17,8 +17,8 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 # Read and evaluate path configurations
 Write-Log 'INF' 'Import Configurations'
 $config = Get-Content '.\Configurations\General.ini' | ConvertFrom-StringData
-$script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
-$script:previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewLocation)
+$csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
+$previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewLocation)
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
@@ -43,7 +43,7 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.CSVGrid.ItemsSource = $csv
 
     # Generate columns of Datagrid
-    Write-Log 'INF' 'Build  Datagrid Columns'
+    Write-Log 'INF' 'Build  Datagrid'
     $Formatting = '.\Configurations\Formatting.csv'
     if (Test-Path $Formatting){
         $Formatting = Get-Content $Formatting | ConvertFrom-CSV
@@ -57,7 +57,7 @@ $wpf.SF7N.Add_ContentRendered({
 
         # Apply conditional formatting
         $NewStyle = [Windows.Style]::New()
-        # Foreach Rule: (Rule.ColumnName = Header)
+        # Foreach Rule: (Rule.ColumnName == Header)
         $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
             # Foreach Trigger-Setter
             $i = 0
@@ -88,29 +88,27 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.CurrentMode.Text = 'Search Mode'
 
     $wpf.TabControl.SelectedIndex = 1
-    Write-Log 'DBG' "Total  $(((Get-Date) - $startTime).TotalMilliseconds) ms"
+    Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 })
 
 # Cleanup on close
 $wpf.SF7N.Add_Closing({
+    $Exit = $true
     if ($wpf.Commit.IsEnabled) {
-        $SavePrompt = [Windows.MessageBox]::Show(
-            'Commit unsaved changes before exiting?', 'SF7N Interface', 3
-        )
-
-        if ($SavePrompt -eq 'Cancel') {
-            $_.Cancel = $true
-        } elseif ($SavePrompt -eq 'Yes') {
-            Export-CustomCSV $csvLocation
+        switch (New-SaveDialog) {
+            'Cancel' {$Exit = $false}
+            'Yes'    {Export-CustomCSV $csvLocation}
         }
     }
 
-    if (!$wpf.Cancel) {
+    if ($Exit) {
         Write-Log 'DBG'
         Write-Log 'INF' 'Remove Modules'
         Remove-Module 'F-*'
         Remove-Module 'H-*'
+    } else {
+        $_.Cancel = $true
     }
 })
 

@@ -53,14 +53,9 @@ $wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 $wpf.Return.Add_Click({
     $Return = $true
     if ($wpf.Commit.IsEnabled) {
-        $SavePrompt = [Windows.MessageBox]::Show(
-            'Commit unsaved changes before returning?', 'SF7N Interface', 3
-        )
-    
-        if ($SavePrompt -eq 'Yes') {
-            Export-CustomCSV $csvLocation
-        } elseif ($SavePrompt -eq 'Cancel') {
-            $Return = $false
+        switch (New-SaveDialog) {
+            'Yes'    {Export-CustomCSV $csvLocation}
+            'Cancel' {$Return = $false}
         }
     }
 

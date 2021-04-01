@@ -4,7 +4,7 @@ function Write-Log ($Type, $Content) {
     if ($Type -eq 'ERR') {
         [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
     }
-    Write-Host "[$(Get-Date -Format 'HH:mm:ss.fff')][$Type] $Content" | Out-Host
+    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Content" | Out-Host
 }
 
 function Import-CustomCSV ($ImportFrom) {
@@ -27,4 +27,8 @@ function Import-CustomCSV ($ImportFrom) {
         }
     
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
+}
+
+function New-SaveDialog {
+    [Windows.MessageBox]::Show('Commit unsaved changes before exiting?', 'SF7N Interface', 3)
 }
