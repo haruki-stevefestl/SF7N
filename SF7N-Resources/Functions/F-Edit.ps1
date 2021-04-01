@@ -36,16 +36,15 @@ function Add-Row ($Action) {
                 '%D', (Get-Date).ToString('yyyyMMdd') -replace
                 '%T', (Get-Date).ToString('HHmmss')   -replace
                 '%#', $I
-            $script:csv.Add($ThisRow)
+            $csv.Add($ThisRow)
 
         } else {
             # Max & Min functions to prevent under/overflowing
-            $script:csv.Insert(
-                [Math]::Max(0,[Math]::Min($At,$script:csv.Count)), $RowTemplate)
+            $csv.Insert([Math]::Max(0,[Math]::Min($At,$csv.Count)), $RowTemplate)
         }
     }
 
-    $wpf.CSVGrid.ItemsSource = $script:csv
+    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
 }

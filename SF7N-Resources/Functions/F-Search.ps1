@@ -44,9 +44,7 @@ function Search-CSV ($SearchText) {
     }
 
     # Apply input assist
-    if ($wpf.InputAssist.IsChecked) {
-        $SearchTerm = ConvertFrom-AliasMode $SearchTerm
-    }
+    if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-AliasMode $SearchTerm}
 
     # Search
     foreach ($Entry in $csv) {

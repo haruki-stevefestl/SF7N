@@ -5,14 +5,12 @@ function Update-GUI {
 
 function Set-Preview {
     # Set preview image of illustration
-    $IllustrationLocation =
+    $PreviewPath =
         $previewLocation + '\' +
         $wpf.CSVGrid.CurrentCell.Item.($config.previewColumn) +
         $config.previewExtension
 
-    if (Test-Path $IllustrationLocation) {
-        $wpf.PreviewImage.Source = $IllustrationLocation
-    }
+    if (Test-Path $PreviewPath) {$wpf.PreviewImage.Source = $PreviewPath}
 
     # Update Active Cell
     $wpf.ActiveCell.Text = 'Active Cell: ({0},{1}) ~ ({2},{3})' -f (
