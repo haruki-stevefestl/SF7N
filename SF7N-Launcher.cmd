@@ -4,6 +4,8 @@ set SF7NLocation="%~dp0\SF7N-Resources\SF7N-Loader.ps1"
 if "%OS%" NEQ "Windows_NT" call :error "Unsupported OS" "Only Windows NT-based OSes are supported."
 if not exist "%SF7NLocation%" call :error "SF7N Missing" "Update the path in variable SF7NLocation in %~dpf0"
 
+echo Press [R] key if prompted below.
+powershell.exe -Command "Get-ChildItem *.ps1 -Recurse | Unblock-File"
 powershell.exe -File "%SF7NLocation%"
 exit /b
 
