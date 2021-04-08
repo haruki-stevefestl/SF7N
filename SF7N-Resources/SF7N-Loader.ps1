@@ -7,7 +7,7 @@ $baseLocation = $PSScriptRoot
 Set-Location $baseLocation
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
-Import-Module '.\Functions\F-Base.ps1'
+Import-Module .\Functions\F-Base.ps1
 Clear-Host
 Write-Log 'INF' '-- SF7N Initialization --'
 
@@ -16,13 +16,13 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 # Read and evaluate path configurations
 Write-Log 'INF' 'Import Configurations'
-$config = Get-Content '.\Configurations\General.ini' | ConvertFrom-StringData
+$config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
 $csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
 $previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewLocation)
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
-[Xml] $xaml = Get-Content '.\GUI.xaml'
+[Xml] $xaml = Get-Content .\GUI.xaml
 $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = @{}
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
@@ -30,7 +30,7 @@ $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
 
 # Import GUI Control code
 Write-Log 'INF' 'Import Modules'
-Get-ChildItem '*.ps1' -Recurse -Exclude 'SF7N-Loader.ps1' | Import-Module
+Get-ChildItem *.ps1 -Recurse -Exclude SF7N-Loader.ps1 | Import-Module
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
