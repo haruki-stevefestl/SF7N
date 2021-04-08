@@ -10,7 +10,11 @@ function Set-Preview {
         $wpf.CSVGrid.CurrentCell.Item.($config.previewColumn) +
         $config.previewExtension
 
-    if (Test-Path $PreviewPath) {$wpf.PreviewImage.Source = $PreviewPath}
+    if (Test-Path $PreviewPath) {
+        $wpf.PreviewImage.Source = $PreviewPath
+    } else {
+        $wpf.PreviewImage.Source = $null
+    }
 
     # Update Active Cell
     $wpf.ActiveCell.Text = 'Active Cell: ({0},{1}) ~ ({2},{3})' -f (
