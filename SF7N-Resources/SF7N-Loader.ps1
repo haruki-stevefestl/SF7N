@@ -86,6 +86,11 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.CSVGrid.IsReadOnly    = $wpf.ReadOnly.IsChecked
     $wpf.InsertLastCount.Text  = $config.InsertLast
     $wpf.CurrentMode.Text = 'Search Mode'
+    if ($wpf.ReadOnly.IsChecked) {
+        $wpf.ReadOnlyText.Text = 'Read-Only'
+    } else {
+        $wpf.ReadOnlyText.Text = 'Read/Write'
+    }
 
     $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"

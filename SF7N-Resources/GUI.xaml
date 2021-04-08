@@ -17,7 +17,7 @@
             <!-- Splashscreen -->
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
-                <TextBlock Text="It's time to go basic!" HorizontalAlignment="Center"/>
+                <TextBlock Name="LoadingText" Text="It's time to go basic!" HorizontalAlignment="Center"/>
             </StackPanel>
         </TabItem>
         <TabItem>
@@ -124,13 +124,17 @@
                         <ColumnDefinition Width="1"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="1"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,16,0" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="1" Background="#363636" Width="1" Margin="0,4,0,4"/>
-                    <TextBlock Grid.Column="2" Name="TotalRows" Text="Total Rows:" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Name="ReadOnlyText" Text="Read-Only" Margin="16,0,16,0" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="3" Background="#363636" Width="1" Margin="0,4,0,4"/>
-                    <TextBlock Grid.Column="4" Name="ActiveCell" Text="Active Cell:" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Name="TotalRows" Text="Total Rows:" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Background="#363636" Width="1" Margin="0,4,0,4"/>
+                    <TextBlock Grid.Column="6" Name="ActiveCell" Text="Active Cell:" Margin="16,0,16,0" VerticalAlignment="Center"/>
                 </Grid>
             </Grid>
         </TabItem>

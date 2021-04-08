@@ -13,4 +13,9 @@ $wpf.ResetSorting.Add_Click({
 $wpf.ReadOnly.Add_Click({
     $wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked
     $wpf.CurrentMode.Text = 'Search Mode'
+    if ($wpf.ReadOnly.IsChecked) {
+        $wpf.ReadOnlyText.Text = 'Read-Only'
+    } else {
+        $wpf.ReadOnlyText.Text = 'Read/Write'
+    }
 })
