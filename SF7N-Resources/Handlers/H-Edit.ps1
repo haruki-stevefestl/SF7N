@@ -3,32 +3,24 @@
 # Enter edit mode
 $wpf.CSVGrid.Add_BeginningEdit({
     if ($wpf.Toolbar.SelectedIndex -eq 0) {
+        # Capture current active cell
+        $CurrentRow = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
+        $CurrentColumn = $wpf.CSVGrid.CurrentCell[0].Column.DisplayIndex
+
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
         $wpf.CurrentMode.Text = 'Edit Mode'
         $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
-        
-        # Capture current active cell
-        $CurrentCell = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
-        $CurrentCellColumn = $wpf.CSVGrid.CurrentCell[0].Column.DisplayIndex
-        
-        # Show all rows in CSV
         $wpf.CSVGrid.ItemsSource = $csv
 
         # Refocus on captured cell
-       for ($i = 0; $i -lt $csv.count; $i++) {
-            if (
-                $wpf.CSVGrid.Items[$i] -eq $CurrentCell
-            ) {
-                $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[$i])
-                $wpf.CSVGrid.CurrentCell = [Windows.Controls.DataGridCellInfo]::New(
-                    $wpf.CSVGrid.Items[$i],
-                    $wpf.CSVGrid.Columns[$CurrentCellColumn]
-                )
-                $wpf.CSVGrid.BeginEdit()
-                break
-            }
-        }
+        $wpf.CSVGrid.Items.Where({$_ -eq $CurrentRow}).ForEach({
+            $wpf.CSVGrid.CurrentCell = [Windows.Controls.DataGridCellInfo]::New(
+                $_,
+                $wpf.CSVGrid.Columns[$CurrentColumn]
+            )
+            $wpf.CSVGrid.BeginEdit()
+        })
     }
 })
 
