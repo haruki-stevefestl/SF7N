@@ -5,6 +5,7 @@
 $startTime = Get-Date
 $baseLocation = $PSScriptRoot
 Set-Location $baseLocation
+Get-ChildItem *.ps1 -Recurse | Unblock-File
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 
 Import-Module .\Functions\F-Base.ps1
@@ -78,7 +79,7 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
-    $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
+    $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
 
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
