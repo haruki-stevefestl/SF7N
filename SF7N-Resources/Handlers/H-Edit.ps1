@@ -57,7 +57,7 @@ $wpf.Return.Add_Click({
 
         Import-CustomCSV $csvLocation
         Search-CSV $wpf.SearchRules.Text
-        $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
+        $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
 
         $wpf.Toolbar.SelectedIndex = 0
     }
