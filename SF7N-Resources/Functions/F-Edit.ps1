@@ -44,6 +44,7 @@ function Add-Row ($Action) {
         }
     }
 
+    $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI

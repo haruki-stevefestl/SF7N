@@ -62,7 +62,7 @@ function Search-CSV ($SearchText) {
     }
 
     $wpf.CSVGrid.Items.Refresh()
-    $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count)"
+    $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count), $([Math]::Round($wpf.CSVGrid.Items.Count/$csv.count*100,1))%"
     Write-Log 'INF' "Search CSV ended; $($wpf.CSVGrid.Items.Count) matches"
     Update-GUI
 }

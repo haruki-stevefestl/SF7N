@@ -10,7 +10,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
         $wpf.CurrentMode.Text = 'Edit Mode'
-        $wpf.TotalRows.Text = "Total rows: $($csv.Count)"
+        $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
         $wpf.CSVGrid.ItemsSource = $csv
 
         # Refocus on captured cell
