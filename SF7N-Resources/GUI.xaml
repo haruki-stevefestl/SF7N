@@ -17,7 +17,7 @@
             <!-- Splashscreen -->
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="SF7N Interface" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,16"/>
-                <TextBlock Name="LoadingText" Text="It's time to go basic!" HorizontalAlignment="Center"/>
+                <TextBlock Name="LoadingText" Text="Naming convention not based on the N700S Series!" HorizontalAlignment="Center"/>
             </StackPanel>
         </TabItem>
         <TabItem>
@@ -26,7 +26,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
@@ -88,7 +88,7 @@
                 <!-- Columns are dynamically generated on launch -->
                 <DataGrid Grid.Row="1" Margin="10,0,10,10" Name="CSVGrid" AutoGenerateColumns="False"
                 EnableColumnVirtualization="True" EnableRowVirtualization="True"
-                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" SelectionUnit="CellOrRowHeader"
+                HorizontalGridLinesBrush="#E2E3E3" GridLinesVisibility="Horizontal" SelectionUnit="CellOrRowHeader" BorderThickness="0"
                 RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
@@ -118,23 +118,24 @@
                 </Button>
 
                 <!-- Statusbar -->
-                <Grid Grid.Row="2" Grid.ColumnSpan="3" Background="#F1EDED">
+                <Grid Grid.Row="2" Grid.ColumnSpan="3" Margin="-2" Background="#F1EDED">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="1"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="1"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Name="CurrentMode" Text="Search Mode" Margin="16,0,16,0" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="1" Background="#363636" Width="1" Margin="0,4,0,4"/>
-                    <TextBlock Grid.Column="2" Name="ReadOnlyText" Text="Read-Only" Margin="16,0,16,0" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="3" Background="#363636" Width="1" Margin="0,4,0,4"/>
-                    <TextBlock Grid.Column="4" Name="TotalRows" Text="Total Rows:" Margin="16,0,16,0" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="5" Background="#363636" Width="1" Margin="0,4,0,4"/>
-                    <TextBlock Grid.Column="6" Name="ActiveCell" Text="Active Cell:" Margin="16,0,16,0" VerticalAlignment="Center"/>
+                    <TextBlock Name="CurrentMode" Text="Search Mode" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Background="#363636" Width="1" Margin="0,4"/>
+                    <TextBlock Grid.Column="2" Name="ReadOnlyText" Text="Read-Only " Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Background="#363636" Width="1" Margin="0,4"/>
+                    <TextBlock Grid.Column="4" Name="TotalRows" Text="Total Rows:" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Background="#363636" Width="1" Margin="0,4"/>
+                    <TextBlock Grid.Column="6" Name="ActiveCell" Text="Active Cell: (-1, ) ~ (-1, )" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
             </Grid>
         </TabItem>

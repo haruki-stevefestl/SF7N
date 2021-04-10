@@ -88,7 +88,7 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.InsertLastCount.Text  = $config.InsertLast
     $wpf.CurrentMode.Text = 'Search Mode'
     if ($wpf.ReadOnly.IsChecked) {
-        $wpf.ReadOnlyText.Text = 'Read-Only'
+        $wpf.ReadOnlyText.Text = 'Read-Only '
     } else {
         $wpf.ReadOnlyText.Text = 'Read/Write'
     }
