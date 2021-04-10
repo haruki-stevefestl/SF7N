@@ -17,7 +17,6 @@ function Import-CustomCSV ($ImportFrom) {
     #>
     Write-Log 'INF' 'Import CSV'
     try {
-        [Collections.ArrayList] $script:csvSearch = @()
         $script:csvHeader = (Get-Content $ImportFrom -First 1) -replace '"','' -split ','
         [Collections.ArrayList] $script:csv = [IO.File]::ReadAllText($ImportFrom) | ConvertFrom-CSV
         

@@ -1,6 +1,6 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
-$wpf.Search.Add_Click({Search-CSV $wpf.SearchRules.Text})
+$wpf.Search.Add_Click({New-Search $wpf.SearchRules.Text})
 
 $wpf.CSVGrid.Add_MouseUp({Set-Preview})
 $wpf.CSVGrid.Add_Keyup({Set-Preview})

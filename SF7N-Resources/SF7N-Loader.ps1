@@ -25,7 +25,7 @@ $previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewL
 Write-Log 'INF' 'Parse  XAML'
 [Xml] $xaml = Get-Content .\GUI.xaml
 $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
-$wpf = @{}
+$wpf = [Hashtable]::Synchronized(@{})
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach({$wpf.Add($_, $tempform.FindName($_))})
 
