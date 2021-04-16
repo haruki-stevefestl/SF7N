@@ -10,7 +10,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
         $wpf.CurrentMode.Text = 'Edit Mode'
-        $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
+        $wpf.TotalRows.Text = "$($csv.Count) item(s)"
         $wpf.CSVGrid.ItemsSource = $csv
 
         # Refocus on captured cell
@@ -32,7 +32,7 @@ $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
     Write-Log 'INF' 'Change Rows: Remove selected rows'
     $wpf.Commit.IsEnabled = $true
-    $wpf.CSVGrid.SelectedCells.ForEach({$csv.Remove($_.Item)})
+    $wpf.CSVGrid.SelectedItems.ForEach({$csv.Remove($_)})
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
@@ -56,8 +56,8 @@ $wpf.Return.Add_Click({
         $wpf.Commit.IsEnabled = $false
 
         Import-CustomCSV $csvLocation
-        New-Search $wpf.SearchRules.Text
-        $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
+        Search-CSV $wpf.SearchRules.Text
+        $wpf.TotalRows.Text = "$($csv.Count) item(s)"
 
         $wpf.Toolbar.SelectedIndex = 0
     }

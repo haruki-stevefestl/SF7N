@@ -23,7 +23,12 @@ function ConvertTo-AliasMode ($Row) {
     return $Row
 }
 
-function New-Search ($SearchText) {
+function Search-CSV ($SearchText) {
+    # Initialize
+    [Collections.ArrayList] $script:csvSearch = @()
+    $wpf.CSVGrid.ItemsSource = $csvSearch
+    $wpf.CSVGrid.Items.Refresh()
+
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchTerm = [PSCustomObject] @{}
 
@@ -37,24 +42,12 @@ function New-Search ($SearchText) {
         $SearchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
         $SearchText = $SearchText.Replace($Matches[0], '')
     }
-    
+
     # Apply input assist
     if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-AliasMode $SearchTerm}
 
-    [Collections.ArrayList] $CsvSearch = Search-CSV $SearchTerm $csv
-    $wpf.CSVGrid.ItemsSource = $CsvSearch
-    $wpf.CSVGrid.Items.Refresh()
-    $wpf.TotalRows.Text = "Total rows: $($wpf.CSVGrid.Items.Count), $([Math]::Round($wpf.CSVGrid.Items.Count/$csv.count*100,1))%"
-    Write-Log 'INF' "Search: found $($wpf.CSVGrid.Items.Count) matches"
-    Update-GUI
-}
-
-function Search-CSV ($SearchTerm, $SearchFrom) {
-    # Initialize
-    [Collections.ArrayList] $Result = @()
-
     # Search
-    foreach ($Entry in $SearchFrom) {
+    foreach ($Entry in $csv) {
         # If notMatch, goto next iteration
         $SearchTerm.PSObject.Properties.ForEach({
             if ($Entry.($_.Name) -notmatch $_.Value) {continue}
@@ -62,10 +55,14 @@ function Search-CSV ($SearchTerm, $SearchFrom) {
 
         # Apply alias if AliasMode is on; else add raw content
         if ($wpf.AliasMode.IsChecked) {
-            $result.Add((ConvertTo-AliasMode $Entry.PsObject.Copy())) | Out-Null
+            $csvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
         } else {
-            $Result.Add($Entry) | Out-Null
+            $csvSearch.Add($Entry)
         }
     }
-    return $Result
+
+    $wpf.CSVGrid.Items.Refresh()
+    $wpf.TotalRows.Text = "$($wpf.CSVGrid.Items.Count) item(s)"
+    Write-Log 'INF' "Search ended; $($wpf.CSVGrid.Items.Count) matches"
+    Update-GUI
 }

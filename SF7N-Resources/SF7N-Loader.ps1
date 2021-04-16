@@ -7,6 +7,7 @@ $baseLocation = $PSScriptRoot
 Set-Location $baseLocation
 Get-ChildItem *.ps1 -Recurse | Unblock-File
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
+$ErrorActionPreference = 'SilentlyContinue'
 
 Import-Module .\Functions\F-Base.ps1
 Clear-Host
@@ -79,7 +80,7 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
-    $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
+    $wpf.TotalRows.Text = "$($csv.Count) item(s)"
 
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
@@ -88,12 +89,11 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.InsertLastCount.Text  = $config.InsertLast
     $wpf.CurrentMode.Text = 'Search Mode'
     if ($wpf.ReadOnly.IsChecked) {
-        $wpf.ReadOnlyText.Text = 'Read-Only '
+        $wpf.ReadOnlyText.Text = '(R/O)'
     } else {
-        $wpf.ReadOnlyText.Text = 'Read/Write'
+        $wpf.ReadOnlyText.Text = '(R/W)'
     }
 
-    $wpf.TabControl.SelectedIndex = 1
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 })

@@ -1,6 +1,6 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
-$wpf.Search.Add_Click({New-Search $wpf.SearchRules.Text})
+$wpf.Search.Add_Click({Search-CSV $wpf.SearchRules.Text})
 
 $wpf.CSVGrid.Add_MouseUp({Set-Preview})
 $wpf.CSVGrid.Add_Keyup({Set-Preview})
@@ -14,8 +14,8 @@ $wpf.ReadOnly.Add_Click({
     $wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked
     $wpf.CurrentMode.Text = 'Search Mode'
     if ($wpf.ReadOnly.IsChecked) {
-        $wpf.ReadOnlyText.Text = 'Read-Only '
+        $wpf.ReadOnlyText.Text = '(R/O)'
     } else {
-        $wpf.ReadOnlyText.Text = 'Read/Write'
+        $wpf.ReadOnlyText.Text = '(R/W)'
     }
 })

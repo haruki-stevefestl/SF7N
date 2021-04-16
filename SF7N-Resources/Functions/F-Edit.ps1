@@ -16,8 +16,8 @@ function Add-Row ($Action) {
     $csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
 
     # Execute preparations for each type of insert
-    $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedCells[0].Item)
-    $Count = $wpf.CSVGrid.SelectedCells.Count
+    $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedItems[0])
+    $Count = $wpf.CSVGrid.SelectedItems.Count
 
     if ($Action -eq 'InsertLast') {
         $Count = $wpf.InsertLastCount.Text
@@ -44,7 +44,7 @@ function Add-Row ($Action) {
         }
     }
 
-    $wpf.TotalRows.Text = "Total rows: $($csv.Count), 100%"
+    $wpf.TotalRows.Text = "$($csv.Count) item(s)"
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
