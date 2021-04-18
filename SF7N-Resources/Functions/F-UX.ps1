@@ -15,4 +15,7 @@ function Set-Preview {
     } else {
         $wpf.PreviewImage.Source = $null
     }
+
+    # Display # of rows selected
+    $wpf.SelectedRows.Text = "$($wpf.CSVGrid.SelectedItems.Count) selected"
 }

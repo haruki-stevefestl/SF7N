@@ -9,7 +9,7 @@ $wpf.CSVGrid.Add_BeginningEdit({
 
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
-        $wpf.CurrentMode.Text = 'Edit Mode'
+        $wpf.CurrentMode.Text = 'Edit Mode  '
         $wpf.TotalRows.Text = "$($csv.Count) item(s)"
         $wpf.CSVGrid.ItemsSource = $csv
 

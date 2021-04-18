@@ -149,8 +149,9 @@
         <!-- Stausbar -->
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
             <TextBlock Name="CurrentMode" Text="Search Mode" Margin="0,0,24,0" Foreground="#1E395B" FontSize="14"/>
-            <TextBlock Name="ReadOnlyText" Text="(Read/Write) " Margin="0,0,64,0" Foreground="#1E395B" FontSize="14"/>
-            <TextBlock Name="TotalRows" Text="0 item(s)" Margin="0,0,64,0" Foreground="#1E395B" FontSize="14"/>
+            <TextBlock Name="ReadOnlyText" Text="(R/O) " Margin="0,0,84,0" Foreground="#1E395B" FontSize="14"/>
+            <TextBlock Name="TotalRows" Text="0 item(s)" Margin="0,0,32,0" Foreground="#1E395B" FontSize="14"/>
+            <TextBlock Name="SelectedRows" Text="0 selected" Margin="0,0,64,0" Foreground="#1E395B" FontSize="14"/>
         </StackPanel>
     </Grid>
 </Window>
