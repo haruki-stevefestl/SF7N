@@ -7,7 +7,6 @@ $baseLocation = $PSScriptRoot
 Set-Location $baseLocation
 Get-ChildItem *.ps1 -Recurse | Unblock-File
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
-$ErrorActionPreference = 'SilentlyContinue'
 
 Import-Module .\Functions\F-Base.ps1
 Clear-Host
