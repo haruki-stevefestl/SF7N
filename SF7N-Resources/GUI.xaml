@@ -154,7 +154,7 @@
         <!-- Preview -->
         <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="#FFFFFF" BorderThickness="0">
             <Grid>
-                <TextBlock Text="Click to image to clipboard" Foreground="#808080" FontSize="14"/>
+                <TextBlock Text="Click image to copy to clipboard" Foreground="#808080" FontSize="14"/>
                 <Image Name="PreviewImage"/>
             </Grid>
         </Button>
