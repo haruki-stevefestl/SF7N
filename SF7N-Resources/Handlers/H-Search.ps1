@@ -1,6 +1,12 @@
 #—————————————————————————————————————————————————————————————————————————————+—————————————————————
 # Search-related actions
 $wpf.Search.Add_Click({Search-CSV $wpf.SearchRules.Text})
+$wpf.SearchRules.Add_TextChanged({
+    if ($wpf.TabSearch.IsChecked -and ($wpf.SearchRules.Text[-1] -eq "`t")) {
+        Search-CSV $wpf.SearchRules.Text
+    }
+}) 
+
 
 $wpf.CSVGrid.Add_MouseUp({Set-Preview})
 $wpf.CSVGrid.Add_Keyup({Set-Preview})
@@ -18,4 +24,8 @@ $wpf.ReadOnly.Add_Click({
     } else {
         $wpf.ReadOnlyText.Text = '(R/W)'
     }
+})
+
+$wpf.TabSearch.Add_Click({
+    $config.TabSearch = !$config.TabSearch
 })

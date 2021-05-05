@@ -84,6 +84,7 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
+    $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
     $wpf.CSVGrid.IsReadOnly    = $wpf.ReadOnly.IsChecked
     $wpf.InsertLastCount.Text  = $config.InsertLast
     $wpf.CurrentMode.Text = 'Search Mode'
