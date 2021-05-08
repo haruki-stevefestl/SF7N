@@ -56,7 +56,7 @@
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                        <Setter Property="Text" Value="Input filter conditions, e.g. Header:Value"/>
+                                        <Setter Property="Text" Value="Input filter conditions, e.g. Header:Value; Press ENTER to filter"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -165,8 +165,8 @@
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
             <TextBlock Name="CurrentMode" Text="Search Mode" Margin="0,0,24,0" Foreground="#1E395B" FontSize="14"/>
             <TextBlock Name="ReadOnlyText" Text="(R/O) " Margin="0,0,84,0" Foreground="#1E395B" FontSize="14"/>
-            <TextBlock Name="TotalRows" Text="0 item(s)" Margin="0,0,32,0" Foreground="#1E395B" FontSize="14"/>
-            <TextBlock Name="SelectedRows" Text="0 selected" Margin="0,0,64,0" Foreground="#1E395B" FontSize="14"/>
+            <TextBlock Name="TotalRows" Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Margin="0,0,32,0" Foreground="#1E395B" FontSize="14"/>
+            <TextBlock Name="SelectedRows" Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Margin="0,0,64,0" Foreground="#1E395B" FontSize="14"/>
         </StackPanel>
     </Grid>
 </Window>
