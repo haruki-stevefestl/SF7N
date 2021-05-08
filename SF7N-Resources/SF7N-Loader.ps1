@@ -79,8 +79,6 @@ $wpf.SF7N.Add_ContentRendered({
         $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
-    $wpf.TotalRows.Text = "$($csv.Count) item(s)"
-
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
