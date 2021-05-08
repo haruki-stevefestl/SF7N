@@ -51,12 +51,12 @@
                             <CheckBox Name="TabSearch" Content=" Tab to Search" VerticalContentAlignment="Center" Margin="0"/>
                         </UniformGrid>
                     </Expander>
-                    <TextBlock Grid.Column="1" Foreground="#808080" Background="#FFFFFF" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
+                    <TextBlock Grid.Column="1" Foreground="Gray" Background="White" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                        <Setter Property="Text" Value="Input filter conditions, e.g. Header:Value; Press ENTER to filter"/>
+                                        <Setter Property="Text" Value="Input filter conditions, e.g. Header:Value"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -119,7 +119,7 @@
                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                     </Border>
-                                    <Path Name="SortArrow" Stroke="#808080" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
+                                    <Path Name="SortArrow" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
                                           HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
                                     <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                     <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
@@ -153,13 +153,13 @@
         </DataGrid>
 
         <!-- Preview -->
-        <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="#FFFFFF" BorderThickness="0">
+        <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="White" BorderThickness="0">
             <Grid>
-                <TextBlock Text="Click to image to clipboard" Foreground="#808080" FontSize="14"/>
+                <TextBlock Text="Click to copy image" Foreground="Gray" FontSize="14"/>
                 <Image Name="PreviewImage"/>
             </Grid>
         </Button>
-        <GridSplitter Grid.Row="1" Grid.Column="1" Width="2" Background="#00000000" HorizontalAlignment="Left"/>
+        <GridSplitter Grid.Row="1" Grid.Column="1" Width="2" Background="Transparent" HorizontalAlignment="Left"/>
 
         <!-- Stausbar -->
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
