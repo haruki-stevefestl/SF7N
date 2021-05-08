@@ -13,11 +13,10 @@ function ConvertFrom-AliasMode ($Row) {
 
 function Search-CSV ($SearchText) {
     # Initialize
-    $wpf.CSVGrid.ItemsSource = $csvSearch
-    $wpf.CSVGrid.Items.Refresh()
+    $wpf.CSVGrid.ItemsSource = $null
     $wpf.PreviewImage.Source = $null
 
-    # Parse SearchRules Text into [PSCustomObject] $SearchTerm
+    # Parse SearchRules Text into [PSCustomObject]$SearchTerm
     $SearchTerm = [PSCustomObject] @{}
 
     # While there are search terms in $SearchText
@@ -25,7 +24,7 @@ function Search-CSV ($SearchText) {
     #     Remove from $SearchText
     while (
         $SearchText -match
-        '(["'']?)(?(1)(.+?|[\S"'']+?))\1:(["'']?)(?(1)(.+?|[\S"'']+?))\3(?:\s|$)'
+        '(["'']?)(?(1)(.+?|[\S"'']+?))\1[:=](["'']?)(?(1)(.+?|[\S"'']+?))\3(?:\s|$)'
     ) {
         $SearchTerm | Add-Member -MemberType NoteProperty -Name $Matches[2] -Value $Matches[4]
         $SearchText = $SearchText.Replace($Matches[0], '')
@@ -43,6 +42,7 @@ function Search-CSV ($SearchText) {
     $Runspace.SessionStateProxy.SetVariable('csv',$csv)
     $Runspace.SessionStateProxy.SetVariable('searchTerm',$searchTerm)
     $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
+    $Runspace.SessionStateProxy.SetVariable('aliasMode',$wpf.AliasMode.IsChecked)
     $Ps = [PowerShell]::Create().AddScript({
         function ConvertTo-AliasMode ($Row) {
             if ($null -ne $csvAlias) {
@@ -64,7 +64,7 @@ function Search-CSV ($SearchText) {
             })
     
             # Apply alias if AliasMode is on; else add raw content
-            if ($wpf.AliasMode.IsChecked) {
+            if ($aliasMode) {
                 $csvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
             } else {
                 $CsvSearch.Add($Entry)
