@@ -11,21 +11,8 @@ function ConvertFrom-AliasMode ($Row) {
     return $Row
 }
 
-function ConvertTo-AliasMode ($Row) {
-    if ($null -ne $csvAlias) {
-        $Row.PSObject.Properties.Foreach({
-            $_.Value = $_.Value -ireplace
-                ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
-                ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
-                ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
-        })
-    }
-    return $Row
-}
-
 function Search-CSV ($SearchText) {
     # Initialize
-    [Collections.ArrayList] $script:csvSearch = @()
     $wpf.CSVGrid.ItemsSource = $csvSearch
     $wpf.CSVGrid.Items.Refresh()
     $wpf.PreviewImage.Source = $null
@@ -48,22 +35,44 @@ function Search-CSV ($SearchText) {
     if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-AliasMode $SearchTerm}
 
     # Search
-    foreach ($Entry in $csv) {
-        # If notMatch, goto next iteration
-        $SearchTerm.PSObject.Properties.ForEach({
-            if ($Entry.($_.Name) -notmatch $_.Value) {continue}
-        })
-
-        # Apply alias if AliasMode is on; else add raw content
-        if ($wpf.AliasMode.IsChecked) {
-            $csvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
-        } else {
-            $csvSearch.Add($Entry)
+    $Runspace = [RunspaceFactory]::CreateRunspace()
+    $Runspace.ApartmentState = 'STA'
+    $Runspace.ThreadOptions = 'ReuseThread'        
+    $Runspace.Open()
+    $Runspace.SessionStateProxy.SetVariable('wpf',$wpf)
+    $Runspace.SessionStateProxy.SetVariable('csv',$csv)
+    $Runspace.SessionStateProxy.SetVariable('searchTerm',$searchTerm)
+    $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
+    $Ps = [PowerShell]::Create().AddScript({
+        function ConvertTo-AliasMode ($Row) {
+            if ($null -ne $csvAlias) {
+                $Row.PSObject.Properties.Foreach({
+                    $_.Value = $_.Value -ireplace
+                        ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
+                        ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
+                        ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
+                })
+            }
+            return $Row
         }
-    }
 
-    $wpf.CSVGrid.Items.Refresh()
-    $wpf.TotalRows.Text = "$($wpf.CSVGrid.Items.Count) item(s)"
-    Write-Log 'INF' "Search ended; $($wpf.CSVGrid.Items.Count) matches"
-    Update-GUI
+        [Collections.ArrayList] $CsvSearch = @()
+        foreach ($Entry in $csv) {
+            # If notMatch, goto next iteration
+            $SearchTerm.PSObject.Properties.ForEach({
+                if ($Entry.($_.Name) -notmatch $_.Value) {continue}
+            })
+    
+            # Apply alias if AliasMode is on; else add raw content
+            if ($wpf.AliasMode.IsChecked) {
+                $csvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
+            } else {
+                $CsvSearch.Add($Entry)
+            }
+        }
+
+        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'Normal')
+    })
+    $Ps.Runspace = $Runspace
+    $Ps.BeginInvoke()
 }
