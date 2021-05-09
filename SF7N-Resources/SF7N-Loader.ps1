@@ -1,6 +1,6 @@
 # Cloned from SammyKrosoft/Powershell/How-To-Load-WPF-Form-XAML.ps1
 # Used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
-#—————————————————————————————————————————————————————————————————————————————+—————————————————————
+#-----------------------------------------------------------------------------+---------------------
 # Import the base fuction & Initialize
 $startTime = Get-Date
 $baseLocation = $PSScriptRoot
