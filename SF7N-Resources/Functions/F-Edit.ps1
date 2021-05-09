@@ -44,7 +44,6 @@ function Add-Row ($Action) {
         }
     }
 
-    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
 }

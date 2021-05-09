@@ -29,10 +29,8 @@ $wpf.InsertLast.Add_Click({ Add-Row 'InsertLast' })
 $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
-    Write-Log 'INF' 'Change Rows: Remove selected rows'
     $wpf.Commit.IsEnabled = $true
     $wpf.CSVGrid.SelectedItems.ForEach({$csv.Remove($_)})
-    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
     Update-GUI
 })
@@ -56,7 +54,6 @@ $wpf.Return.Add_Click({
 
         Import-CustomCSV $csvLocation
         Search-CSV $wpf.SearchRules.Text
-        $wpf.TotalRows.Text = "$($csv.Count) item(s)"
 
         $wpf.Toolbar.SelectedIndex = 0
     }
