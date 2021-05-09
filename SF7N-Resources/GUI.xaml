@@ -19,6 +19,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="HideEditControl" TargetType="{x:Type Button}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="20,8,20,8">
@@ -73,9 +80,9 @@
                         <Button Name="InsertLast" Content="Append" Margin="0,0,8,0"/>
                         <TextBox Name="InsertLastCount" Margin="8,0,48,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     </UniformGrid>
-                    <Button Name="InsertAbove" Content="Insert Above" Margin="0,0,8,0"/>
-                    <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0"/>
-                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,8,0"/>
+                    <Button Name="InsertAbove" Content="Insert Above" Margin="0,0,8,0" Style="{StaticResource HideEditControl}"/> 
+                    <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0" Style="{StaticResource HideEditControl}"/>
+                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,8,0" Style="{StaticResource HideEditControl}"/>
                     <Button Name="Commit" Content="Commit" Margin="8,0,8,0" IsEnabled="False"/>
                     <Button Name="Return" Content="Return" Margin="32,0,0,0"/>
                 </UniformGrid>
