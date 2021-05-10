@@ -1,4 +1,3 @@
-#-----------------------------------------------------------------------------+---------------------
 function ConvertFrom-AliasMode ($Row) {
     if ($null -ne $csvAlias) {
         $Row.PSObject.Properties.Foreach({
@@ -13,8 +12,7 @@ function ConvertFrom-AliasMode ($Row) {
 
 function Search-CSV ($SearchText) {
     # Initialize
-    $wpf.CSVGrid.ItemsSource = $null
-    $wpf.PreviewImage.Source = $null
+    $wpf.CSVGrid.ItemsSource = $wpf.PreviewImage.Source = $null
 
     # Parse SearchRules Text into [PSCustomObject]$SearchTerm
     $SearchTerm = [PSCustomObject] @{}
@@ -33,10 +31,10 @@ function Search-CSV ($SearchText) {
     # Apply input assist
     if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-AliasMode $SearchTerm}
 
-    # Search
+    # Search with new runspace
     $Runspace = [RunspaceFactory]::CreateRunspace()
     $Runspace.ApartmentState = 'STA'
-    $Runspace.ThreadOptions = 'ReuseThread'        
+    $Runspace.ThreadOptions = 'ReuseThread'
     $Runspace.Open()
     $Runspace.SessionStateProxy.SetVariable('wpf',$wpf)
     $Runspace.SessionStateProxy.SetVariable('csv',$csv)
@@ -65,7 +63,7 @@ function Search-CSV ($SearchText) {
     
             # Apply alias if AliasMode is on; else add raw content
             if ($aliasMode) {
-                $csvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
+                $CsvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
             } else {
                 $CsvSearch.Add($Entry)
             }
