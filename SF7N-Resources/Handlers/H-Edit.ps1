@@ -1,4 +1,3 @@
-#------------------------------------------------------------------------------+--------------------
 # Editing-related actions
 # Enter edit mode
 $wpf.CSVGrid.Add_BeginningEdit({
@@ -29,13 +28,11 @@ $wpf.InsertLast.Add_Click({ Add-Row 'InsertLast' })
 $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
 $wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
 $wpf.RemoveSelected.Add_Click({
-    $wpf.Commit.IsEnabled = $true
     $wpf.CSVGrid.SelectedItems.ForEach({$csv.Remove($_)})
     $wpf.CSVGrid.Items.Refresh()
-    Update-GUI
 })
 
-
+# Commit CSV
 $wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
 
 # Reload CSV on Return
