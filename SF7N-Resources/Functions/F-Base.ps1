@@ -1,5 +1,3 @@
-Set-Location $baseLocation
-#-----------------------------------------------------------------------------+---------------------
 function Write-Log ($Type, $Content) {
     if ($Type -eq 'ERR') {
         [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
