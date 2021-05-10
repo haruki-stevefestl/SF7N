@@ -1,5 +1,4 @@
-#-----------------------------------------------------------------------------+---------------------
-# Search-related actions
+# Start search
 $wpf.Search.Add_Click({Search-CSV $wpf.SearchRules.Text})
 $wpf.SearchRules.Add_TextChanged({
     if ($wpf.TabSearch.IsChecked -and ($wpf.SearchRules.Text[-1] -eq "`t")) {
@@ -7,25 +6,32 @@ $wpf.SearchRules.Add_TextChanged({
     }
 }) 
 
-
-$wpf.CSVGrid.Add_MouseUp({Set-Preview})
-$wpf.CSVGrid.Add_Keyup({Set-Preview})
-
+# Reset sorting
 $wpf.ResetSorting.Add_Click({
     $wpf.CSVGrid.Items.SortDescriptions.Clear()
     $wpf.CSVGrid.Columns.ForEach({$_.SortDirection = $null})
 })
 
-$wpf.ReadOnly.Add_Click({
-    $wpf.CSVGrid.IsReadOnly = $wpf.ReadOnly.IsChecked
-    $wpf.CurrentMode.Text = 'Search Mode'
-    if ($wpf.ReadOnly.IsChecked) {
-        $wpf.ReadOnlyText.Text = '(R/O)'
-    } else {
-        $wpf.ReadOnlyText.Text = '(R/W)'
-    }
+# Set preview on cell change
+$wpf.CSVGrid.Add_SelectionChanged({
+    # Evaluate <.+?> notations
+    $PreviewPath = $previewLocation
+    $Temp = $previewLocation | Select-String '(?<=<)(.+?)(?=>)' -AllMatches
+    $Temp.Matches.Value.ForEach({
+        $PreviewPath = $previewPath.Replace("<$_>", ($wpf.CSVGrid.SelectedItems[0].($_)))
+    })
+
+    # Set preview
+    try {
+        $wpf.PreviewImage.Source = $PreviewPath
+    } catch {$wpf.PreviewImage.Source = $null}
 })
 
-$wpf.TabSearch.Add_Click({
-    $config.TabSearch = !$config.TabSearch
+# Copy preview
+$wpf.PreviewCopy.Add_Click({
+    if ($null -ne $wpf.PreviewImage.Source) {
+        [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
+            $wpf.PreviewImage.Source -replace 'file:///',''
+        ))
+    }
 })
