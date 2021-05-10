@@ -1,17 +1,12 @@
-# Cloned from SammyKrosoft/Powershell/How-To-Load-WPF-Form-XAML.ps1
-# Used under the MIT License (https://github.com/SammyKrosoft/PowerShell/blob/master/LICENSE.MD)
-#-----------------------------------------------------------------------------+---------------------
 # Import the base fuction & Initialize
 $startTime = Get-Date
-$baseLocation = $PSScriptRoot
-Set-Location $baseLocation
+Set-Location $PSScriptRoot
 Get-ChildItem *.ps1 -Recurse | Unblock-File
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
-
 Import-Module .\Functions\F-Base.ps1
+
 Clear-Host
 Write-Log 'INF' '-- SF7N Initialization --'
-
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
@@ -19,15 +14,17 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 Write-Log 'INF' 'Import Configurations'
 $config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
 $csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
-$previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewLocation)
+$previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewPath)
 
 # Load a WPF GUI from a XAML file
 Write-Log 'INF' 'Parse  XAML'
 [Xml] $xaml = Get-Content .\GUI.xaml
 $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = [Hashtable]::Synchronized(@{})
+$ErrorActionPreference = 'SilentlyContinue'
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach({$wpf.Add($_, $tempform.FindName($_))})
+$ErrorActionPreference = 'Continue'
 
 # Import GUI Control code
 Write-Log 'INF' 'Import Modules'
@@ -46,7 +43,7 @@ $wpf.SF7N.Add_ContentRendered({
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid'
     $Formatting = '.\Configurations\Formatting.csv'
-    if (Test-Path $Formatting){
+    if (Test-Path $Formatting) {
         $Formatting = Get-Content $Formatting | ConvertFrom-CSV
     }
 
@@ -59,10 +56,10 @@ $wpf.SF7N.Add_ContentRendered({
         # Apply conditional formatting
         $NewStyle = [Windows.Style]::New()
         # Foreach Rule: (Rule.ColumnName == Header)
-        $Formatting.Where({$_.ColumnName -eq $Header}).ForEach({
+        $Formatting.Where{$_.ColumnName -eq $Header}.ForEach({
             # Foreach Trigger-Setter
             $i = 0
-            while (!([String]::IsNullOrEmpty($_."Trigger$i"))) {
+            while (![String]::IsNullOrEmpty($_."Trigger$i")) {
                 # Append Trigger-Setter to Column
                 $NewTrigger = [Windows.DataTrigger]::New()
                 $NewTrigger.Binding = [Windows.Data.Binding]::New($Header)
@@ -83,38 +80,30 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
     $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
-    $wpf.CSVGrid.IsReadOnly    = $wpf.ReadOnly.IsChecked
+    $wpf.CurrentMode.Text      = 'Search Mode'
     $wpf.InsertLastCount.Text  = $config.InsertLast
-    $wpf.CurrentMode.Text = 'Search Mode'
-    if ($wpf.ReadOnly.IsChecked) {
-        $wpf.ReadOnlyText.Text = '(R/O)'
-    } else {
-        $wpf.ReadOnlyText.Text = '(R/W)'
-    }
 
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 })
 
-# Cleanup on close
+# Prompt and cleanup on close
 $wpf.SF7N.Add_Closing({
-    $Exit = $true
     if ($wpf.Commit.IsEnabled) {
-        switch (New-SaveDialog) {
-            'Cancel' {$Exit = $false}
-            'Yes'    {Export-CustomCSV $csvLocation}
+        $Dialog = New-SaveDialog
+        if ($Dialog -eq 'Cancel') {
+            $_.Cancel = $true
+        } elseif ($Dialog -eq 'Yes') {
+            Export-CustomCSV $csvLocation
         }
     }
 
-    if ($Exit) {
+    if (!$_.Cancel) {
         Write-Log 'DBG'
         Write-Log 'INF' 'Remove Modules'
-        Remove-Module 'F-*'
-        Remove-Module 'H-*'
-    } else {
-        $_.Cancel = $true
+        Remove-Module 'F-*', 'H-*'
     }
 })
 
-# Load WPF >> Using method from https://gist.github.com/altrive/6227237
-$wpf.SF7N.Dispatcher.InvokeAsync({$wpf.SF7N.ShowDialog()}).Wait() | Out-Null
+# Load WPF
+$wpf.SF7N.ShowDialog() | Out-Null
