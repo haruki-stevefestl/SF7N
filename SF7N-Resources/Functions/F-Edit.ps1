@@ -1,4 +1,3 @@
-#-----------------------------------------------------------------------------+---------------------
 function Export-CustomCSV ($ExportTo) {
     try {
         $csv | Export-CSV $ExportTo -NoTypeInformation
@@ -8,12 +7,9 @@ function Export-CustomCSV ($ExportTo) {
 }
 
 function Add-Row ($Action) {
-    # Make editor dirty
-    $wpf.Commit.IsEnabled = $true
-
     # Prepare blank template for inserting
     $RowTemplate = [PSCustomObject] @{}
-    $csvHeader.foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
+    $csvHeader.Foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
 
     # Execute preparations for each type of insert
     $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedItems[0])
@@ -27,9 +23,8 @@ function Add-Row ($Action) {
         $At += $Count
     }
 
-    Write-Log 'INF' "Edit   CSV: $Action at $At for $Count rows"
-    for ($I = 0; $I -lt $Count; $I++) {
-        if ($Action -eq 'InsertLast') {
+    if ($Action -eq 'InsertLast') {
+        for ($I = 0; $I -lt $Count; $I++) {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
             $ThisRow.($csvHeader[0]) = $config.AppendFormat -replace
@@ -37,13 +32,11 @@ function Add-Row ($Action) {
                 '%T', (Get-Date).ToString('HHmmss')   -replace
                 '%#', $I
             $csv.Add($ThisRow)
-
-        } else {
-            # Max & Min functions to prevent under/overflowing
-            $csv.Insert([Math]::Max(0,[Math]::Min($At,$csv.Count)), $RowTemplate)
         }
+    } else {
+        # Max & Min functions to prevent under/overflowing
+        $csv.InsertRange([Math]::Max(0,[Math]::Min($At,$csv.Count)), @($RowTemplate) * $Count)
     }
 
     $wpf.CSVGrid.Items.Refresh()
-    Update-GUI
 }
