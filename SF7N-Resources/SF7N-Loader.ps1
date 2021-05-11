@@ -43,28 +43,25 @@ $wpf.SF7N.Add_ContentRendered({
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid'
     $Formatting = '.\Configurations\Formatting.csv'
-    if (Test-Path $Formatting) {
-        $Formatting = Get-Content $Formatting | ConvertFrom-CSV
-    }
+    if (Test-Path $Formatting) {$Formatting = Import-CSV $Formatting}
 
     foreach ($Header in $csvHeader) {
         # Generate new column & its binding
         $NewColumn = [Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [Windows.Data.Binding]::New($Header)
         $NewColumn.Header  = $Header
-
+    
         # Apply conditional formatting
         $NewStyle = [Windows.Style]::New()
-        # Foreach Rule: (Rule.ColumnName == Header)
+
+        # Foreach Trigger-Setter
         $Formatting.Where{$_.ColumnName -eq $Header}.ForEach({
-            # Foreach Trigger-Setter
             $i = 0
-            while (![String]::IsNullOrEmpty($_."Trigger$i")) {
+            while ($_."Trigger$i" -notMatch '^\s*$') {
                 # Append Trigger-Setter to Column
                 $NewTrigger = [Windows.DataTrigger]::New()
-                $NewTrigger.Binding = [Windows.Data.Binding]::New($Header)
+                $NewTrigger.Binding = $NewColumn.Binding
                 $NewTrigger.Value = $_."Trigger$i"
-
                 $NewTrigger.Setters.Add([Windows.Setter]::New(
                     [Windows.Controls.DataGridCell]::BackgroundProperty,
                     [Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
@@ -80,7 +77,6 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
     $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
-    $wpf.CurrentMode.Text      = 'Search Mode'
     $wpf.InsertLastCount.Text  = $config.InsertLast
 
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
