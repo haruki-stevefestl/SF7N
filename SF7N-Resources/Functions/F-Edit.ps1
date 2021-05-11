@@ -28,8 +28,8 @@ function Add-Row ($Action) {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
             $ThisRow.($csvHeader[0]) = $config.AppendFormat -replace
-                '%D', (Get-Date).ToString('yyyyMMdd') -replace
-                '%T', (Get-Date).ToString('HHmmss')   -replace
+                '%D', (Get-Date -Format yyyyMMdd) -replace
+                '%T', (Get-Date -Format HHmmss)   -replace
                 '%#', $I
             $csv.Add($ThisRow)
         }

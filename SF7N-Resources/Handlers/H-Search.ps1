@@ -9,16 +9,16 @@ $wpf.SearchRules.Add_TextChanged({
 # Reset sorting
 $wpf.ResetSorting.Add_Click({
     $wpf.CSVGrid.Items.SortDescriptions.Clear()
-    $wpf.CSVGrid.Columns.ForEach({$_.SortDirection = $null})
+    $wpf.CSVGrid.Columns.ForEach{$_.SortDirection = $null}
 })
 
 # Set preview on cell change
 $wpf.CSVGrid.Add_SelectionChanged({
     # Evaluate <.+?> notations
     $PreviewPath = $previewLocation
-    $Temp = $previewLocation | Select-String '(?<=<)(.+?)(?=>)' -AllMatches
-    $Temp.Matches.Value.ForEach({
-        $PreviewPath = $previewPath.Replace("<$_>", ($wpf.CSVGrid.SelectedItems[0].($_)))
+    $Replacements = $previewLocation | Select-String '(?<=<)(.+?)(?=>)' -AllMatches
+    $Replacements.Matches.Value.ForEach({
+        $PreviewPath = $previewPath.Replace("<$_>", $wpf.CSVGrid.SelectedItems[0].$_)
     })
 
     # Set preview
@@ -29,7 +29,7 @@ $wpf.CSVGrid.Add_SelectionChanged({
 
 # Copy preview
 $wpf.PreviewCopy.Add_Click({
-    if ($null -ne $wpf.PreviewImage.Source) {
+    if ($wpf.PreviewImage.Source) {
         [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
             $wpf.PreviewImage.Source -replace 'file:///',''
         ))

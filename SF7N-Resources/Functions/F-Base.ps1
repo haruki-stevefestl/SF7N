@@ -8,7 +8,6 @@ function Write-Log ($Type, $Content) {
 function Import-CustomCSV ($ImportFrom) {
     <#
         Creates following variables:
-        - csvSearch    [AList] Matching results in searching
         - csvHeader    [Array] Header of the CSV
         - csv          [AList] Content from CSV
         - csvAlias     [AList] Aliases for CSV
@@ -27,5 +26,5 @@ function Import-CustomCSV ($ImportFrom) {
 }
 
 function New-SaveDialog {
-    [Windows.MessageBox]::Show('Commit unsaved changes before exiting?', 'SF7N Interface', 3)
+    [Windows.MessageBox]::Show('Commit changes before exiting?', 'SF7N Interface', 'YesNoCancel', 'Question')
 }
