@@ -23,7 +23,7 @@ $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = [Hashtable]::Synchronized(@{})
 $ErrorActionPreference = 'SilentlyContinue'
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
-    ForEach({$wpf.Add($_, $tempform.FindName($_))})
+    ForEach{$wpf.Add($_, $tempform.FindName($_))}
 $ErrorActionPreference = 'Continue'
 
 # Import GUI Control code
@@ -42,43 +42,36 @@ $wpf.SF7N.Add_ContentRendered({
 
     # Generate columns of Datagrid
     Write-Log 'INF' 'Build  Datagrid'
-    $Formatting = '.\Configurations\Formatting.csv'
-    if (Test-Path $Formatting) {$Formatting = Import-CSV $Formatting}
+    $Format = '.\Configurations\Formatting.csv'
+    if (Test-Path $Format) {$Format = Import-CSV $Format}
 
-    foreach ($Header in $csvHeader) {
-        # Generate new column & its binding
+    $csvHeader.ForEach({
         $NewColumn = [Windows.Controls.DataGridTextColumn]::New()
-        $NewColumn.Binding = [Windows.Data.Binding]::New($Header)
-        $NewColumn.Header  = $Header
-    
-        # Apply conditional formatting
+        $NewColumn.Binding = [Windows.Data.Binding]::New($_)
+        $NewColumn.Header  = $_
         $NewStyle = [Windows.Style]::New()
+        $Count = if ($Format.$_[0]) {$Format.$_.Count} else {0}
 
-        # Foreach Trigger-Setter
-        $Formatting.Where{$_.ColumnName -eq $Header}.ForEach({
-            $i = 0
-            while ($_."Trigger$i" -notMatch '^\s*$') {
-                # Append Trigger-Setter to Column
-                $NewTrigger = [Windows.DataTrigger]::New()
-                $NewTrigger.Binding = $NewColumn.Binding
-                $NewTrigger.Value = $_."Trigger$i"
-                $NewTrigger.Setters.Add([Windows.Setter]::New(
-                    [Windows.Controls.DataGridCell]::BackgroundProperty,
-                    [Windows.Media.BrushConverter]::New().ConvertFromString($_."Setter$i")
-                ))
-                $NewStyle.Triggers.Add($NewTrigger)
-                ++ $i
-            }
-        })
+        # Apply conditional formatting
+        for ($i = 0; $i -lt $Count; $i+=2) {
+            $NewTrigger = [Windows.DataTrigger]::New()
+            $NewTrigger.Binding = $NewColumn.Binding
+            $NewTrigger.Value = $Format.$_[$i]
+            $NewTrigger.Setters.Add([Windows.Setter]::New(
+                [Windows.Controls.DataGridCell]::BackgroundProperty,
+                [Windows.Media.BrushConverter]::New().ConvertFromString($Format.$_[$i+1])
+            ))
+            $NewStyle.Triggers.Add($NewTrigger)
+        }
         $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
-    }
+    })
+
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
     $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
     $wpf.InsertLastCount.Text  = $config.InsertLast
-
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 })
