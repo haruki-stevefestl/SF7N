@@ -1,6 +1,6 @@
 # Editing-related actions
 # Enter edit mode
-$wpf.CSVGrid.Add_BeginningEdit({
+$wpf.CSVGrid.Add_BeginningEdit{
     if ($wpf.Toolbar.SelectedIndex -eq 0) {
         # Capture current active cell
         $CurrentRow = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
@@ -8,35 +8,34 @@ $wpf.CSVGrid.Add_BeginningEdit({
 
         # Enable editing toolbar
         $wpf.Toolbar.SelectedIndex = 1
-        $wpf.CurrentMode.Text = 'Edit Mode  '
         $wpf.CSVGrid.ItemsSource = $csv
 
         # Refocus on captured cell
-        $wpf.CSVGrid.Items.Where({$_ -eq $CurrentRow}).ForEach({
+        $wpf.CSVGrid.Items.Where{$_ -eq $CurrentRow}.ForEach{
             $wpf.CSVGrid.CurrentCell = [Windows.Controls.DataGridCellInfo]::New(
                 $_,
                 $wpf.CSVGrid.Columns[$CurrentColumn]
             )
             $wpf.CSVGrid.BeginEdit()
-        })
+        }
     }
-})
+}
 
 # Add-Row actions
-$wpf.CSVGrid.Add_CellEditEnding({$wpf.Commit.IsEnabled = $true})
-$wpf.InsertLast.Add_Click({ Add-Row 'InsertLast' })
-$wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
-$wpf.InsertBelow.Add_Click({Add-Row 'InsertBelow'})
-$wpf.RemoveSelected.Add_Click({
-    $wpf.CSVGrid.SelectedItems.ForEach({$csv.Remove($_)})
+$wpf.CSVGrid.Add_CellEditEnding{$wpf.Commit.IsEnabled = $true}
+$wpf.InsertLast.Add_Click{ Add-Row 'InsertLast' }
+$wpf.InsertAbove.Add_Click{Add-Row 'InsertAbove'}
+$wpf.InsertBelow.Add_Click{Add-Row 'InsertBelow'}
+$wpf.RemoveSelected.Add_Click{
+    $wpf.CSVGrid.SelectedItems.ForEach{$csv.Remove($_)}
     $wpf.CSVGrid.Items.Refresh()
-})
+}
 
 # Commit CSV
-$wpf.Commit.Add_Click({Export-CustomCSV $csvLocation})
+$wpf.Commit.Add_Click{Export-CustomCSV $csvLocation}
 
 # Reload CSV on Return
-$wpf.Return.Add_Click({
+$wpf.Return.Add_Click{
     $Return = $true
     if ($wpf.Commit.IsEnabled) {
         switch (New-SaveDialog) {
@@ -46,12 +45,9 @@ $wpf.Return.Add_Click({
     }
 
     if ($Return) {
-        $wpf.CurrentMode.Text = 'Search Mode'
-        $wpf.Commit.IsEnabled = $false
-
         Import-CustomCSV $csvLocation
         Search-CSV $wpf.SearchRules.Text
-
+        $wpf.Commit.IsEnabled = $false
         $wpf.Toolbar.SelectedIndex = 0
     }
-})
+}

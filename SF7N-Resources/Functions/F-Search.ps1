@@ -1,11 +1,11 @@
 function ConvertFrom-AliasMode ($Row) {
     if ($null -ne $csvAlias) {
-        $Row.PSObject.Properties.Foreach({
+        $Row.PSObject.Properties.Foreach{
             $_.Value = $_.Value -ireplace
                 ($csvAlias[1].($_.Name), $csvAlias[0].($_.Name)) -ireplace
                 ($csvAlias[3].($_.Name), $csvAlias[2].($_.Name)) -ireplace
                 ($csvAlias[5].($_.Name), $csvAlias[4].($_.Name))
-        })
+        }
     }
     return $Row
 }
@@ -41,15 +41,15 @@ function Search-CSV ($SearchText) {
     $Runspace.SessionStateProxy.SetVariable('searchTerm',$searchTerm)
     $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
     $Runspace.SessionStateProxy.SetVariable('aliasMode',$wpf.AliasMode.IsChecked)
-    $Ps = [PowerShell]::Create().AddScript({
+    $Ps = [PowerShell]::Create().AddScript{
         function ConvertTo-AliasMode ($Row) {
             if ($null -ne $csvAlias) {
-                $Row.PSObject.Properties.Foreach({
+                $Row.PSObject.Properties.Foreach{
                     $_.Value = $_.Value -ireplace
                         ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
                         ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
                         ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
-                })
+                }
             }
             return $Row
         }
@@ -57,9 +57,9 @@ function Search-CSV ($SearchText) {
         [Collections.ArrayList] $CsvSearch = @()
         foreach ($Entry in $csv) {
             # If notMatch, goto next iteration
-            $SearchTerm.PSObject.Properties.ForEach({
+            $SearchTerm.PSObject.Properties.ForEach{
                 if ($Entry.($_.Name) -notmatch $_.Value) {continue}
-            })
+            }
     
             # Apply alias if AliasMode is on; else add raw content
             if ($aliasMode) {
@@ -70,7 +70,7 @@ function Search-CSV ($SearchText) {
         }
 
         $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'Normal')
-    })
+    }
     $Ps.Runspace = $Runspace
     $Ps.BeginInvoke()
 }
