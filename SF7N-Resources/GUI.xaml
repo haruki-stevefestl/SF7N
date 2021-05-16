@@ -63,7 +63,7 @@
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                        <Setter Property="Text" Value="Input filter conditions (Header:Value)"/>
+                                        <Setter Property="Text" Value="Input filter conditions, e.g. Header:Value"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -163,15 +163,28 @@
         <!-- Preview -->
         <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="White" BorderThickness="0">
             <Grid>
-                <TextBlock Text="Preview unavailable" Foreground="DimGray" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Image Name="PreviewImage" Source="{Binding ElementName=PreviewPath, Path=Text}"/>
+                <TextBlock Text="Click to copy image" Foreground="DimGray" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Image Name="PreviewImage"/>
             </Grid>
         </Button>
         <GridSplitter Grid.Row="1" Grid.Column="1" Width="2" Background="Transparent" HorizontalAlignment="Left"/>
 
         <!-- Stausbar -->
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
-            <TextBlock Name="CurrentMode" Text="Search Mode" Margin="0,0,24,0" Foreground="DimGray" FontSize="14"/>
+            <TextBlock Name="CurrentMode" Margin="0,0,24,0" Foreground="DimGray" FontSize="14">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="1">
+                                <Setter Property="Text" Value="Edit   Mode"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="0">
+                                <Setter Property="Text" Value="Search Mode"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
             <TextBlock Name="ReadOnlyText" Margin="0,0,84,0" Foreground="DimGray" FontSize="14">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
