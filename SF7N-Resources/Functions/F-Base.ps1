@@ -21,8 +21,13 @@ function Import-CustomCSV ($ImportFrom) {
         if (Test-Path $AliasLocation) {
             [Collections.ArrayList] $script:csvAlias = Import-CSV $AliasLocation
         }
-    
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
+
+    # Enter edit mode if CSV is empty
+    if (!$csv) {
+        Write-Log 'ERR' 'CSV is empty; SF7N will automatically enter Edit Mode.'
+        $wpf.Toolbar.SelectedIndex = 1
+    }
 }
 
 function New-SaveDialog {

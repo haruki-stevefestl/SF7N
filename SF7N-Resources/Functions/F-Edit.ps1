@@ -31,12 +31,17 @@ function Add-Row ($Action) {
                 '%D', (Get-Date -Format yyyyMMdd) -replace
                 '%T', (Get-Date -Format HHmmss)   -replace
                 '%#', $I
-            $csv.Add($ThisRow)
+            if ($csv) {
+                $csv.Add($ThisRow)
+            } else {
+                [Collections.ArrayList] $csv = @($ThisRow)
+            }
         }
     } else {
         # Max & Min functions to prevent under/overflowing
         $csv.InsertRange([Math]::Max(0,[Math]::Min($At,$csv.Count)), @($RowTemplate) * $Count)
     }
 
+    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
 }
