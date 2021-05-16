@@ -8,7 +8,7 @@ Import-Module .\Functions\F-Base.ps1
 Clear-Host
 Write-Log 'INF' '-- SF7N Initialization --'
 Write-Log 'INF' 'Import WPF'
-Add-Type -AssemblyName PresentationFramework, PresentationCore
+Add-Type -AssemblyName PresentationFramework
 
 # Read and evaluate path configurations
 Write-Log 'INF' 'Import Configurations'
@@ -31,9 +31,7 @@ Write-Log 'INF' 'Import Modules'
 Get-ChildItem *.ps1 -Recurse -Exclude SF7N-Loader.ps1 | Import-Module
 
 # Initialzation work after splashscreen show
-$wpf.SF7N.Add_ContentRendered({
-    Write-Log 'DBG' 'Launch GUI'
-    Write-Log 'DBG'
+$wpf.SF7N.Add_ContentRendered{
     Write-Log 'INF' 'Import WinForms'
     Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
 
@@ -45,7 +43,7 @@ $wpf.SF7N.Add_ContentRendered({
     $Format = '.\Configurations\Formatting.csv'
     if (Test-Path $Format) {$Format = Import-CSV $Format}
 
-    $csvHeader.ForEach({
+    $csvHeader.ForEach{
         $NewColumn = [Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [Windows.Data.Binding]::New($_)
         $NewColumn.Header  = $_
@@ -65,7 +63,7 @@ $wpf.SF7N.Add_ContentRendered({
         }
         $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
-    })
+    }
 
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
@@ -74,10 +72,10 @@ $wpf.SF7N.Add_ContentRendered({
     $wpf.InsertLastCount.Text  = $config.InsertLast
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
-})
+}
 
 # Prompt and cleanup on close
-$wpf.SF7N.Add_Closing({
+$wpf.SF7N.Add_Closing{
     if ($wpf.Commit.IsEnabled) {
         $Dialog = New-SaveDialog
         if ($Dialog -eq 'Cancel') {
@@ -92,7 +90,8 @@ $wpf.SF7N.Add_Closing({
         Write-Log 'INF' 'Remove Modules'
         Remove-Module 'F-*', 'H-*'
     }
-})
+}
 
 # Load WPF
+Write-Log 'DBG' 'Launch GUI'
 $wpf.SF7N.ShowDialog() | Out-Null
