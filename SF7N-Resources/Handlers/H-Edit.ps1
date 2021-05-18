@@ -1,25 +1,6 @@
 # Editing-related actions
 # Enter edit mode
-$wpf.CSVGrid.Add_BeginningEdit{
-    if ($wpf.Toolbar.SelectedIndex -eq 0) {
-        # Capture current active cell
-        $CurrentRow = ConvertFrom-AliasMode $wpf.CSVGrid.CurrentCell[0].Item
-        $CurrentColumn = $wpf.CSVGrid.CurrentCell[0].Column.DisplayIndex
-
-        # Enable editing toolbar
-        $wpf.Toolbar.SelectedIndex = 1
-        $wpf.CSVGrid.ItemsSource = $csv
-
-        # Refocus on captured cell
-        $wpf.CSVGrid.Items.Where{$_ -eq $CurrentRow}.ForEach{
-            $wpf.CSVGrid.CurrentCell = [Windows.Controls.DataGridCellInfo]::New(
-                $_,
-                $wpf.CSVGrid.Columns[$CurrentColumn]
-            )
-            $wpf.CSVGrid.BeginEdit()
-        }
-    }
-}
+$wpf.CSVGrid.Add_BeginningEdit{$wpf.Toolbar.SelectedIndex = 1}
 
 # Add-Row actions
 $wpf.CSVGrid.Add_CellEditEnding{$wpf.Commit.IsEnabled = $true}

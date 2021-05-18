@@ -47,7 +47,7 @@ $wpf.SF7N.Add_ContentRendered{
         $NewColumn = [Windows.Controls.DataGridTextColumn]::New()
         $NewColumn.Binding = [Windows.Data.Binding]::New($_)
         $NewColumn.Header  = $_
-        $NewStyle = [Windows.Style]::New()
+        $NewColumn.CellStyle = [Windows.Style]::New()
         $Count = if ($Format.$_[0]) {$Format.$_.Count} else {0}
 
         # Apply conditional formatting
@@ -59,17 +59,17 @@ $wpf.SF7N.Add_ContentRendered{
                 [Windows.Controls.DataGridCell]::BackgroundProperty,
                 [Windows.Media.BrushConverter]::New().ConvertFromString($Format.$_[$i+1])
             ))
-            $NewStyle.Triggers.Add($NewTrigger)
+            $NewColumn.CellStyle.Triggers.Add($NewTrigger)
         }
-        $NewColumn.CellStyle = $NewStyle
         $wpf.CSVGrid.Columns.Add($NewColumn)
     }
 
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
-    $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true'
+    $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true' -and $wpf.AliasMode.IsChecked
     $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
     $wpf.InsertLastCount.Text  = $config.InsertLast
+
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 }
