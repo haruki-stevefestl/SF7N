@@ -24,8 +24,11 @@ function Import-CustomCSV ($ImportFrom) {
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 
     # Enter edit mode if CSV is empty
-    if (!$csv) {
-        Write-Log 'ERR' 'CSV is empty; SF7N will automatically enter Edit Mode.'
+    if (!$csvHeader) {
+        Write-Log 'ERR' 'CSV is empty; SF7N will exit.'
+        $wpf.SF7N.Close()
+
+    } elseif (!$csv) {
         $wpf.Toolbar.SelectedIndex = 1
     }
 }

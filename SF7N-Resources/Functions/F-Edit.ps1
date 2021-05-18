@@ -34,7 +34,7 @@ function Add-Row ($Action) {
             if ($csv) {
                 $csv.Add($ThisRow)
             } else {
-                [Collections.ArrayList] $csv = @($ThisRow)
+                [Collections.ArrayList] $script:csv = @($ThisRow)
             }
         }
     } else {
@@ -42,6 +42,5 @@ function Add-Row ($Action) {
         $csv.InsertRange([Math]::Max(0,[Math]::Min($At,$csv.Count)), @($RowTemplate) * $Count)
     }
 
-    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
 }
