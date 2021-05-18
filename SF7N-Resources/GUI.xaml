@@ -50,13 +50,13 @@
                         <ColumnDefinition Width="253"/>
                     </Grid.ColumnDefinitions>
                     <Expander Grid.ColumnSpan="3">
-                        <UniformGrid Columns="6" Margin="0,12,0,12">
-                            <Button   Name="ResetSorting" Content="Reset Sorting" Margin="0,0,48,0"/>
-                            <CheckBox Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0"/>
-                            <CheckBox Name="InputAssist" Content=" Input Assist" VerticalContentAlignment="Center" Margin="0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,12">
+                            <Button   Name="ResetSorting" Content="Reset Sorting" Margin="0,0,48,0" Padding="32,2,32,2"/>
+                            <CheckBox Name="TabSearch" Content=" Tab to Search" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
+                            <CheckBox Name="InputAssist" Content=" Input Assist" VerticalContentAlignment="Center" Margin="0,0,64,0"/>
+                            <CheckBox Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
                             <CheckBox Name="ReadOnly" Content=" Read-only Mode" VerticalContentAlignment="Center" Margin="0"/>
-                            <CheckBox Name="TabSearch" Content=" Tab to Search" VerticalContentAlignment="Center" Margin="0"/>
-                        </UniformGrid>
+                        </StackPanel>
                     </Expander>
                     <TextBlock Grid.Column="1" Foreground="Gray" Background="White" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
                         <TextBlock.Style>
