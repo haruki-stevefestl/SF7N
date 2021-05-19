@@ -66,7 +66,7 @@ $wpf.SF7N.Add_ContentRendered{
 
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
-    $wpf.ReadOnly.IsChecked    = $config.ReadOnly    -ieq 'true' -and $wpf.AliasMode.IsChecked
+    $wpf.ReadWrite.IsChecked   = $config.ReadWrite   -ieq 'true'
     $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
     $wpf.InsertLastCount.Text  = $config.InsertLast
 

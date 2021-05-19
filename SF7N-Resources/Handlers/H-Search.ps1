@@ -35,22 +35,3 @@ $wpf.PreviewCopy.Add_Click{
         ))
     }
 }
-
-# AliasMode - ReadOnly
-$wpf.AliasMode.Add_Click{
-    if ($wpf.AliasMode.IsChecked) {
-        $script:oldReadOnly = $wpf.ReadOnly.IsChecked
-        $wpf.ReadOnly.IsChecked = $true
-        $wpf.ReadOnly.IsEnabled = $false
-    } else {
-        $wpf.ReadOnly.IsEnabled = $true
-        $wpf.ReadOnly.IsChecked = $oldReadOnly
-    }
-    Search-CSV $wpf.SearchRules.Text
-}
-
-$wpf.ReadOnly.Add_Click{
-    if (!$wpf.ReadOnly.IsChecked) {
-        $wpf.AliasMode.IsEnabled = $true
-    }
-}

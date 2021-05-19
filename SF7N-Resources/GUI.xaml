@@ -54,8 +54,8 @@
                             <Button   Name="ResetSorting" Content="Reset Sorting" Margin="0,0,48,0" Padding="32,2,32,2"/>
                             <CheckBox Name="TabSearch" Content=" Tab to Search" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
                             <CheckBox Name="InputAssist" Content=" Input Assist" VerticalContentAlignment="Center" Margin="0,0,64,0"/>
-                            <CheckBox Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
-                            <CheckBox Name="ReadOnly" Content=" Read-only Mode" VerticalContentAlignment="Center" Margin="0"/>
+                            <RadioButton Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
+                            <RadioButton Name="ReadWrite" Content=" Read/Write Mode" VerticalContentAlignment="Center" Margin="0"/>
                         </StackPanel>
                     </Expander>
                     <TextBlock Grid.Column="1" Foreground="Gray" Background="White" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
@@ -93,8 +93,16 @@
         <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False"
                   Background="#FFFFFF" GridLinesVisibility="None" BorderThickness="0"
                   RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
-                  SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True"
-                  IsReadOnly="{Binding ElementName=ReadOnly, Path=IsChecked}">
+                  SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="False">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Style.Resources>
@@ -171,7 +179,7 @@
 
         <!-- Stausbar -->
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
-            <TextBlock Name="CurrentMode" Margin="0,0,24,0" Foreground="DimGray" FontSize="14">
+            <TextBlock Margin="0,0,24,0" Foreground="DimGray" FontSize="14">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
@@ -185,22 +193,22 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <TextBlock Name="ReadOnlyText" Margin="0,0,84,0" Foreground="DimGray" FontSize="14">
+            <TextBlock Margin="0,0,84,0" Foreground="DimGray" FontSize="14">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ReadOnly, Path=IsChecked}" Value="True">
-                                <Setter Property="Text" Value="(R/O)"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ReadOnly, Path=IsChecked}" Value="False">
+                            <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="True">
                                 <Setter Property="Text" Value="(R/W)"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="False">
+                                <Setter Property="Text" Value="(R/O)"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <TextBlock Name="TotalRows" Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Margin="0,0,32,0" Foreground="DimGray" FontSize="14"/>
-            <TextBlock Name="SelectedRows" Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Margin="0,0,64,0" Foreground="DimGray" FontSize="14"/>
+            <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Margin="0,0,32,0" Foreground="DimGray" FontSize="14"/>
+            <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Margin="0,0,64,0" Foreground="DimGray" FontSize="14"/>
         </StackPanel>
     </Grid>
 </Window>
