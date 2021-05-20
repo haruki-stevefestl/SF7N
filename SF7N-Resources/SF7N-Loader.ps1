@@ -5,7 +5,6 @@ Get-ChildItem *.ps1 -Recurse | Unblock-File
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Import-Module .\Functions\F-Base.ps1
 
-Clear-Host
 Write-Log 'INF' '-- SF7N Initialization --'
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework
@@ -21,10 +20,8 @@ Write-Log 'INF' 'Parse  XAML'
 [Xml] $xaml = Get-Content .\GUI.xaml
 $tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
 $wpf = [Hashtable]::Synchronized(@{})
-$ErrorActionPreference = 'SilentlyContinue'
 $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
     ForEach{$wpf.Add($_, $tempform.FindName($_))}
-$ErrorActionPreference = 'Continue'
 
 # Import GUI Control code
 Write-Log 'INF' 'Import Modules'
@@ -48,10 +45,10 @@ $wpf.SF7N.Add_ContentRendered{
         $NewColumn.Binding = [Windows.Data.Binding]::New($_)
         $NewColumn.Header  = $_
         $NewColumn.CellStyle = [Windows.Style]::New()
-        $Count = if ($Format.$_[0]) {$Format.$_.Count} else {0}
 
         # Apply conditional formatting
-        for ($i = 0; $i -lt $Count; $i+=2) {
+        for ($i = 0; $i -lt $Format.$_.Count; $i+=2) {
+            if ([String]::IsNullOrWhiteSpace($Format.$_[$i])) {break}
             $NewTrigger = [Windows.DataTrigger]::New()
             $NewTrigger.Binding = $NewColumn.Binding
             $NewTrigger.Value = $Format.$_[$i]
@@ -70,6 +67,7 @@ $wpf.SF7N.Add_ContentRendered{
     $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
     $wpf.InsertLastCount.Text  = $config.InsertLast
 
+    $wpf.SplashScreen.Visibility = 'Hidden'
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Write-Log 'DBG'
 }
@@ -94,4 +92,5 @@ $wpf.SF7N.Add_Closing{
 
 # Load WPF
 Write-Log 'DBG' 'Launch GUI'
+$wpf.SplashScreen.Visibility = 'Visible'
 $wpf.SF7N.ShowDialog() | Out-Null

@@ -210,5 +210,11 @@
             <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Margin="0,0,32,0" Foreground="DimGray" FontSize="14"/>
             <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Margin="0,0,64,0" Foreground="DimGray" FontSize="14"/>
         </StackPanel>
+
+        <!-- Splashscreen -->
+        <Grid Name="Splashscreen" Grid.RowSpan="3" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White" Visibility="Hidden">
+            <TextBlock Text="SF7N 1.5" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="Welcome back, splashscreen!" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,42,0,0"/>
+        </Grid>
     </Grid>
 </Window>
