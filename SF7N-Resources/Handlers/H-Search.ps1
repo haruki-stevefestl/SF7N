@@ -5,6 +5,8 @@ $wpf.SearchRules.Add_TextChanged{
         Search-CSV $wpf.SearchRules.Text
     }
 }
+$wpf.AliasMode.Add_Checked{Search-CSV $wpf.SearchRules.Text}
+$wpf.ReadWrite.Add_Checked{Search-CSV $wpf.SearchRules.Text}
 
 # Reset sorting
 $wpf.ResetSorting.Add_Click{
@@ -31,7 +33,7 @@ $wpf.CSVGrid.Add_SelectionChanged{
 $wpf.PreviewCopy.Add_Click{
     if ($wpf.PreviewImage.Source) {
         [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
-            $wpf.PreviewImage.Source.Replace('file:///','')
+            $wpf.PreviewImage.Source -replace 'file:///',''
         ))
     }
 }

@@ -26,7 +26,6 @@ $wpf.Return.Add_Click{
     }
 
     if ($Return) {
-        Import-CustomCSV $csvLocation
         Search-CSV $wpf.SearchRules.Text
         $wpf.Commit.IsEnabled = $false
         $wpf.Toolbar.SelectedIndex = 0
