@@ -12,12 +12,12 @@ function Add-Row ($Action) {
     $csvHeader.Foreach{$RowTemplate | Add-Member NoteProperty $_ ''}
 
     # Execute preparations for each type of insert
-    $At = $wpf.CSVGrid.Items.IndexOf($wpf.CSVGrid.SelectedItems[0])
+    $At = $csv.IndexOf($wpf.CSVGrid.SelectedItem)
     $Count = $wpf.CSVGrid.SelectedItems.Count
 
     if ($Action -eq 'InsertLast') {
         $Count = $wpf.InsertLastCount.Text
-        $wpf.CSVGrid.ScrollIntoView($wpf.CSVGrid.Items[-1], $wpf.CSVGrid.Columns[0])
+        $wpf.CSVGrid.ScrollIntoView($csv[-1], $wpf.CSVGrid.Columns[0])
     
     } elseif ($Action -eq 'InsertBelow') {
         $At += $Count
@@ -42,5 +42,6 @@ function Add-Row ($Action) {
         $csv.InsertRange([Math]::Max(0,[Math]::Min($At,$csv.Count)), @($RowTemplate) * $Count)
     }
 
+    $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
 }
