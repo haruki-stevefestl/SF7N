@@ -40,7 +40,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Toolbar -->
-        <TabControl Name="Toolbar" Grid.ColumnSpan="3" MinHeight="40" Margin="-20,-12,-20,0" Padding="16,12,16,10" BorderThickness="0">
+        <TabControl Name="Toolbar" Grid.ColumnSpan="3" MinHeight="40" Margin="-20,-12,-20,0" Padding="16,12,16,10" BorderThickness="0" Background="Transparent">
             <!-- Search -->
             <TabItem>
                 <Grid VerticalAlignment="Top">
@@ -50,15 +50,14 @@
                         <ColumnDefinition Width="253"/>
                     </Grid.ColumnDefinitions>
                     <Expander Grid.ColumnSpan="3">
-                        <StackPanel Orientation="Horizontal" Margin="0,12,0,12">
-                            <Button   Name="ResetSorting" Content="Reset Sorting" Margin="0,0,48,0" Padding="32,2,32,2"/>
+                        <StackPanel Orientation="Horizontal" Margin="50,16,0,12">
                             <CheckBox Name="TabSearch" Content=" Tab to Search" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
                             <CheckBox Name="InputAssist" Content=" Input Assist" VerticalContentAlignment="Center" Margin="0,0,64,0"/>
                             <RadioButton Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
                             <RadioButton Name="ReadWrite" Content=" Read/Write Mode" VerticalContentAlignment="Center" Margin="0"/>
                         </StackPanel>
                     </Expander>
-                    <TextBlock Grid.Column="1" Foreground="Gray" Background="White" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
+                    <TextBlock Grid.Column="1" Foreground="Gray" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -90,8 +89,19 @@
         </TabControl>
 
         <!-- Datagrid -->
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DimGray" FontSize="14">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
+                            <Setter Property="Text" Value="The search returns no results"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
         <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False"
-                  Background="#FFFFFF" GridLinesVisibility="None" BorderThickness="0"
+                  Background="Transparent" GridLinesVisibility="None" BorderThickness="0"
                   RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
                   SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
             <DataGrid.Style>
@@ -119,6 +129,7 @@
                             <Setter Property="Background" Value="#E5F3FF"/>
                         </Trigger>
                     </Style.Triggers>
+                    <Setter Property="Background" Value="Transparent"/>
                 </Style>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="MinWidth" Value="128"/>
@@ -169,7 +180,7 @@
         </DataGrid>
 
         <!-- Preview -->
-        <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="White" BorderThickness="0">
+        <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
             <Grid>
                 <TextBlock Text="Click to copy image" Foreground="DimGray" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <Image Name="PreviewImage"/>
@@ -187,9 +198,9 @@
                                 <Setter Property="Text" Value="Edit   Mode"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="0">
-                                <Setter Property="Text" Value="Search Mode"/>
                             </DataTrigger>
                         </Style.Triggers>
+                        <Setter Property="Text" Value="Search Mode"/>
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
@@ -200,10 +211,8 @@
                             <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="True">
                                 <Setter Property="Text" Value="(R/W)"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="False">
-                                <Setter Property="Text" Value="(R/O)"/>
-                            </DataTrigger>
                         </Style.Triggers>
+                        <Setter Property="Text" Value="(R/O)"/>
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
