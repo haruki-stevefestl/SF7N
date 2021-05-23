@@ -8,19 +8,13 @@ $wpf.SearchRules.Add_TextChanged{
 $wpf.AliasMode.Add_Checked{Search-CSV $wpf.SearchRules.Text}
 $wpf.ReadWrite.Add_Checked{Search-CSV $wpf.SearchRules.Text}
 
-# Reset sorting
-$wpf.ResetSorting.Add_Click{
-    $wpf.CSVGrid.Items.SortDescriptions.Clear()
-    $wpf.CSVGrid.Columns.ForEach{$_.SortDirection = $null}
-}
-
 # Set preview on cell change
 $wpf.CSVGrid.Add_SelectionChanged{
     # Evaluate <.+?> notations
     $PreviewPath = $previewLocation
     $Replacements = $previewLocation | Select-String '(?<=<)(.+?)(?=>)' -AllMatches
     $Replacements.Matches.Value.ForEach{
-        $PreviewPath = $PreviewPath.Replace("<$_>", $wpf.CSVGrid.SelectedItems[0].$_)
+        $PreviewPath = $PreviewPath.Replace("<$_>", $wpf.CSVGrid.SelectedItem.$_)
     }
 
     # Set preview
