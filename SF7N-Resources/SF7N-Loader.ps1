@@ -41,35 +41,33 @@ $wpf.SF7N.Add_ContentRendered{
     if (Test-Path $Format) {$Format = Import-CSV $Format}
 
     $csvHeader.ForEach{
-        $NewColumn = [Windows.Controls.DataGridTextColumn]::New()
-        $NewColumn.Binding = [Windows.Data.Binding]::New($_)
-        $NewColumn.Header  = $_
-        $NewColumn.CellStyle = [Windows.Style]::New()
+        $Column = [Windows.Controls.DataGridTextColumn]::New()
+        $Column.Binding = [Windows.Data.Binding]::New($_)
+        $Column.Header  = $_
+        $Column.CellStyle = [Windows.Style]::New()
 
         # Apply conditional formatting
-        for ($i = 0; $i -lt $Format.$_.Count; $i+=2) {
+        for ($i = 0; $i -lt $Format.$_.Count; $i += 2) {
             if ([String]::IsNullOrWhiteSpace($Format.$_[$i])) {break}
-            $NewTrigger = [Windows.DataTrigger]::New()
-            $NewTrigger.Binding = $NewColumn.Binding
-            $NewTrigger.Value = $Format.$_[$i]
-            $NewTrigger.Setters.Add([Windows.Setter]::New(
+            $Trigger = [Windows.DataTrigger]::New()
+            $Trigger.Binding = $Column.Binding
+            $Trigger.Value = $Format.$_[$i]
+            $Trigger.Setters.Add([Windows.Setter]::New(
                 [Windows.Controls.DataGridCell]::BackgroundProperty,
                 [Windows.Media.BrushConverter]::New().ConvertFromString($Format.$_[$i+1])
             ))
-            $NewColumn.CellStyle.Triggers.Add($NewTrigger)
+            $Column.CellStyle.Triggers.Add($Trigger)
         }
-        $wpf.CSVGrid.Columns.Add($NewColumn)
+        $wpf.CSVGrid.Columns.Add($Column)
     }
 
     $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.ReadWrite.IsChecked   = $config.ReadWrite   -ieq 'true'
-    $wpf.TabSearch.IsChecked   = $config.TabSearch   -ieq 'true'
     $wpf.InsertLastCount.Text  = $config.InsertLast
 
     $wpf.SplashScreen.Visibility = 'Hidden'
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
-    Write-Log 'DBG'
 }
 
 # Prompt and cleanup on close
@@ -84,7 +82,6 @@ $wpf.SF7N.Add_Closing{
     }
 
     if (!$_.Cancel) {
-        Write-Log 'DBG'
         Write-Log 'INF' 'Remove Modules'
         Remove-Module 'F-*', 'H-*'
     }
