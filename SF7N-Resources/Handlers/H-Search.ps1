@@ -1,7 +1,8 @@
 # Start search
-$wpf.Search.Add_Click{Search-CSV $wpf.SearchRules.Text}
 $wpf.SearchRules.Add_TextChanged{
-    if ($wpf.TabSearch.IsChecked -and ($wpf.SearchRules.Text[-1] -eq "`t")) {
+    if ($wpf.SearchRules.Text[-1] -eq "`n") {
+        $wpf.SearchRules.Text = $wpf.SearchRules.Text -replace '[\r\n]', ''
+        $wpf.SearchRules.SelectionStart = $wpf.SearchRules.Text.Length
         Search-CSV $wpf.SearchRules.Text
     }
 }
