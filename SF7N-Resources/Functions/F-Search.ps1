@@ -1,10 +1,10 @@
-function ConvertFrom-AliasMode ($Row) {
-    if ($null -ne $csvAlias) {
+function ConvertFrom-Alias ($Row) {
+    if ($csvAlias) {
         $Row.PSObject.Properties.Foreach{
-            $_.Value = $_.Value -ireplace
-                ($csvAlias[1].($_.Name), $csvAlias[0].($_.Name)) -ireplace
-                ($csvAlias[3].($_.Name), $csvAlias[2].($_.Name)) -ireplace
-                ($csvAlias[5].($_.Name), $csvAlias[4].($_.Name))
+            $Header = $_.Name
+            for ($i = 0; $i -lt $csvAlias.$Header.Count; $i += 2) {
+                $_.Value = $_.Value.Replace($csvAlias[$i+1].$Header, $csvAlias[$i].$Header)
+            }
         }
     }
     return $Row
@@ -29,7 +29,7 @@ function Search-CSV ($SearchText) {
     }
 
     # Apply input assist
-    if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-AliasMode $SearchTerm}
+    if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-Alias $SearchTerm}
 
     # Search with new runspace
     $Runspace = [RunspaceFactory]::CreateRunspace()
@@ -42,13 +42,13 @@ function Search-CSV ($SearchText) {
     $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
     $Runspace.SessionStateProxy.SetVariable('aliasMode',$wpf.AliasMode.IsChecked)
     $Ps = [PowerShell]::Create().AddScript{
-        function ConvertTo-AliasMode ($Row) {
-            if ($null -ne $csvAlias) {
+        function ConvertTo-Alias ($Row) {
+            if ($csvAlias) {
                 $Row.PSObject.Properties.Foreach{
-                    $_.Value = $_.Value -ireplace
-                        ($csvAlias[0].($_.Name), $csvAlias[1].($_.Name)) -ireplace
-                        ($csvAlias[2].($_.Name), $csvAlias[3].($_.Name)) -ireplace
-                        ($csvAlias[4].($_.Name), $csvAlias[5].($_.Name))
+                    $Header = $_.Name
+                    for ($i = 0; $i -lt $csvAlias.$Header.Count; $i += 2) {
+                        $_.Value = $_.Value.Replace($csvAlias[$i].$Header, $csvAlias[$i+1].$Header)
+                    }
                 }
             }
             return $Row
@@ -63,13 +63,13 @@ function Search-CSV ($SearchText) {
     
             # Apply alias if AliasMode is on; else add raw content
             if ($aliasMode) {
-                $CsvSearch.Add((ConvertTo-AliasMode $Entry.PsObject.Copy()))
+                $CsvSearch.Add((ConvertTo-Alias $Entry.PsObject.Copy()))
             } else {
                 $CsvSearch.Add($Entry)
             }
         }
 
-        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'Normal')
+        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'ApplicationIdle')
     }
     $Ps.Runspace = $Runspace
     $Ps.BeginInvoke()
