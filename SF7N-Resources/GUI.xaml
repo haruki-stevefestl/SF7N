@@ -5,19 +5,6 @@
     <Window.Resources>
         <Style TargetType="TabItem">
             <Setter Property="Height" Value="0"/>
-            <Setter Property="Margin" Value="0"/>
-        </Style>
-        <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
-            <Setter Property="Width" Value="8"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="SizeWE"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
         </Style>
         <Style x:Key="HideEditControl" TargetType="{x:Type Button}">
             <Style.Triggers>
@@ -25,6 +12,18 @@
                     <Setter Property="IsEnabled" Value="False"/>
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+        <Style x:Key="ColumnHeaderGripperStyle" TargetType="Thumb">
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Cursor" Value="SizeWE"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -40,49 +39,46 @@
         </Grid.ColumnDefinitions>
 
         <!-- Toolbar -->
-        <TabControl Name="Toolbar" Grid.ColumnSpan="3" MinHeight="40" Margin="-20,-12,-20,0" Padding="16,12,16,10" BorderThickness="0" Background="Transparent">
+        <TabControl Name="Toolbar" Grid.ColumnSpan="2" BorderThickness="0">
             <!-- Search -->
             <TabItem>
-                <Grid VerticalAlignment="Top">
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="48"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="253"/>
                     </Grid.ColumnDefinitions>
                     <Expander Grid.ColumnSpan="3">
-                        <StackPanel Orientation="Horizontal" Margin="50,16,0,12">
-                            <CheckBox Name="TabSearch" Content=" Tab to Search" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="48,16,0,0">
                             <CheckBox Name="InputAssist" Content=" Input Assist" VerticalContentAlignment="Center" Margin="0,0,64,0"/>
                             <RadioButton Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
                             <RadioButton Name="ReadWrite" Content=" Read/Write Mode" VerticalContentAlignment="Center" Margin="0"/>
                         </StackPanel>
                     </Expander>
-                    <TextBlock Grid.Column="1" Foreground="Gray" Margin="12,0,0,0" Padding="3,3" VerticalAlignment="Top" Height="24">
+                    <TextBlock Grid.Column="1" Foreground="Gray" Padding="3,3" VerticalAlignment="Top" Height="24">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                        <Setter Property="Text" Value="Input filter conditions, e.g. Header:Value"/>
+                                        <Setter Property="Text" Value="Filter by Header:Value; ENTER to search"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox Grid.Column="1" Name="SearchRules" AcceptsTab="True" BorderBrush="LightGray" Margin="12,0,0,0" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="Transparent"/>
-                    <Button Grid.Column="2" Name="Search" DockPanel.Dock="Right" Content="→" Margin="24,0,0,0" Height="24" VerticalAlignment="Top"/>
+                    <TextBox Grid.Column="1" Name="SearchRules" AcceptsReturn="True" BorderBrush="LightGray" BorderThickness="0,0,0,1" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="Transparent"/>
                 </Grid>
             </TabItem>
             <!-- Edit -->
             <TabItem>
                 <UniformGrid Columns="6" Height="24">
                     <UniformGrid Columns="2">
-                        <Button Name="InsertLast" Content="Append" Margin="0,0,8,0"/>
-                        <TextBox Name="InsertLastCount" Margin="8,0,48,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Button Name="InsertLast" Content="Append"/>
+                        <TextBox Name="InsertLastCount" Margin="8,0,32,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     </UniformGrid>
-                    <Button Name="InsertAbove" Content="Insert Above" Margin="0,0,8,0" Style="{StaticResource HideEditControl}"/>
-                    <Button Name="InsertBelow" Content="Insert Below" Margin="8,0,8,0" Style="{StaticResource HideEditControl}"/>
-                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="8,0,8,0" Style="{StaticResource HideEditControl}"/>
-                    <Button Name="Commit" Content="Commit" Margin="8,0,8,0" IsEnabled="False"/>
+                    <Button Name="InsertAbove" Content="Insert Above" Margin="0,0,4,0" Style="{StaticResource HideEditControl}"/>
+                    <Button Name="InsertBelow" Content="Insert Below" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
+                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
+                    <Button Name="Commit" Content="Commit" Margin="4,0,0,0" IsEnabled="False"/>
                     <Button Name="Return" Content="Return" Margin="32,0,0,0"/>
                 </UniformGrid>
             </TabItem>
@@ -100,7 +96,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False"
+        <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,16,0,0"
                   Background="Transparent" GridLinesVisibility="None" BorderThickness="0"
                   RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
                   SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
@@ -119,57 +115,35 @@
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#CCE8FF"/>
                         <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#E5F3FF"/>
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black"/>
                     </Style.Resources>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#CCE8FF"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#E5F3FF"/>
-                        </Trigger>
-                    </Style.Triggers>
                     <Setter Property="Background" Value="Transparent"/>
                 </Style>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="MinWidth" Value="128"/>
                     <Setter Property="MinHeight" Value="32"/>
-                    <Setter Property="Padding" Value="3"/>
-                    <Setter Property="FontSize" Value="14"/>
                     <Setter Property="Foreground" Value="DimGray"/>
+                    <Setter Property="FontSize" Value="14"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="DataGridColumnHeader">
-                                <Grid>
-                                    <Border Name="BRIN" CornerRadius="1" Padding="4,4,4,2" BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                    </Border>
-                                    <Path Name="SortArrow" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
-                                          HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
-                                    <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
+                                <Grid Name="Back">
+                                    <Path Name="SortAscend" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed" HorizontalAlignment="Center"/>
+                                    <Path Name="SortDescend" Stroke="Gray" Data="M0,4 L4,0 L8,4" Visibility="Collapsed" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding}" Margin="4,8,4,4"/>
                                     <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="SortDirection" Value="Ascending">
-                                        <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
-                                        <Setter TargetName="SortArrow" Property="RenderTransform">
-                                            <Setter.Value>
-                                                <TransformGroup>
-                                                    <ScaleTransform ScaleY="-1"/>
-                                                </TransformGroup>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter TargetName="SortAscend" Property="Visibility" Value="Visible"/>
                                     </Trigger>
                                     <Trigger Property="SortDirection" Value="Descending">
-                                        <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
+                                        <Setter TargetName="SortDescend" Property="Visibility" Value="Visible"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="BRIN" Property="Border.Background" Value="#D9EBF9"/>
+                                        <Setter TargetName="Back" Property="Background" Value="#D9EBF9"/>
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="True">
-                                        <Setter TargetName="BRIN" Property="Border.Background" Value="#BCDCF4" />
+                                        <Setter TargetName="Back" Property="Background" Value="#BCDCF4" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -180,13 +154,13 @@
         </DataGrid>
 
         <!-- Preview -->
+        <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
         <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
             <Grid>
                 <TextBlock Text="Click to copy image" Foreground="DimGray" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <Image Name="PreviewImage"/>
             </Grid>
         </Button>
-        <GridSplitter Grid.Row="1" Grid.Column="1" Width="2" Background="Transparent" HorizontalAlignment="Left"/>
 
         <!-- Stausbar -->
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
@@ -196,8 +170,6 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="1">
                                 <Setter Property="Text" Value="Edit   Mode"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="0">
                             </DataTrigger>
                         </Style.Triggers>
                         <Setter Property="Text" Value="Search Mode"/>
@@ -222,7 +194,7 @@
 
         <!-- Splashscreen -->
         <Grid Name="Splashscreen" Grid.RowSpan="3" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White" Visibility="Hidden">
-            <TextBlock Text="SF7N 1.5" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="SF7N 1.6" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBlock Text="Welcome back, splashscreen!" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,42,0,0"/>
         </Grid>
     </Grid>
