@@ -1,13 +1,13 @@
 # Start search
-$wpf.SearchRules.Add_TextChanged{
-    if ($wpf.SearchRules.Text[-1] -eq "`n") {
-        $wpf.SearchRules.Text = $wpf.SearchRules.Text -replace '[\r\n]', ''
-        $wpf.SearchRules.SelectionStart = $wpf.SearchRules.Text.Length
-        Search-CSV $wpf.SearchRules.Text
+$wpf.SearchBar.Add_TextChanged{
+    if ($wpf.SearchBar.Text -match '[\r\n]') {
+        $wpf.SearchBar.Text = $wpf.SearchBar.Text -replace '[\r\n]', ''
+        Search-CSV $wpf.SearchBar.Text
     }
 }
-$wpf.AliasMode.Add_Checked{Search-CSV $wpf.SearchRules.Text}
-$wpf.ReadWrite.Add_Checked{Search-CSV $wpf.SearchRules.Text}
+$wpf.Search.Add_Click{Search-CSV $wpf.SearchBar.Text}
+$wpf.AliasMode.Add_Checked{Search-CSV $wpf.SearchBar.Text}
+$wpf.ReadWrite.Add_Checked{Search-CSV $wpf.SearchBar.Text}
 
 # Set preview on cell change
 $wpf.CSVGrid.Add_SelectionChanged{
