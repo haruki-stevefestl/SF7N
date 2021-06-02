@@ -1,7 +1,7 @@
 <Window Name="SF7N"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SF7N Interface" Height="600" Width="1600" FontFamily="Courier New" FontSize="16">
+        Title="SF7N Interface" Height="600" Width="1600" FontFamily="Courier New" FontSize="14">
     <Window.Resources>
         <Style TargetType="TabItem">
             <Setter Property="Height" Value="0"/>
@@ -25,6 +25,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="DefaultText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DimGray"/>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="20,8,20,8">
@@ -45,27 +48,29 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="48"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Expander Grid.ColumnSpan="3">
                         <StackPanel Orientation="Horizontal" Margin="48,16,0,0">
-                            <CheckBox Name="InputAssist" Content=" Input Assist" VerticalContentAlignment="Center" Margin="0,0,64,0"/>
-                            <RadioButton Name="AliasMode" Content=" Alias Mode" VerticalContentAlignment="Center" Margin="0,0,32,0"/>
-                            <RadioButton Name="ReadWrite" Content=" Read/Write Mode" VerticalContentAlignment="Center" Margin="0"/>
+                            <CheckBox Name="InputAssist" Content=" Input Assist" FontSize="16"/>
+                            <RadioButton Name="AliasMode" Content=" Aliasing" FontSize="16" Margin="64,0,24,0"/>
+                            <RadioButton Name="ReadWrite" Content=" Data Editing" FontSize="16"/>
                         </StackPanel>
                     </Expander>
-                    <TextBlock Grid.Column="1" Foreground="Gray" Padding="3,3" VerticalAlignment="Top" Height="24">
+                    <TextBlock Grid.Column="1" Foreground="Gray" Padding="3,3" VerticalAlignment="Top" Height="24" FontSize="16">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=SearchRules, Path=Text.IsEmpty}" Value="True">
-                                        <Setter Property="Text" Value="Filter by Header:Value; ENTER to search"/>
+                                    <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
+                                        <Setter Property="Text" Value="Filter by Header:Value"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox Grid.Column="1" Name="SearchRules" AcceptsReturn="True" BorderBrush="LightGray" BorderThickness="0,0,0,1" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="Transparent"/>
+                    <TextBox Grid.Column="1" Name="SearchBar" AcceptsReturn="True" Margin="0,0,16,0" BorderThickness="1" BorderBrush="LightGray" FontSize="16" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="Transparent"/>
+                    <Button Grid.Column="2" Grid.ColumnSpan="3" Name="Search" Content="Filter" FontSize="16" Height="24" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <!-- Edit -->
@@ -85,7 +90,7 @@
         </TabControl>
 
         <!-- Datagrid -->
-        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DimGray" FontSize="14">
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -97,7 +102,7 @@
             </TextBlock.Style>
         </TextBlock>
         <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,16,0,0"
-                  Background="Transparent" GridLinesVisibility="None" BorderThickness="0"
+                  Background="Transparent" GridLinesVisibility="None" BorderThickness="0" FontSize="16"
                   RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
                   SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
             <DataGrid.Style>
@@ -121,7 +126,6 @@
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="MinWidth" Value="128"/>
                     <Setter Property="MinHeight" Value="32"/>
-                    <Setter Property="Foreground" Value="DimGray"/>
                     <Setter Property="FontSize" Value="14"/>
                     <Setter Property="Template">
                         <Setter.Value>
@@ -157,16 +161,16 @@
         <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
         <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
             <Grid>
-                <TextBlock Text="Click to copy image" Foreground="DimGray" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <Image Name="PreviewImage"/>
             </Grid>
         </Button>
 
         <!-- Stausbar -->
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Bottom">
-            <TextBlock Margin="0,0,24,0" Foreground="DimGray" FontSize="14">
+            <TextBlock Margin="0,0,24,0">
                 <TextBlock.Style>
-                    <Style TargetType="TextBlock">
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultText}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="1">
                                 <Setter Property="Text" Value="Edit   Mode"/>
@@ -176,9 +180,9 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <TextBlock Margin="0,0,84,0" Foreground="DimGray" FontSize="14">
+            <TextBlock Margin="0,0,84,0">
                 <TextBlock.Style>
-                    <Style TargetType="TextBlock">
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultText}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="True">
                                 <Setter Property="Text" Value="(R/W)"/>
@@ -188,8 +192,8 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Margin="0,0,32,0" Foreground="DimGray" FontSize="14"/>
-            <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Margin="0,0,64,0" Foreground="DimGray" FontSize="14"/>
+            <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Margin="0,0,32,0"/>
+            <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Margin="0,0,64,0"/>
         </StackPanel>
 
         <!-- Splashscreen -->
