@@ -30,7 +30,7 @@ $wpf.SF7N.Add_ContentRendered{
 
     # Read and evaluate path configurations
     Write-Log 'INF' 'Import Configurations'
-    $config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
+    $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
     $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
     $script:previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewPath)
 
