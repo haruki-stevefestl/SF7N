@@ -21,7 +21,9 @@ $ErrorActionPreference = 'Continue'
 
 # Import GUI Control code
 Write-Log 'INF' 'Import Modules'
-Import-Module (Get-ChildItem *.ps1 -Recurse -Exclude SF7N-Loader.ps1)
+Import-Module '.\Functions\F-Edit.ps1', '.\Functions\F-Search.ps1',
+              '.\Handlers\H-Edit.ps1', '.\Handlers\H-Config.ps1',
+              '.\Handlers\H-Search.ps1'
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered{
@@ -34,43 +36,17 @@ $wpf.SF7N.Add_ContentRendered{
     $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
     $script:previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewPath)
 
-    Import-CustomCSV $csvLocation
-    $wpf.CSVGrid.ItemsSource = $csv
-    
     # Apply config
-    $wpf.AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
-    $wpf.InputAssist.IsChecked = $config.InputAssist -ieq 'true'
-    $wpf.ReadWrite.IsChecked   = $config.ReadWrite   -ieq 'true'
-    $wpf.InsertLastCount.Text  = $config.InsertLast
+    $wpf.Config_CSVLocation.Text      = $config.csvLocation
+    $wpf.Config_PreviewLocation.Text  = $config.PreviewPath
+    $wpf.Config_InputAssist.IsChecked = $config.InputAssist -ieq 'true'
+    $wpf.Config_AppendFormat.Text     = $config.AppendFormat
+    $wpf.Config_AppendCount.Text      = $config.InsertLast
+    $wpf.Config_AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
+    $wpf.Config_ReadWrite.IsChecked   = $config.ReadWrite   -ieq 'true'
 
-    # Generate columns of Datagrid
-    Write-Log 'INF' 'Build  Datagrid'
-    $Format = '.\Configurations\Formatting.csv'
-    if (Test-Path $Format) {$Format = Import-CSV $Format}
+    Invoke-Initialization
 
-    $csvHeader.ForEach{
-        $Column = [Windows.Controls.DataGridTextColumn]::New()
-        $Column.Binding = [Windows.Data.Binding]::New($_)
-        $Column.Header  = $_
-        $Column.CellStyle = [Windows.Style]::New()
-
-        # Apply conditional formatting
-        for ($i = 0; $i -lt $Format.$_.Count; $i += 2) {
-            if ([String]::IsNullOrWhiteSpace($Format.$_[$i])) {break}
-            $Trigger = [Windows.DataTrigger]::New()
-            $Trigger.Binding = $Column.Binding
-            $Trigger.Value = $Format.$_[$i]
-            $Trigger.Setters.Add([Windows.Setter]::New(
-                [Windows.Controls.DataGridCell]::BackgroundProperty,
-                [Windows.Media.BrushConverter]::New().ConvertFromString($Format.$_[$i+1])
-            ))
-            $Column.CellStyle.Triggers.Add($Trigger)
-        }
-        $wpf.CSVGrid.Columns.Add($Column)
-    }
-
-    # Cleanup
-    $wpf.SplashScreen.Visibility = 'Hidden'
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Remove-Variable 'tempform', 'xaml', 'startTime' -Scope Script
 }

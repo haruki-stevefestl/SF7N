@@ -40,7 +40,7 @@ function Search-CSV ($SearchText) {
     $Runspace.SessionStateProxy.SetVariable('csv',$csv)
     $Runspace.SessionStateProxy.SetVariable('searchTerm',$searchTerm)
     $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
-    $Runspace.SessionStateProxy.SetVariable('aliasMode',$wpf.AliasMode.IsChecked)
+    $Runspace.SessionStateProxy.SetVariable('aliasMode',$wpf.Config_AliasMode.IsChecked)
     $Ps = [PowerShell]::Create().AddScript{
         function ConvertTo-Alias ($Row) {
             if ($csvAlias) {
