@@ -67,9 +67,12 @@ function Search-CSV ($SearchText) {
             } else {
                 $CsvSearch.Add($Entry)
             }
-        }
 
-        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'ApplicationIdle')
+            if ($CsvSearch.Count -eq 25) {
+                $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch.PSObject.Copy()}, 'Normal')
+            }
+        }
+        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'Normal')
     }
     $Ps.Runspace = $Runspace
     $Ps.BeginInvoke()
