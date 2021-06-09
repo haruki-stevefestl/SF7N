@@ -4,7 +4,7 @@ $wpf.Settings.Add_Click({
         # Export config to file
         (
             'csvLocation  = ' + $wpf.Config_CSVLocation.Text.Replace('\','\\') + "`n",
-            'previewPath  = ' + $wpf.Config_PreviewLocation.Text.Replace('\','\\') + "`n",
+            'PreviewPath  = ' + $wpf.Config_PreviewPath.Text.Replace('\','\\') + "`n",
             'InputAssist  = ' + $wpf.Config_InputAssist.IsChecked + "`n",
             'InsertLast   = ' + $wpf.Config_AppendCount.Text + "`n",
             'AppendFormat = ' + $wpf.Config_AppendFormat.Text + "`n",
@@ -12,7 +12,13 @@ $wpf.Settings.Add_Click({
             'ReadWrite    = ' + $wpf.Config_ReadWrite.IsChecked
         ) | Set-Content '.\Configurations\General.ini'
 
-        # Reload
-        Invoke-Initialization
+        # Reinitalize if locational variables changed
+        if (
+            $config.csvLocation -ne $wpf.Config_CSVLocation.Text -or
+            $config.PreviewPath -ne $wpf.Config_PreviewPath.Text
+        ) {
+            Invoke-Initialization
+        }
+        Search-CSV $wpf.SearchBar.Text
     }
 })
