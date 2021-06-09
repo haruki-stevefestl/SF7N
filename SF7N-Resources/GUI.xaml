@@ -46,27 +46,24 @@
         <TabControl Name="Toolbar" Grid.ColumnSpan="2" BorderThickness="0">
             <!-- Search -->
             <TabItem>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" MaxWidth="144"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*" MaxWidth="300"/>
-                    </Grid.ColumnDefinitions>
-                    <ToggleButton Height="24" HorizontalAlignment="Stretch" Margin="0,-2,0,0" Content="Settings" Name="Settings"/>
-                    <TextBlock Grid.Column="1" Margin="8,0,0,0" Foreground="Gray" Padding="7,3" VerticalAlignment="Top" Height="24" FontSize="16">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
-                                        <Setter Property="Text" Value="Filter by Header:Value"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <TextBox Grid.Column="1" Margin="8,0,0,0" Name="SearchBar" AcceptsReturn="True" BorderThickness="1" BorderBrush="LightGray" FontSize="16" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Padding="4,0,0,0" Background="Transparent"/>
-                    <Button Grid.Column="2" Name="Search" Content="Filter" FontSize="16" Height="24" VerticalAlignment="Top" Margin="8,0,0,0"/>
-                </Grid>
+                <DockPanel>
+                    <ToggleButton Height="24" Width="200" Content="Settings" Name="Settings" VerticalAlignment="Top"/>
+                    <Button DockPanel.Dock="Right" Name="Search" Content="Filter" Height="24" Width="300" VerticalAlignment="Top"/>
+                    <Grid>
+                        <TextBlock Margin="15,3" Foreground="Gray">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
+                                            <Setter Property="Text" Value="Filter by Header:Value"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBox Margin="8,0" Name="SearchBar" AcceptsReturn="True" FontSize="16" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Padding="4,0,0,0" Background="Transparent"/>
+                    </Grid>
+                </DockPanel>
             </TabItem>
             <!-- Edit -->
             <TabItem>
@@ -82,19 +79,22 @@
         </TabControl>
 
         <!-- Datagrid -->
-        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
-                            <Setter Property="Text" Value="The search returns no results"/>
+                            <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
+                    <Setter Property="Visibility" Value="Collapsed"/>
                 </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,16,0,0"
-                  Background="Transparent" GridLinesVisibility="None" BorderThickness="0" FontSize="16"
+            </StackPanel.Style>
+            <TextBlock Style="{StaticResource SmallText}" Text="The search returns no matches yet." HorizontalAlignment="Center"/>
+            <TextBlock Style="{StaticResource SmallText}" Text="Try other search criteria or await pending results." Margin="0,8,0,0"/>
+        </StackPanel>
+        <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,16,0,0" MinColumnWidth="48"
+                  Background="Transparent" GridLinesVisibility="None" BorderThickness="0"
                   RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
                   SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
             <DataGrid.Resources>
@@ -125,7 +125,7 @@
                                     <Path Name="SortAscend" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed" HorizontalAlignment="Center"/>
                                     <Path Name="SortDescend" Stroke="Gray" Data="M0,4 L4,0 L8,4" Visibility="Collapsed" HorizontalAlignment="Center"/>
                                     <TextBlock Text="{Binding}" Margin="4,8,4,4" Style="{StaticResource SmallText}"/>
-                                    <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
+                                    <Thumb Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="SortDirection" Value="Ascending">
@@ -228,7 +228,7 @@
             <RadioButton Grid.Column="3" Grid.Row="6" Name="Config_ReadWrite" Content="Read/Write" Style="{StaticResource {x:Type ToggleButton}}"/>
 
             <TextBox Grid.Column="3" Grid.Row="1" Height="24" VerticalAlignment="Top" Name="Config_CSVLocation"/>
-            <TextBox Grid.Column="3" Grid.Row="2" Height="24" VerticalAlignment="Top" Name="Config_PreviewLocation"/>
+            <TextBox Grid.Column="3" Grid.Row="2" Height="24" VerticalAlignment="Top" Name="Config_PreviewPath"/>
             <CheckBox Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" Name="Config_InputAssist"/>
             <TextBox Grid.Column="3" Grid.Row="4" Height="24" VerticalAlignment="Top" Name="Config_AppendFormat"/>
             <TextBox Grid.Column="3" Grid.Row="5" Height="24" VerticalAlignment="Top" Name="Config_AppendCount"/>
