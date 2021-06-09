@@ -1,5 +1,6 @@
 # Import the base fuction & Initialize
 $startTime = Get-Date
+$script:baseLocation = $PSScriptRoot
 Set-Location $PSScriptRoot
 Get-ChildItem *.ps1 -Recurse | Unblock-File
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
@@ -26,33 +27,29 @@ Import-Module '.\Functions\F-Edit.ps1', '.\Functions\F-Search.ps1',
               '.\Handlers\H-Search.ps1'
 
 # Initialzation work after splashscreen show
-$wpf.SF7N.Add_ContentRendered{
+$wpf.SF7N.Add_ContentRendered({
     Write-Log 'INF' 'Import WinForms'
     Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
 
-    # Read and evaluate path configurations
-    Write-Log 'INF' 'Import Configurations'
-    $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
-    $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
-    $script:previewLocation = $ExecutionContext.InvokeCommand.ExpandString($config.previewPath)
-
     # Apply config
+    Invoke-Initialization
     $wpf.Config_CSVLocation.Text      = $config.csvLocation
-    $wpf.Config_PreviewLocation.Text  = $config.PreviewPath
+    $wpf.Config_PreviewPath.Text      = $config.PreviewPath
     $wpf.Config_InputAssist.IsChecked = $config.InputAssist -ieq 'true'
     $wpf.Config_AppendFormat.Text     = $config.AppendFormat
     $wpf.Config_AppendCount.Text      = $config.InsertLast
     $wpf.Config_AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
     $wpf.Config_ReadWrite.IsChecked   = $config.ReadWrite   -ieq 'true'
+    Search-CSV $wpf.SearchBar.Text
 
-    Invoke-Initialization
-
+    # Cleanup
+    $wpf.SplashScreen.Visibility = 'Hidden'
     Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
     Remove-Variable 'tempform', 'xaml', 'startTime' -Scope Script
-}
+})
 
 # Prompt and cleanup on close
-$wpf.SF7N.Add_Closing{
+$wpf.SF7N.Add_Closing({
     if ($wpf.Commit.IsEnabled) {
         $Dialog = New-SaveDialog
         if ($Dialog -eq 'Cancel') {
@@ -66,7 +63,7 @@ $wpf.SF7N.Add_Closing{
         Write-Log 'INF' 'Remove Modules'
         Remove-Module 'F-*', 'H-*'
     }
-}
+})
 
 # Load WPF
 Write-Log 'DBG' 'Launch GUI'

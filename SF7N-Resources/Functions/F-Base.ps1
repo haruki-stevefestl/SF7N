@@ -38,6 +38,12 @@ function New-SaveDialog {
 }
 
 function Invoke-Initialization {
+    # Read and evaluate path configurations
+    Write-Log 'INF' 'Import Configurations'
+    $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
+    $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
+    $script:previewPath = $ExecutionContext.InvokeCommand.ExpandString($config.previewPath)
+
     Import-CustomCSV $csvLocation
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.CSVGrid.Columns.Clear()
@@ -67,8 +73,4 @@ function Invoke-Initialization {
         }
         $wpf.CSVGrid.Columns.Add($Column)
     }
-    Search-CSV $wpf.SearchBar.Text
-
-    # Cleanup
-    $wpf.SplashScreen.Visibility = 'Hidden'
 }
