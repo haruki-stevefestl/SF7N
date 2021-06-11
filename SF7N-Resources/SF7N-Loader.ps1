@@ -46,7 +46,7 @@ $wpf.SF7N.Add_Closing({
         if ($Dialog -eq 'Cancel') {
             $_.Cancel = $true
         } elseif ($Dialog -eq 'Yes') {
-            Export-CustomCSV $csvLocation
+            Export-CustomCSV $dataContext.csvLocation
         }
     }
 

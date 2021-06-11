@@ -1,6 +1,6 @@
 function Export-CustomCSV ($ExportTo) {
     try {
-        $csv | Export-CSV $ExportTo -NoTypeInformation
+        $csv | Export-CSV $ExecutionContext.InvokeCommand.ExpandString($ExportTo) -NoTypeInformation
         $wpf.Commit.IsEnabled = $false
     } catch {Write-Log 'ERR' "Export CSV Failed: $_"}
 }
@@ -15,11 +15,11 @@ function Add-Row ($Action) {
     try {$Count = $wpf.CSVGrid.SelectedItems.Count}     catch {$Count = 1}
     
     if ($Action -eq 'InsertLast') {
-        $Count = $wpf.Config_AppendCount.Text
+        $Count = $dataContext.AppendCount
         for ($I = 0; $I -lt $Count; $I++) {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
-            $ThisRow.($csvHeader[0]) = $wpf.Config_AppendFormat.Text -replace
+            $ThisRow.($csvHeader[0]) = $dataContext.AppendFormat -replace
                 '%D', (Get-Date -Format yyyyMMdd) -replace
                 '%T', (Get-Date -Format HHmmss)   -replace
                 '%#', $I

@@ -99,7 +99,7 @@
             <DataGrid.Resources>
                 <Style TargetType="DataGrid">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=Config_ReadWrite, Path=IsChecked}" Value="True">
+                        <DataTrigger Binding="{Binding ReadWrite}" Value="True">
                             <Setter Property="IsReadOnly" Value="False"/>
                         </DataTrigger>
                     </Style.Triggers>
