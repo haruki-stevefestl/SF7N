@@ -14,6 +14,8 @@ function Import-CustomCSV ($ImportFrom) {
     #>
     Write-Log 'INF' 'Import CSV'
     try {
+        $ImportFrom = $ExecutionContext.InvokeCommand.ExpandString($ImportFrom)
+
         $script:csvHeader = (Get-Content $ImportFrom -First 1) -replace '"','' -split ','
         [Collections.ArrayList] $script:csv = Import-CSV $ImportFrom
         
@@ -37,14 +39,34 @@ function New-SaveDialog {
     [Windows.MessageBox]::Show('Commit changes before exiting?', 'SF7N Interface', 'YesNoCancel', 'Question')
 }
 
+function Set-DataContext ($Key, $Value) {
+    # Because I do not know how to implement INotifyPropertyChanged
+    $dataContext.$Key = $Value
+    $wpf.SF7N.DataContext = $null
+    $wpf.SF7N.DataContext = $dataContext
+}
+
 function Invoke-Initialization {
     # Read and evaluate path configurations
     Write-Log 'INF' 'Import Configurations'
-    $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
-    $script:csvLocation = $ExecutionContext.InvokeCommand.ExpandString($config.csvLocation)
-    $script:previewPath = $ExecutionContext.InvokeCommand.ExpandString($config.previewPath)
+    $Config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
 
-    Import-CustomCSV $csvLocation
+    # Bulid DataContext
+    Write-Log 'INF' 'Build  DataContext'
+    $script:dataContext = [PSCustomObject] @{
+        csvLocation  = $config.csvLocation
+        PreviewPath  = $config.PreviewPath
+        InputAssist  = $config.InputAssist -ieq 'true'
+        AppendFormat = $config.AppendFormat
+        AppendCount  = $config.AppendCount
+        AliasMode    = $config.AliasMode   -ieq 'true'
+        ReadWrite    = $config.ReadWrite   -ieq 'true'
+        Status       = 'Initializing'
+        Preview      = $null
+    }
+    $wpf.SF7N.DataContext = $dataContext
+
+    Import-CustomCSV $dataContext.csvLocation
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.CSVGrid.Columns.Clear()
     
@@ -73,4 +95,6 @@ function Invoke-Initialization {
         }
         $wpf.CSVGrid.Columns.Add($Column)
     }
+    Search-CSV $wpf.SearchBar.Text
+    Set-DataContext Status Ready
 }

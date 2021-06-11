@@ -12,7 +12,9 @@ function ConvertFrom-Alias ($Row) {
 
 function Search-CSV ($SearchText) {
     # Initialize
-    $wpf.CSVGrid.ItemsSource = $wpf.PreviewImage.Source = $null
+    $wpf.CSVGrid.ItemsSource = $null
+    Set-DataContext Preview $null
+    Set-DataContext Status 'Processing'
 
     # Parse SearchRules Text into [PSCustomObject]$SearchTerm
     $SearchTerm = [PSCustomObject] @{}
@@ -40,7 +42,7 @@ function Search-CSV ($SearchText) {
     $Runspace.SessionStateProxy.SetVariable('csv',$csv)
     $Runspace.SessionStateProxy.SetVariable('searchTerm',$searchTerm)
     $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
-    $Runspace.SessionStateProxy.SetVariable('aliasMode',$wpf.Config_AliasMode.IsChecked)
+    $Runspace.SessionStateProxy.SetVariable('dataContext',$dataContext)
     $Ps = [PowerShell]::Create().AddScript{
         function ConvertTo-Alias ($Row) {
             if ($csvAlias) {
@@ -62,7 +64,7 @@ function Search-CSV ($SearchText) {
             }
     
             # Apply alias if AliasMode is on; else add raw content
-            if ($aliasMode) {
+            if ($dataContext.AliasMode) {
                 $CsvSearch.Add((ConvertTo-Alias $Entry.PsObject.Copy()))
             } else {
                 $CsvSearch.Add($Entry)
@@ -73,6 +75,9 @@ function Search-CSV ($SearchText) {
             }
         }
         $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'Normal')
+        $dataContext.Status = 'Ready'
+        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.SF7N.DataContext = $null}, 'Normal')
+        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.SF7N.DataContext = $dataContext}, 'Normal')
     }
     $Ps.Runspace = $Runspace
     $Ps.BeginInvoke()

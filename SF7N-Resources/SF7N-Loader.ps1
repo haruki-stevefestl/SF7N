@@ -31,16 +31,7 @@ $wpf.SF7N.Add_ContentRendered({
     Write-Log 'INF' 'Import WinForms'
     Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
 
-    # Apply config
     Invoke-Initialization
-    $wpf.Config_CSVLocation.Text      = $config.csvLocation
-    $wpf.Config_PreviewPath.Text      = $config.PreviewPath
-    $wpf.Config_InputAssist.IsChecked = $config.InputAssist -ieq 'true'
-    $wpf.Config_AppendFormat.Text     = $config.AppendFormat
-    $wpf.Config_AppendCount.Text      = $config.InsertLast
-    $wpf.Config_AliasMode.IsChecked   = $config.AliasMode   -ieq 'true'
-    $wpf.Config_ReadWrite.IsChecked   = $config.ReadWrite   -ieq 'true'
-    Search-CSV $wpf.SearchBar.Text
 
     # Cleanup
     $wpf.SplashScreen.Visibility = 'Hidden'
