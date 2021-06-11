@@ -13,13 +13,13 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="ColumnHeaderGripperStyle" TargetType="Thumb">
+        <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
             <Setter Property="Width" Value="8"/>
-            <Setter Property="Cursor" Value="SizeWE"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="SizeWE"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Thumb">
+                    <ControlTemplate TargetType="{x:Type Thumb}">
                         <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -117,27 +117,40 @@
                     <Setter Property="MinWidth" Value="128"/>
                     <Setter Property="MinHeight" Value="32"/>
                     <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="Foreground" Value="DimGray"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="DataGridColumnHeader">
-                                <Grid Name="Back" Background="White">
-                                    <Path Name="SortAscend" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed" HorizontalAlignment="Center"/>
-                                    <Path Name="SortDescend" Stroke="Gray" Data="M0,4 L4,0 L8,4" Visibility="Collapsed" HorizontalAlignment="Center"/>
-                                    <Thumb Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
-                                    <TextBlock Text="{Binding}" Margin="4" Style="{StaticResource SmallText}" VerticalAlignment="Bottom"/>
+                                <Grid>
+                                    <Border Name="BRIN" CornerRadius="1" Padding="4,4,4,2" BorderThickness="0">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                    </Border>
+                                    <Path Name="SortArrow" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
+                                          HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+                                    <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
+                                    <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="SortDirection" Value="Ascending">
-                                        <Setter TargetName="SortAscend" Property="Visibility" Value="Visible"/>
+                                        <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
+                                        <Setter TargetName="SortArrow" Property="RenderTransform">
+                                            <Setter.Value>
+                                                <TransformGroup>
+                                                    <ScaleTransform ScaleY="-1"/>
+                                                </TransformGroup>
+                                            </Setter.Value>
+                                        </Setter>
                                     </Trigger>
                                     <Trigger Property="SortDirection" Value="Descending">
-                                        <Setter TargetName="SortDescend" Property="Visibility" Value="Visible"/>
+                                        <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Back" Property="Background" Value="#D9EBF9"/>
+                                        <Setter TargetName="BRIN" Property="Border.Background" Value="#D9EBF9"/>
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="True">
-                                        <Setter TargetName="Back" Property="Background" Value="#BCDCF4" />
+                                        <Setter TargetName="BRIN" Property="Border.Background" Value="#BCDCF4" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
