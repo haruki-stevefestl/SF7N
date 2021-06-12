@@ -1,7 +1,8 @@
 <Window Name="SF7N"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SF7N Interface" Height="600" Width="1600" FontFamily="Courier New" FontSize="16">
+        Title="SF7N Interface" Height="600" Width="1600"
+        FontFamily="Courier New" FontSize="16">
     <Window.Resources>
         <Style TargetType="TabItem">
             <Setter Property="Height" Value="0"/>
@@ -266,9 +267,18 @@
         </ToggleButton>
 
         <!-- Splashscreen -->
-        <Grid Name="Splashscreen" Grid.RowSpan="3" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White" Visibility="Hidden">
+        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White" Margin="-20">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Initializing">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Style>
+                </Grid.Style>
             <TextBlock Text="SF7N 1.6" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="Runtime-settings-changing sponsered by haruki-taka8!" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,42,0,0"/>
         </Grid>
     </Grid>
 </Window>

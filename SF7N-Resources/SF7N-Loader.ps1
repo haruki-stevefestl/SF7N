@@ -31,12 +31,8 @@ $wpf.SF7N.Add_ContentRendered({
     Write-Log 'INF' 'Import WinForms'
     Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
 
-    Invoke-Initialization
-
-    # Cleanup
-    $wpf.SplashScreen.Visibility = 'Hidden'
-    Write-Log 'DBG' "Total  $(((Get-Date)-$startTime).TotalMilliseconds) ms"
-    Remove-Variable 'tempform', 'xaml', 'startTime' -Scope Script
+    Initialize-SF7N
+    Remove-Variable 'tempform', 'xaml' -Scope Script
 })
 
 # Prompt and cleanup on close
@@ -50,13 +46,9 @@ $wpf.SF7N.Add_Closing({
         }
     }
 
-    if (!$_.Cancel) {
-        Write-Log 'INF' 'Remove Modules'
-        Remove-Module 'F-*', 'H-*'
-    }
+    if (!$_.Cancel) {Remove-Module 'F-*', 'H-*'}
 })
 
 # Load WPF
 Write-Log 'DBG' 'Launch GUI'
-$wpf.SplashScreen.Visibility = 'Visible'
 $wpf.SF7N.ShowDialog() | Out-Null
