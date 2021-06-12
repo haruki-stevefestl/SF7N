@@ -9,8 +9,8 @@ $wpf.Settings.Add_Unchecked({
         'AppendCount  = ' + $dataContext.AppendCount + "`n",
         'AliasMode    = ' + $dataContext.AliasMode + "`n",
         'ReadWrite    = ' + $dataContext.ReadWrite
-    ) | Set-Content '.\Configurations\General.ini'
+    ) | Out-File '.\Configurations\General.ini'
 
     # Reload
-    Invoke-Initialization
+    Initialize-SF7N
 })

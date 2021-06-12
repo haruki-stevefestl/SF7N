@@ -38,6 +38,7 @@ function Add-Row ($Action) {
         $csv.InsertRange([Math]::Max(0, [Math]::Min($At,$csv.Count)), @($RowTemplate)*$Count)
     }
 
+    $wpf.Commit.IsEnabled = $true
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
 }
