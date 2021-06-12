@@ -10,11 +10,11 @@ function ConvertFrom-Alias ($Row) {
     return $Row
 }
 
-function Search-CSV ($SearchText) {
+function Search-CSV ($SearchText, $FirstRun) {
     # Initialize
     $wpf.CSVGrid.ItemsSource = $null
     Set-DataContext Preview $null
-    Set-DataContext Status 'Processing'
+    if (!$FirstRun) {Set-DataContext Status 'Processing'}
 
     # Parse SearchRules Text into [PSCustomObject]$SearchTerm
     $SearchTerm = [PSCustomObject] @{}
@@ -38,11 +38,10 @@ function Search-CSV ($SearchText) {
     $Runspace.ApartmentState = 'STA'
     $Runspace.ThreadOptions = 'ReuseThread'
     $Runspace.Open()
-    $Runspace.SessionStateProxy.SetVariable('wpf',$wpf)
-    $Runspace.SessionStateProxy.SetVariable('csv',$csv)
-    $Runspace.SessionStateProxy.SetVariable('searchTerm',$searchTerm)
-    $Runspace.SessionStateProxy.SetVariable('csvAlias',$csvAlias)
-    $Runspace.SessionStateProxy.SetVariable('dataContext',$dataContext)
+    # Pass variables
+    ('wpf','csv','SearchTerm','csvAlias','dataContext','FirstRun').ForEach({
+        $RunSpace.SessionStateProxy.SetVariable($_, (Get-Variable $_).Value)
+    })
     $Ps = [PowerShell]::Create().AddScript{
         function ConvertTo-Alias ($Row) {
             if ($csvAlias) {
@@ -59,10 +58,12 @@ function Search-CSV ($SearchText) {
         [Collections.ArrayList] $CsvSearch = @()
         foreach ($Entry in $csv) {
             # If notMatch, goto next iteration
-            $SearchTerm.PSObject.Properties.ForEach{
-                if ($Entry.($_.Name) -notmatch $_.Value) {continue}
+            if (!$FirstRun) {
+                $SearchTerm.PSObject.Properties.ForEach{
+                    if ($Entry.($_.Name) -notmatch $_.Value) {continue}
+                }
             }
-    
+        
             # Apply alias if AliasMode is on; else add raw content
             if ($dataContext.AliasMode) {
                 $CsvSearch.Add((ConvertTo-Alias $Entry.PsObject.Copy()))

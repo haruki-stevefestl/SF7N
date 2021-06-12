@@ -2,7 +2,10 @@ function Write-Log ($Type, $Content) {
     if ($Type -eq 'ERR') {
         [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
     }
-    Write-Host "[$(Get-Date -Format HH:mm:ss.fff)][$Type] $Content" | Out-Host
+    $TimeDiff = ((Get-Date)-$startTime).TotalMilliseconds.
+                    ToString().Split('.')[0].  # Get integral part
+                    PadRight(5)                # Right padding
+    Write-Host "$TimeDiff    $Type    $Content" | Out-Host
 }
 
 function Import-CustomCSV ($ImportFrom) {
@@ -16,13 +19,11 @@ function Import-CustomCSV ($ImportFrom) {
     try {
         $ImportFrom = $ExecutionContext.InvokeCommand.ExpandString($ImportFrom)
 
-        $script:csvHeader = (Get-Content $ImportFrom -First 1) -replace '"','' -split ','
+        $script:csvHeader = (Get-Content $ImportFrom -First 1).Replace('"', '').Split(',')
         [Collections.ArrayList] $script:csv = Import-CSV $ImportFrom
         
-        $AliasLocation = '.\Configurations\CSVAlias.csv'
-        if (Test-Path $AliasLocation) {
-            [Collections.ArrayList] $script:csvAlias = Import-CSV $AliasLocation
-        }
+        $Alias = '.\Configurations\CSVAlias.csv'
+        if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}
     } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
 
     # Enter edit mode if CSV is empty
@@ -46,7 +47,7 @@ function Set-DataContext ($Key, $Value) {
     $wpf.SF7N.DataContext = $dataContext
 }
 
-function Invoke-Initialization {
+function Initialize-SF7N {
     # Read and evaluate path configurations
     Write-Log 'INF' 'Import Configurations'
     $Config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
@@ -65,6 +66,7 @@ function Invoke-Initialization {
         Preview      = $null
     }
     $wpf.SF7N.DataContext = $dataContext
+    $wpf.SF7N.Dispatcher.Invoke([Action]{}, 'Render')
 
     Import-CustomCSV $dataContext.csvLocation
     $wpf.CSVGrid.ItemsSource = $null
@@ -95,6 +97,5 @@ function Invoke-Initialization {
         }
         $wpf.CSVGrid.Columns.Add($Column)
     }
-    Search-CSV $wpf.SearchBar.Text
-    Set-DataContext Status Ready
+    Search-CSV $wpf.SearchBar.Text -FirstRun $true
 }
