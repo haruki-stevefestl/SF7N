@@ -33,8 +33,8 @@ function Set-XAMLTheme ($Xaml) {
         # Because ConvertFrom-StringData doesn't provide a [Hashtable],
         # we're manually parsing each line of the theme file
         (Get-Content $Theme).ForEach({
-            $This = $_.Split('=')
-            $Color.($This[0].Trim()) = $This[1].Trim()
+            $ThisLine = $_.Split('=')
+            $Color.($ThisLine[0].Trim()) = $ThisLine[1].Trim()
         })
     }
 
