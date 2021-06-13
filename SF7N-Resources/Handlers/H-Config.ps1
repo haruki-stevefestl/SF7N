@@ -2,14 +2,14 @@
 $wpf.SettingsReturn.Add_Click({
     # Export config to file
     (
-        'csvLocation  = ' + $dataContext.csvLocation.Replace('\','\\') + "`n",
-        'PreviewPath  = ' + $dataContext.PreviewPath.Replace('\','\\') + "`n",
-        'Theme        = ' + $dataContext.Theme + "`n",
-        'InputAssist  = ' + $dataContext.InputAssist + "`n",
-        'AppendFormat = ' + $dataContext.AppendFormat + "`n",
-        'AppendCount  = ' + $dataContext.AppendCount + "`n",
-        'AliasMode    = ' + $dataContext.AliasMode + "`n",
-        'ReadWrite    = ' + $dataContext.ReadWrite
+        'csvLocation  = ' + $context.csvLocation.Replace('\','\\') + "`n",
+        'PreviewPath  = ' + $context.PreviewPath.Replace('\','\\') + "`n",
+        'Theme        = ' + $context.Theme + "`n",
+        'InputAssist  = ' + $context.InputAssist + "`n",
+        'AppendFormat = ' + $context.AppendFormat + "`n",
+        'AppendCount  = ' + $context.AppendCount + "`n",
+        'AliasMode    = ' + $context.AliasMode + "`n",
+        'ReadWrite    = ' + $context.ReadWrite
     ) | Out-File '.\Configurations\General.ini'
 
     # Reload

@@ -28,7 +28,7 @@ function Set-XAMLTheme ($Xaml) {
             Control    = 'E5F3FF'
     }
 
-    $Theme = ".\Configurations\Themes\$($dataContext.Theme).ini"
+    $Theme = ".\Configurations\Themes\$($context.Theme).ini"
     if (Test-Path $Theme) {
         # Because ConvertFrom-StringData doesn't provide a [Hashtable],
         # we're manually parsing each line of the theme file

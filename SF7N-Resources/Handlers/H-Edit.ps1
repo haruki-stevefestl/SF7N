@@ -15,20 +15,20 @@ $wpf.RemoveSelected.Add_Click({
 })
 
 # Commit CSV
-$wpf.Commit.Add_Click({Export-CustomCSV $dataContext.csvLocation})
+$wpf.Commit.Add_Click({Export-CustomCSV $context.csvLocation})
 
 # Reload CSV on Return
 $wpf.Return.Add_Click({
     $Return = $true
     if ($wpf.Commit.IsEnabled) {
         switch (New-SaveDialog) {
-            'Yes'    {Export-CustomCSV $dataContext.csvLocation}
+            'Yes'    {Export-CustomCSV $context.csvLocation}
             'Cancel' {$Return = $false}
         }
     }
 
     if ($Return) {
-        Import-CustomCSV $dataContext.csvLocation
+        Import-CustomCSV $context.csvLocation
         $wpf.CSVGrid.ItemsSource = $csv
         $wpf.Commit.IsEnabled = $false
         $wpf.Toolbar.SelectedIndex = 0

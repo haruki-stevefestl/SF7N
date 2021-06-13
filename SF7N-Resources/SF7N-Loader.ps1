@@ -16,7 +16,7 @@ $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringDa
 
 # Bulid DataContext
 Write-Log 'INF' 'Build  DataContext'
-$script:dataContext = [PSCustomObject] @{
+$script:context = [PSCustomObject] @{
     csvLocation  = $config.csvLocation
     PreviewPath  = $config.PreviewPath
     Theme        = $config.Theme
@@ -54,7 +54,7 @@ $wpf.SF7N.Add_Closing({
         if ($Dialog -eq 'Cancel') {
             $_.Cancel = $true
         } elseif ($Dialog -eq 'Yes') {
-            Export-CustomCSV $dataContext.csvLocation
+            Export-CustomCSV $context.csvLocation
         }
     }
 

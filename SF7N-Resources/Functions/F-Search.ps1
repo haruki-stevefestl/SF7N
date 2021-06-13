@@ -39,7 +39,7 @@ function Search-CSV ($SearchText, $FirstRun) {
     $Runspace.ThreadOptions = 'ReuseThread'
     $Runspace.Open()
     # Pass variables
-    ('wpf','csv','SearchTerm','csvAlias','dataContext','FirstRun').ForEach({
+    ('wpf','csv','SearchTerm','csvAlias','context','FirstRun').ForEach({
         $RunSpace.SessionStateProxy.SetVariable($_, (Get-Variable $_).Value)
     })
     $Ps = [PowerShell]::Create().AddScript{
@@ -65,7 +65,7 @@ function Search-CSV ($SearchText, $FirstRun) {
             }
         
             # Apply alias if AliasMode is on; else add raw content
-            if ($dataContext.AliasMode) {
+            if ($context.AliasMode) {
                 $CsvSearch.Add((ConvertTo-Alias $Entry.PsObject.Copy()))
             } else {
                 $CsvSearch.Add($Entry)
@@ -76,9 +76,9 @@ function Search-CSV ($SearchText, $FirstRun) {
             }
         }
         $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.CSVGrid.ItemsSource = $CsvSearch}, 'Normal')
-        $dataContext.Status = 'Ready'
+        $context.Status = 'Ready'
         $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.SF7N.DataContext = $null}, 'Normal')
-        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.SF7N.DataContext = $dataContext}, 'Normal')
+        $wpf.SF7N.Dispatcher.Invoke([Action] {$wpf.SF7N.DataContext = $context}, 'Normal')
     }
     $Ps.Runspace = $Runspace
     $Ps.BeginInvoke()

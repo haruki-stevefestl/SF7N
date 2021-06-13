@@ -10,7 +10,7 @@ $wpf.Search.Add_Click({Search-CSV $wpf.SearchBar.Text})
 # Set preview on cell change
 $wpf.CSVGrid.Add_SelectionChanged({
     # Evaluate <.+?> notations
-    $Preview = $ExecutionContext.InvokeCommand.ExpandString($dataContext.PreviewPath)
+    $Preview = $ExecutionContext.InvokeCommand.ExpandString($context.PreviewPath)
     $Replacements = $Preview | Select-String '(?<=<)(.+?)(?=>)' -AllMatches
     $Replacements.Matches.Value.ForEach({
         $Preview = $Preview.Replace("<$_>", $wpf.CSVGrid.SelectedItem.$_)
@@ -20,9 +20,9 @@ $wpf.CSVGrid.Add_SelectionChanged({
 
 # Copy preview
 $wpf.PreviewCopy.Add_Click({
-    if ($dataContext.Preview) {
+    if ($context.Preview) {
         [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
-            $dataContext.Preview
+            $context.Preview
         ))
     }
 })

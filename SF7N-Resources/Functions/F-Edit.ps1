@@ -15,11 +15,11 @@ function Add-Row ($Action) {
     try {$Count = $wpf.CSVGrid.SelectedItems.Count}     catch {$Count = 1}
     
     if ($Action -eq 'InsertLast') {
-        $Count = $dataContext.AppendCount
+        $Count = $context.AppendCount
         for ($I = 0; $I -lt $Count; $I++) {
             # Add rows at end with IDing
             $ThisRow = $RowTemplate.PsObject.Copy()
-            $ThisRow.($csvHeader[0]) = $dataContext.AppendFormat -replace
+            $ThisRow.($csvHeader[0]) = $context.AppendFormat -replace
                 '%D', (Get-Date -Format yyyyMMdd) -replace
                 '%T', (Get-Date -Format HHmmss)   -replace
                 '%#', $I
