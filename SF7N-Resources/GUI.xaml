@@ -4,281 +4,274 @@
         Title="SF7N Interface" Height="600" Width="1600"
         FontFamily="Courier New" FontSize="16">
     <Window.Resources>
+        <SolidColorBrush x:Key="Color_Background" Color="#242424"/>
+        <SolidColorBrush x:Key="Color_Caption" Color="#969696"/>
+        <SolidColorBrush x:Key="Color_Header" Color="#404040"/>
+        <SolidColorBrush x:Key="Color_Foreground" Color="#EEEEEE"/>
+        <SolidColorBrush x:Key="Color_Highlight" Color="#FF0000"/>
+        <SolidColorBrush x:Key="Color_Control" Color="#00FF00"/>
+        <Color x:Key="Color__Highlight" R="255" G="0" B="0" A="255"/>
+        <Color x:Key="Color__Control" R="0" G="255" B="0" A="255"/>
+        <Color x:Key="Color__Foreground" R="238" G="238" B="238" A="255"/>
+
         <Style TargetType="TabItem">
             <Setter Property="Height" Value="0"/>
         </Style>
-        <Style x:Key="HideEditControl" TargetType="{x:Type Button}">
+        <Style x:Key="HideEditControl" TargetType="Button">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
                     <Setter Property="IsEnabled" Value="False"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
+        <Style x:Key="ColumnHeaderGripperStyle" TargetType="Thumb">
             <Setter Property="Width" Value="8"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Cursor" Value="SizeWE"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
+                    <ControlTemplate TargetType="Thumb">
                         <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="SmallText" TargetType="{x:Type TextBlock}">
-            <Setter Property="Foreground" Value="DimGray"/>
+        <Style x:Key="Caption" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Color_Caption}"/>
             <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Color_Foreground}"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="{StaticResource Color_Foreground}"/>
+            <Setter Property="Background" Value="Transparent"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="20,8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="24"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <!-- Toolbar -->
-        <TabControl Name="Toolbar" Grid.ColumnSpan="2" BorderThickness="0" Background="#EEEEEE" Margin="-20,-12,-20,0" Padding="20,20,20,0">
-            <!-- Search -->
-            <TabItem>
-                <DockPanel>
-                    <Button DockPanel.Dock="Right" Name="Search" Content="Filter" Height="24" Width="256" Margin="8,0,152,0" VerticalAlignment="Top"/>
-                    <Grid>
-                        <TextBlock Padding="7,3" Height="24" VerticalAlignment="Top" Foreground="DimGray" Background="White">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
-                                            <Setter Property="Text" Value="Filter by Header:Value"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                        <TextBox Name="SearchBar" AcceptsReturn="True" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Padding="4,0,0,0" BorderBrush="#707070" Background="Transparent"/>
-                    </Grid>
-                </DockPanel>
-            </TabItem>
-            <!-- Edit -->
-            <TabItem>
-                <UniformGrid Columns="6" Height="24" Margin="0,-14,0,0">
-                    <Button Name="InsertLast" Content="Append" Margin="0,0,4,0" />
-                    <Button Name="InsertAbove" Content="Insert Above" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
-                    <Button Name="InsertBelow" Content="Insert Below" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
-                    <Button Name="RemoveSelected" Content="Remove Selected" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
-                    <Button Name="Commit" Content="Commit" Margin="4,0,0,0" IsEnabled="False"/>
-                    <Button Name="Return" Content="Return" Margin="16,0,0,0"/>
-                </UniformGrid>
-            </TabItem>
-        </TabControl>
-
-        <!-- Datagrid -->
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel.Style>
-                <Style TargetType="StackPanel">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                </Style>
-            </StackPanel.Style>
-            <TextBlock Style="{StaticResource SmallText}" Text="The search returns no matches yet." HorizontalAlignment="Center"/>
-            <TextBlock Style="{StaticResource SmallText}" Text="Try other search criteria or await pending results." Margin="0,8,0,0"/>
-        </StackPanel>
-        <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,8,0,0" MinColumnWidth="48"
-                  Background="Transparent" GridLinesVisibility="None" BorderThickness="0"
-                  RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
-                  SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
-            <DataGrid.Resources>
-                <Style TargetType="DataGrid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ReadWrite}" Value="True">
-                            <Setter Property="IsReadOnly" Value="False"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="IsReadOnly" Value="True"/>
-                </Style>
-                <Style TargetType="DataGridRow">
-                    <Style.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#CCE8FF"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#E5F3FF"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
-                    </Style.Resources>
-                    <Setter Property="Background" Value="Transparent"/>
-                </Style>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="MinWidth" Value="128"/>
-                    <Setter Property="MinHeight" Value="32"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="Foreground" Value="DimGray"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="DataGridColumnHeader">
-                                <Grid>
-                                    <Border Name="BRIN" CornerRadius="1" Padding="4,4,4,2" BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                    </Border>
-                                    <Path Name="SortArrow" Stroke="Gray" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
-                                          HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
-                                    <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
-                                    <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
-                                </Grid>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="SortDirection" Value="Ascending">
-                                        <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
-                                        <Setter TargetName="SortArrow" Property="RenderTransform">
-                                            <Setter.Value>
-                                                <TransformGroup>
-                                                    <ScaleTransform ScaleY="-1"/>
-                                                </TransformGroup>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                    <Trigger Property="SortDirection" Value="Descending">
-                                        <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="BRIN" Property="Border.Background" Value="#D9EBF9"/>
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                        <Setter TargetName="BRIN" Property="Border.Background" Value="#BCDCF4" />
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.Resources>
-        </DataGrid>
-
-        <!-- Preview -->
-        <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
-        <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
-            <Grid>
-                <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource SmallText}"/>
-                <Image Source="{Binding Preview}"/>
-            </Grid>
-        </Button>
-
-        <!-- Stausbar -->
-        <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
-            <TextBlock Margin="0,0,48,0">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="1">
-                                <Setter Property="Text" Value="Edit Mode"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                        <Setter Property="Text" Value="Search Mode"/>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <TextBlock Margin="0,0,96,0">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ReadWrite}" Value="True">
-                                <Setter Property="Text" Value="Read/Write"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                        <Setter Property="Text" Value="Read-Only"/>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Style="{StaticResource SmallText}" Margin="0,0,48,0"/>
-            <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Style="{StaticResource SmallText}"/>
-            <TextBlock DockPanel.Dock="Right" Text="{Binding Status, UpdateSourceTrigger=Explicit}" Style="{StaticResource SmallText}" HorizontalAlignment="Right"/>
-        </DockPanel>
-
-        <!-- Settings -->
-        <Grid Background="White" Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="-20,-10,-20,-8">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=Settings, Path=IsChecked}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                </Style>
-            </Grid.Style>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="24"/>
-                <RowDefinition Height="5*"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="SF7N Configurations"/>
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="CSV Location"/>
-            <TextBlock Grid.Column="1" Grid.Row="2" Text="Preview Location"/>
-            <TextBlock Grid.Column="1" Grid.Row="3" Text="Dark Theme (WIP)"/>
-            <TextBlock Grid.Column="1" Grid.Row="4" Text="Input Assist"/>
-            <TextBlock Grid.Column="1" Grid.Row="5" Text="Append Format"/>
-            <TextBlock Grid.Column="1" Grid.Row="6" Text="Append Count"/>
-
-            <RadioButton Grid.Column="1" Grid.Row="7" Content="Output Aliasing" IsChecked="{Binding AliasMode}" Style="{StaticResource {x:Type ToggleButton}}"/>
-            <TextBlock Grid.Column="2" Grid.Row="7" Text="or" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <RadioButton Grid.Column="3" Grid.Row="7" Content="Read/Write" IsChecked="{Binding ReadWrite}" Style="{StaticResource {x:Type ToggleButton}}"/>
-
-            <TextBox Grid.Column="3" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
-            <TextBox Grid.Column="3" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
-            <CheckBox Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" IsChecked="{Binding DarkMode}"/>
-            <CheckBox Grid.Column="3" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAssist}"/>
-            <TextBox Grid.Column="3" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
-            <TextBox Grid.Column="3" Grid.Row="6" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>
-        </Grid>
-        <ToggleButton Height="24" Width="144" Name="Settings" HorizontalAlignment="Right" Margin="0,-2,0,0" Grid.Column="1">
-            <ToggleButton.Style>
-                <Style TargetType="ToggleButton">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=Settings, Path=IsChecked}" Value="True">
-                            <Setter Property="Content" Value="Return"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="1">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Content" Value="Settings"/>
-                </Style>
-            </ToggleButton.Style>
-        </ToggleButton>
+    <TabControl BorderThickness="0" Margin="-2" Background="{StaticResource Color_Background}">
+        <TabControl.Style>
+            <Style TargetType="TabControl">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Status}" Value="Initializing">
+                        <Setter Property="SelectedIndex" Value="0"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Status}" Value="Configurating">
+                        <Setter Property="SelectedIndex" Value="2"/>
+                    </DataTrigger>
+                </Style.Triggers>
+                <Setter Property="SelectedIndex" Value="1"/>
+            </Style>
+        </TabControl.Style>
 
         <!-- Splashscreen -->
-        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White" Margin="-20">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Status}" Value="Initializing">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Visibility" Value="Hidden"/>
-                </Style>
-                </Grid.Style>
+        <TabItem>
             <TextBlock Text="SF7N 1.6" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Grid>
-    </Grid>
+        </TabItem>
+
+        <!-- Homepage -->
+        <TabItem>
+            <Grid Margin="16,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="24"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- Toolbar -->
+                <TabControl Name="Toolbar" Grid.ColumnSpan="2" BorderThickness="0" Background="{StaticResource Color_Header}" Margin="-18,-18,-18,0" Padding="18,8" VerticalContentAlignment="Center">
+                    <TabItem>
+                        <DockPanel Height="24">
+                            <Button Name="Settings" DockPanel.Dock="Right" Content="Settings" Width="192"/>
+                            <Button Name="Search" DockPanel.Dock="Right" Content="Filter" Width="256" Margin="8,0"/>
+                            <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0"
+                                     BorderBrush="{StaticResource Color_Caption}" Background="{StaticResource Color_Background}"/>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem>
+                        <UniformGrid Columns="6" Height="24">
+                            <Button Name="InsertLast" Content="Append" Margin="0,0,4,0"/>
+                            <Button Name="InsertAbove" Content="Insert Above" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
+                            <Button Name="InsertBelow" Content="Insert Below" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
+                            <Button Name="RemoveSelected" Content="Remove Selected" Margin="4,0,4,0" Style="{StaticResource HideEditControl}"/>
+                            <Button Name="Commit" Content="Commit" Margin="4,0,0,0" IsEnabled="False"/>
+                            <Button Name="Return" Content="Return" Margin="16,0,0,0"/>
+                        </UniformGrid>
+                    </TabItem>
+                </TabControl>
+
+                <!-- Datagrid -->
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock Style="{StaticResource Caption}" Text="The search returns no matches yet." HorizontalAlignment="Center"/>
+                    <TextBlock Style="{StaticResource Caption}" Text="Try other search criteria or await pending results." Margin="0,8,0,0"/>
+                </StackPanel>
+                <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,8,0,0" MinColumnWidth="48"
+                  Background="Transparent" Foreground="{StaticResource Color_Foreground}" GridLinesVisibility="None" BorderThickness="0"
+                  RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
+                  SelectionUnit="FullRow" EnableColumnVirtualization="True" EnableRowVirtualization="True">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGrid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ReadWrite}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="IsReadOnly" Value="True"/>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource Color__Highlight}"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{StaticResource Color__Control}"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource Color__Foreground}"/>
+                            </Style.Resources>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="MinWidth" Value="128"/>
+                            <Setter Property="MinHeight" Value="32"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Foreground" Value="{StaticResource Color_Caption}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridColumnHeader">
+                                        <Grid>
+                                            <Border Name="BRIN" CornerRadius="1" Padding="4,4,4,2" BorderThickness="0">
+                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                            </Border>
+                                            <Path Name="SortArrow" Stroke="{StaticResource Color_Caption}" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
+                                          HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+                                            <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
+                                            <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="SortDirection" Value="Ascending">
+                                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
+                                                <Setter TargetName="SortArrow" Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <TransformGroup>
+                                                            <ScaleTransform ScaleY="-1"/>
+                                                        </TransformGroup>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                            <Trigger Property="SortDirection" Value="Descending">
+                                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="BRIN" Property="Border.Background" Value="{StaticResource Color_Control}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="BRIN" Property="Border.Background" Value="{StaticResource Color_Highlight}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.Resources>
+                </DataGrid>
+
+                <!-- Preview -->
+                <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
+                <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
+                    <Grid>
+                        <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource Caption}"/>
+                        <Image Source="{Binding Preview}"/>
+                    </Grid>
+                </Button>
+
+                <!-- Stausbar -->
+                <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+                    <TextBlock Margin="0,0,48,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Toolbar, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Text" Value="Edit Mode"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                                <Setter Property="Text" Value="Search Mode"/>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Margin="0,0,96,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ReadWrite}" Value="True">
+                                        <Setter Property="Text" Value="Read/Write"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                                <Setter Property="Text" Value="Read-Only"/>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Style="{StaticResource Caption}" Margin="0,0,48,0"/>
+                    <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Style="{StaticResource Caption}"/>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding Status, UpdateSourceTrigger=Explicit}" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                </DockPanel>
+            </Grid>
+        </TabItem>
+
+        <!-- Configurations -->
+        <TabItem>
+            <Grid Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="-20,-10,-20,-8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="48"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1.3*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="SF7N Configurations"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="CSV Location"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Text="Preview Location"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="Dark Theme"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="Requires relaunch" Style="{StaticResource Caption}" Margin="0,20,0,0" />
+                <TextBlock Grid.Column="1" Grid.Row="4" Text="Input Assist"/>
+                <TextBlock Grid.Column="1" Grid.Row="5" Text="Append Format"/>
+                <TextBlock Grid.Column="1" Grid.Row="6" Text="Append Count"/>
+
+                <RadioButton Grid.Column="1" Grid.Row="7" Height="24" VerticalAlignment="Top" Content="Output Aliasing" IsChecked="{Binding AliasMode}" Style="{StaticResource {x:Type ToggleButton}}"/>
+                <TextBlock Grid.Column="2" Grid.Row="7" Text="or" Margin="0,4" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                <RadioButton Grid.Column="3" Grid.Row="7" Height="24" VerticalAlignment="Top" Content="Read/Write" IsChecked="{Binding ReadWrite}" Style="{StaticResource {x:Type ToggleButton}}"/>
+
+                <TextBox Grid.Column="3" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
+                <TextBox Grid.Column="3" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
+                <CheckBox Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" IsChecked="{Binding DarkMode}"/>
+                <CheckBox Grid.Column="3" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAssist}"/>
+                <TextBox Grid.Column="3" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
+                <TextBox Grid.Column="3" Grid.Row="6" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>
+
+                <Button Name="SettingsReturn" Content="Return" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3" Height="24"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

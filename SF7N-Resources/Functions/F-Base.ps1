@@ -48,15 +48,12 @@ function Set-DataContext ($Key, $Value) {
 }
 
 function Initialize-SF7N {
-    # Read and evaluate path configurations
-    Write-Log 'INF' 'Import Configurations'
-    $Config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
-
     # Bulid DataContext
     Write-Log 'INF' 'Build  DataContext'
     $script:dataContext = [PSCustomObject] @{
         csvLocation  = $config.csvLocation
         PreviewPath  = $config.PreviewPath
+        DarkMode     = $config.DarkMode    -ieq 'true'
         InputAssist  = $config.InputAssist -ieq 'true'
         AppendFormat = $config.AppendFormat
         AppendCount  = $config.AppendCount

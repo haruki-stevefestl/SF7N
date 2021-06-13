@@ -26,3 +26,6 @@ $wpf.PreviewCopy.Add_Click({
         ))
     }
 })
+
+# Open config page
+$wpf.Settings.Add_Click({Set-DataContext Status Configurating})
