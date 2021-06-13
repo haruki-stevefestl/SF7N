@@ -4,15 +4,15 @@
         Title="SF7N Interface" Height="600" Width="1600"
         FontFamily="Courier New" FontSize="16">
     <Window.Resources>
-        <SolidColorBrush x:Key="Color_Background" Color="#242424"/>
-        <SolidColorBrush x:Key="Color_Caption" Color="#969696"/>
-        <SolidColorBrush x:Key="Color_Header" Color="#404040"/>
-        <SolidColorBrush x:Key="Color_Foreground" Color="#EEEEEE"/>
-        <SolidColorBrush x:Key="Color_Highlight" Color="#FF0000"/>
-        <SolidColorBrush x:Key="Color_Control" Color="#00FF00"/>
-        <Color x:Key="Color__Highlight" R="255" G="0" B="0" A="255"/>
-        <Color x:Key="Color__Control" R="0" G="255" B="0" A="255"/>
-        <Color x:Key="Color__Foreground" R="238" G="238" B="238" A="255"/>
+        <SolidColorBrush x:Key="Color_Background" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="Color_Caption" Color="#696969"/>
+        <SolidColorBrush x:Key="Color_Header" Color="#EEEEEE"/>
+        <SolidColorBrush x:Key="Color_Foreground" Color="#000000"/>
+        <SolidColorBrush x:Key="Color_Highlight" Color="#CCE8FF"/>
+        <SolidColorBrush x:Key="Color_Control" Color="#E5F3FF"/>
+        <Color x:Key="Color__Highlight" R="204" G="232" B="255" A="255"/>
+        <Color x:Key="Color__Control" R="229" G="243" B="255" A="255"/>
+        <Color x:Key="Color__Foreground" R="0" G="0" B="0" A="255"/>
 
         <Style TargetType="TabItem">
             <Setter Property="Height" Value="0"/>
@@ -49,7 +49,7 @@
         </Style>
     </Window.Resources>
 
-    <TabControl BorderThickness="0" Margin="-2" Background="{StaticResource Color_Background}">
+    <TabControl BorderThickness="0" Margin="-4" Background="{StaticResource Color_Background}">
         <TabControl.Style>
             <Style TargetType="TabControl">
                 <Style.Triggers>
@@ -87,8 +87,23 @@
                         <DockPanel Height="24">
                             <Button Name="Settings" DockPanel.Dock="Right" Content="Settings" Width="192"/>
                             <Button Name="Search" DockPanel.Dock="Right" Content="Filter" Width="256" Margin="8,0"/>
-                            <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0"
-                                     BorderBrush="{StaticResource Color_Caption}" Background="{StaticResource Color_Background}"/>
+                            <Grid>
+                                <TextBlock Foreground="{StaticResource Color_Caption}" Background="{StaticResource Color_Background}"
+                                           VerticalAlignment="Center" Height="24" Padding="7,3">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
+                                                    <Setter Property="Text" Value="Filter by Header:Value"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Text" Value=""/>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0"
+                                         BorderBrush="{StaticResource Color_Caption}" Background="Transparent"/>
+                            </Grid>
                         </DockPanel>
                     </TabItem>
                     <TabItem>
@@ -253,7 +268,7 @@
                 <TextBlock Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="SF7N Configurations"/>
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="CSV Location"/>
                 <TextBlock Grid.Column="1" Grid.Row="2" Text="Preview Location"/>
-                <TextBlock Grid.Column="1" Grid.Row="3" Text="Dark Theme"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="Theme"/>
                 <TextBlock Grid.Column="1" Grid.Row="3" Text="Requires relaunch" Style="{StaticResource Caption}" Margin="0,20,0,0" />
                 <TextBlock Grid.Column="1" Grid.Row="4" Text="Input Assist"/>
                 <TextBlock Grid.Column="1" Grid.Row="5" Text="Append Format"/>
@@ -265,7 +280,7 @@
 
                 <TextBox Grid.Column="3" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
                 <TextBox Grid.Column="3" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
-                <CheckBox Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" IsChecked="{Binding DarkMode}"/>
+                <TextBox Grid.Column="3" Grid.Row="3" Height="24" VerticalAlignment="Top" Text="{Binding Theme}"/>
                 <CheckBox Grid.Column="3" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAssist}"/>
                 <TextBox Grid.Column="3" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
                 <TextBox Grid.Column="3" Grid.Row="6" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>

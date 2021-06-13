@@ -4,7 +4,7 @@ $wpf.SettingsReturn.Add_Click({
     (
         'csvLocation  = ' + $dataContext.csvLocation.Replace('\','\\') + "`n",
         'PreviewPath  = ' + $dataContext.PreviewPath.Replace('\','\\') + "`n",
-        'DarkMode     = ' + $dataContext.DarkMode + "`n",
+        'Theme        = ' + $dataContext.Theme + "`n",
         'InputAssist  = ' + $dataContext.InputAssist + "`n",
         'AppendFormat = ' + $dataContext.AppendFormat + "`n",
         'AppendCount  = ' + $dataContext.AppendCount + "`n",
@@ -13,5 +13,6 @@ $wpf.SettingsReturn.Add_Click({
     ) | Out-File '.\Configurations\General.ini'
 
     # Reload
+    $config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
     Initialize-SF7N
 })

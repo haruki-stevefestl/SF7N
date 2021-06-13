@@ -48,20 +48,8 @@ function Set-DataContext ($Key, $Value) {
 }
 
 function Initialize-SF7N {
-    # Bulid DataContext
-    Write-Log 'INF' 'Build  DataContext'
-    $script:dataContext = [PSCustomObject] @{
-        csvLocation  = $config.csvLocation
-        PreviewPath  = $config.PreviewPath
-        DarkMode     = $config.DarkMode    -ieq 'true'
-        InputAssist  = $config.InputAssist -ieq 'true'
-        AppendFormat = $config.AppendFormat
-        AppendCount  = $config.AppendCount
-        AliasMode    = $config.AliasMode   -ieq 'true'
-        ReadWrite    = $config.ReadWrite   -ieq 'true'
-        Status       = 'Initializing'
-        Preview      = $null
-    }
+    # Apply DataContext to GUI
+    Write-Log 'INF' 'Apply  DataContext to GUI'
     $wpf.SF7N.DataContext = $dataContext
     $wpf.SF7N.Dispatcher.Invoke([Action]{}, 'Render')
 
