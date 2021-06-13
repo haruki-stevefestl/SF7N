@@ -1,5 +1,5 @@
 # Import the base fuction & Initialize
-$startTime = Get-Date
+$script:startTime = Get-Date
 $script:baseLocation = $PSScriptRoot
 Set-Location $PSScriptRoot
 Get-ChildItem *.ps1 -Recurse | Unblock-File
@@ -10,18 +10,31 @@ Write-Log 'INF' '-- SF7N Initialization --'
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework
 
-# Load a WPF GUI from a XAML file
-Write-Log 'INF' 'Parse  XAML'
-[Xml] $xaml = Get-Content .\GUI.xaml
-$tempform = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($xaml))
-$wpf = [Hashtable]::Synchronized(@{})
-$ErrorActionPreference = 'SilentlyContinue'
-$xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]").Name.
-    ForEach{$wpf.Add($_, $tempform.FindName($_))}
-$ErrorActionPreference = 'Continue'
+# Read and evaluate path configurations
+Write-Log 'INF' 'Import Configurations'
+$script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
 
+# Bulid DataContext
+Write-Log 'INF' 'Build  DataContext'
+$script:context = [PSCustomObject] @{
+    csvLocation  = $config.csvLocation
+    PreviewPath  = $config.PreviewPath
+    Theme        = $config.Theme
+    InputAssist  = $config.InputAssist -ieq 'true'
+    AppendFormat = $config.AppendFormat
+    AppendCount  = $config.AppendCount
+    AliasMode    = $config.AliasMode   -ieq 'true'
+    ReadWrite    = $config.ReadWrite   -ieq 'true'
+    Status       = 'Initializing'
+    Preview      = $null
+}
+
+# Load a WPF GUI from a XAML file
+Import-Module '.\Functions\F-XAML.ps1'
+$wpf = Get-XAML
+ 
 # Import GUI Control code
-Write-Log 'INF' 'Import Modules'
+Write-Log 'INF' 'Import GUI modules'
 Import-Module '.\Functions\F-Edit.ps1', '.\Functions\F-Search.ps1',
               '.\Handlers\H-Edit.ps1', '.\Handlers\H-Config.ps1',
               '.\Handlers\H-Search.ps1'
@@ -32,7 +45,6 @@ $wpf.SF7N.Add_ContentRendered({
     Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
 
     Initialize-SF7N
-    Remove-Variable 'tempform', 'xaml' -Scope Script
 })
 
 # Prompt and cleanup on close
@@ -42,7 +54,7 @@ $wpf.SF7N.Add_Closing({
         if ($Dialog -eq 'Cancel') {
             $_.Cancel = $true
         } elseif ($Dialog -eq 'Yes') {
-            Export-CustomCSV $dataContext.csvLocation
+            Export-CustomCSV $context.csvLocation
         }
     }
 

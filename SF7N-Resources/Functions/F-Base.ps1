@@ -42,33 +42,18 @@ function New-SaveDialog {
 
 function Set-DataContext ($Key, $Value) {
     # Because I do not know how to implement INotifyPropertyChanged
-    $dataContext.$Key = $Value
+    $context.$Key = $Value
     $wpf.SF7N.DataContext = $null
-    $wpf.SF7N.DataContext = $dataContext
+    $wpf.SF7N.DataContext = $context
 }
 
 function Initialize-SF7N {
-    # Read and evaluate path configurations
-    Write-Log 'INF' 'Import Configurations'
-    $Config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
-
-    # Bulid DataContext
-    Write-Log 'INF' 'Build  DataContext'
-    $script:dataContext = [PSCustomObject] @{
-        csvLocation  = $config.csvLocation
-        PreviewPath  = $config.PreviewPath
-        InputAssist  = $config.InputAssist -ieq 'true'
-        AppendFormat = $config.AppendFormat
-        AppendCount  = $config.AppendCount
-        AliasMode    = $config.AliasMode   -ieq 'true'
-        ReadWrite    = $config.ReadWrite   -ieq 'true'
-        Status       = 'Initializing'
-        Preview      = $null
-    }
-    $wpf.SF7N.DataContext = $dataContext
+    # Apply DataContext to GUI
+    Write-Log 'INF' 'Apply  DataContext to GUI'
+    $wpf.SF7N.DataContext = $context
     $wpf.SF7N.Dispatcher.Invoke([Action]{}, 'Render')
 
-    Import-CustomCSV $dataContext.csvLocation
+    Import-CustomCSV $context.csvLocation
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.CSVGrid.Columns.Clear()
     
