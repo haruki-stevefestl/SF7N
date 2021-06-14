@@ -10,22 +10,19 @@
         <SolidColorBrush x:Key="Color_Foreground" Color="#000000"/>
         <SolidColorBrush x:Key="Color_Highlight" Color="#CCE8FF"/>
         <SolidColorBrush x:Key="Color_Control" Color="#E5F3FF"/>
+        <SolidColorBrush x:Key="Color_Border" Color="#808080"/>
         <Color x:Key="Color__Highlight" R="204" G="232" B="255" A="255"/>
         <Color x:Key="Color__Control" R="229" G="243" B="255" A="255"/>
         <Color x:Key="Color__Foreground" R="0" G="0" B="0" A="255"/>
         <SolidColorBrush x:Key="ScrollBar.Static.Thumb" Color="#404040"/>
         <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="#505050"/>
         <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb" Color="#646464"/>
+        <SolidColorBrush x:Key="Button.Background" Color="#DDDDDD"/>
+        <SolidColorBrush x:Key="Button.MouseOver" Color="#BEE6FD"/>
+        <SolidColorBrush x:Key="Button.Pressed" Color="#C4E5F6"/>
 
         <Style TargetType="TabItem">
             <Setter Property="Height" Value="0"/>
-        </Style>
-        <Style x:Key="HideEditControl" TargetType="Button">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
-                    <Setter Property="IsEnabled" Value="False"/>
-                </DataTrigger>
-            </Style.Triggers>
         </Style>
         <Style x:Key="ColumnHeaderGripperStyle" TargetType="Thumb">
             <Setter Property="Width" Value="8"/>
@@ -49,6 +46,48 @@
         <Style TargetType="TextBox">
             <Setter Property="Foreground" Value="{StaticResource Color_Foreground}"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Color_Border}"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource Color_Foreground}"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Button.Background}"/>
+            <Setter Property="Foreground" Value="{StaticResource Color_Foreground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Color_Border}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border" BorderThickness="1" BorderBrush="{StaticResource Color_Border}" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Button.MouseOver}" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Button.Pressed}" TargetName="Border"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="HideEditControl" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Background" Value="{StaticResource Button.Background}"/>
+            <Setter Property="Foreground" Value="{StaticResource Color_Foreground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Color_Border}"/>
         </Style>
     </Window.Resources>
 
@@ -104,8 +143,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0"
-                                         BorderBrush="{StaticResource Color_Caption}" Background="Transparent"/>
+                                <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0" Background="Transparent"/>
                             </Grid>
                         </DockPanel>
                     </TabItem>
@@ -282,6 +320,7 @@
                                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource Color__Highlight}"/>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{StaticResource Color__Control}"/>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource Color__Foreground}"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{StaticResource Color__Foreground}"/>
                             </Style.Resources>
                             <Setter Property="Background" Value="Transparent"/>
                         </Style>
@@ -334,13 +373,13 @@
 
                 <!-- Preview -->
                 <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
-                <Button Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
+                <RepeatButton Name="PreviewCopy" Margin="8,0,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0">
                     <Grid>
                         <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource Caption}"/>
                         <Image Source="{Binding Preview}"/>
                     </Grid>
-                </Button>
-
+                </RepeatButton>
+                
                 <!-- Stausbar -->
                 <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
                     <TextBlock Margin="0,0,48,0">
@@ -380,7 +419,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="48"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
@@ -392,7 +430,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
@@ -404,19 +442,19 @@
                 <TextBlock Grid.Column="1" Grid.Row="4" Text="Input Assist"/>
                 <TextBlock Grid.Column="1" Grid.Row="5" Text="Append Format"/>
                 <TextBlock Grid.Column="1" Grid.Row="6" Text="Append Count"/>
+                <TextBlock Grid.Column="1" Grid.Row="7" Text="Editing Access"/>
 
-                <RadioButton Grid.Column="1" Grid.Row="7" Height="24" VerticalAlignment="Top" Content="Output Aliasing" IsChecked="{Binding AliasMode}" Style="{StaticResource {x:Type ToggleButton}}"/>
-                <TextBlock Grid.Column="2" Grid.Row="7" Text="or" Margin="0,4" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-                <RadioButton Grid.Column="3" Grid.Row="7" Height="24" VerticalAlignment="Top" Content="Read/Write" IsChecked="{Binding ReadWrite}" Style="{StaticResource {x:Type ToggleButton}}"/>
+                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Alias Mode" IsChecked="{Binding AliasMode}" Margin="0,32,0,0"/>
+                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read/Write" IsChecked="{Binding ReadWrite}"/>
 
-                <TextBox Grid.Column="3" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
-                <TextBox Grid.Column="3" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
-                <TextBox Grid.Column="3" Grid.Row="3" Height="24" VerticalAlignment="Top" Text="{Binding Theme}"/>
-                <CheckBox Grid.Column="3" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAssist}"/>
-                <TextBox Grid.Column="3" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
-                <TextBox Grid.Column="3" Grid.Row="6" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>
+                <TextBox Grid.Column="2" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
+                <TextBox Grid.Column="2" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
+                <TextBox Grid.Column="2" Grid.Row="3" Height="24" VerticalAlignment="Top" Text="{Binding Theme}"/>
+                <CheckBox Grid.Column="2" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAssist}"/>
+                <TextBox Grid.Column="2" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
+                <TextBox Grid.Column="2" Grid.Row="6" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>
 
-                <Button Name="SettingsReturn" Content="Return" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3" Height="24"/>
+                <Button Name="SettingsReturn" Content="Return" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Height="24"/>
             </Grid>
         </TabItem>
     </TabControl>
