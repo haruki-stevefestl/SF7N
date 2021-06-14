@@ -26,6 +26,9 @@ function Set-XAMLTheme ($Xaml) {
             Foreground = '000000'
             Highlight  = 'CCE8FF'
             Control    = 'E5F3FF'
+            'ScrollBar.Static.Thumb'    = 'EEEEEE'
+            'ScrollBar.MouseOver.Thumb' = 'DDDDDD'
+            'ScrollBar.Pressed.Thumb'   = 'CCCCCC'
     }
 
     $Theme = ".\Configurations\Themes\$($context.Theme).ini"
@@ -38,7 +41,7 @@ function Set-XAMLTheme ($Xaml) {
         })
     }
 
-    # Some places require Color, not SolidColorBrush
+    # BrushKeys require Color, not SolidColorBrush
     $Color.Add('Foreground_', @(
         [Convert]::ToInt16($Color.Foreground.Substring(0,2), 16),
         [Convert]::ToInt16($Color.Foreground.Substring(2,2), 16),
@@ -65,5 +68,8 @@ function Set-XAMLTheme ($Xaml) {
     $Xaml[12] = '<Color x:Key="Color__Highlight"  R="'+ $Color.Highlight_[0]  +'" G="'+ $Color.Highlight_[1]  +'" B="'+ $Color.Highlight_[2]  +'" A="255"/>'
     $Xaml[13] = '<Color x:Key="Color__Control"    R="'+ $Color.Control_[0]    +'" G="'+ $Color.Control_[1]    +'" B="'+ $Color.Control_[2]    +'" A="255"/>'
     $Xaml[14] = '<Color x:Key="Color__Foreground" R="'+ $Color.Foreground_[0] +'" G="'+ $Color.Foreground_[1] +'" B="'+ $Color.Foreground_[2] +'" A="255"/>'
+    $Xaml[15] = '<SolidColorBrush x:Key="ScrollBar.Static.Thumb"    Color="#'+ $Color.'ScrollBar.Static.Thumb' +'"/>'
+    $Xaml[16] = '<SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="#'+ $Color.'ScrollBar.MouseOver.Thumb'  +'"/>'
+    $Xaml[17] = '<SolidColorBrush x:Key="ScrollBar.Pressed.Thumb"   Color="#'+ $Color.'ScrollBar.Pressed.Thumb'    +'"/>'
     return $Xaml
 }
