@@ -20,7 +20,7 @@ $wpf.CSVGrid.Add_SelectionChanged({
 
 # Copy preview
 $wpf.PreviewCopy.Add_Click({
-    if ($context.Preview) {
+    if (Test-Path $context.Preview) {
         [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
             $context.Preview
         ))

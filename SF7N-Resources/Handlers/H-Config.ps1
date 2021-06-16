@@ -13,6 +13,5 @@ $wpf.SettingsReturn.Add_Click({
     ) | Out-File '.\Configurations\General.ini'
 
     # Reload
-    $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
     Initialize-SF7N
 })

@@ -12,19 +12,19 @@ Add-Type -AssemblyName PresentationFramework
 
 # Read and evaluate path configurations
 Write-Log 'INF' 'Import Configurations'
-$script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
+$Config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
 
 # Bulid DataContext
 Write-Log 'INF' 'Build  DataContext'
 $script:context = [PSCustomObject] @{
-    csvLocation  = $config.csvLocation
-    PreviewPath  = $config.PreviewPath
-    Theme        = $config.Theme
-    InputAssist  = $config.InputAssist -ieq 'true'
-    AppendFormat = $config.AppendFormat
-    AppendCount  = $config.AppendCount
-    AliasMode    = $config.AliasMode   -ieq 'true'
-    ReadWrite    = $config.ReadWrite   -ieq 'true'
+    csvLocation  = $Config.csvLocation
+    PreviewPath  = $Config.PreviewPath
+    Theme        = $Config.Theme
+    InputAssist  = $Config.InputAssist -ieq 'true'
+    AppendFormat = $Config.AppendFormat
+    AppendCount  = $Config.AppendCount
+    AliasMode    = $Config.AliasMode   -ieq 'true'
+    ReadWrite    = $Config.ReadWrite   -ieq 'true'
     Status       = 'Initializing'
     Preview      = $null
 }
