@@ -10,8 +10,8 @@
         <SolidColorBrush x:Key="Brush_Foreground" Color="#000000"/>
         <SolidColorBrush x:Key="Brush_Highlight" Color="#CCE8FF"/>
         <SolidColorBrush x:Key="Brush_Control" Color="#E5F3FF"/>
-        <SolidColorBrush x:Key="Brush_Border" Color="#808080"/>
-        <Color x:Key="Color_Highlight" R="204" G="232" B="255" A="255"/>
+        <SolidColorBrush x:Key="Brush_Border" Color="#727272"/>
+        <Color x:Key="Color_Highlight" R="204" G="232" B="255" A="255" />
         <Color x:Key="Color_Control" R="229" G="243" B="255" A="255"/>
         <Color x:Key="Color_Foreground" R="0" G="0" B="0" A="255"/>
         <SolidColorBrush x:Key="Brush_Scroll_Static" Color="#DDDDDD"/>
@@ -127,9 +127,12 @@
                 <!-- Toolbar -->
                 <TabControl Name="Toolbar" Grid.ColumnSpan="2" BorderThickness="0" Background="{StaticResource Brush_Header}" Margin="-18,-18,-18,0" Padding="18,8" VerticalContentAlignment="Center">
                     <TabItem>
-                        <DockPanel Height="24">
-                            <Button Name="Settings" DockPanel.Dock="Right" Content="Settings" Width="192"/>
-                            <Button Name="Search" DockPanel.Dock="Right" Content="Filter" Width="256" Margin="8,0"/>
+                        <Grid Height="24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="12*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
                             <Grid>
                                 <TextBlock Foreground="{StaticResource Brush_Caption}" Background="{StaticResource Brush_Background}"
                                            VerticalAlignment="Center" Height="24" Padding="7,3">
@@ -146,7 +149,9 @@
                                 </TextBlock>
                                 <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0" Background="Transparent"/>
                             </Grid>
-                        </DockPanel>
+                            <Button Name="Search" Grid.Column="1" DockPanel.Dock="Right" Content="Filter" Margin="8,0"/>
+                            <Button Name="Settings" Grid.Column="2"  DockPanel.Dock="Right" Content="Settings"/>
+                        </Grid>
                     </TabItem>
                     <TabItem>
                         <UniformGrid Columns="6" Height="24">
@@ -259,12 +264,6 @@
                                             </Grid.RowDefinitions>
                                             <Border Background="{TemplateBinding Background}" BorderThickness="0" Grid.Row="1"/>
                                             <Track x:Name="PART_Track" IsEnabled="{TemplateBinding IsMouseOver}" IsDirectionReversed="true" Grid.Row="1">
-                                                <Track.DecreaseRepeatButton>
-                                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                </Track.DecreaseRepeatButton>
-                                                <Track.IncreaseRepeatButton>
-                                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                </Track.IncreaseRepeatButton>
                                                 <Track.Thumb>
                                                     <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
                                                 </Track.Thumb>
@@ -291,12 +290,6 @@
                                                     </Grid.ColumnDefinitions>
                                                     <Border Background="{TemplateBinding Background}" BorderThickness="0" Grid.Column="1"/>
                                                     <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
-                                                        <Track.DecreaseRepeatButton>
-                                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                        </Track.DecreaseRepeatButton>
-                                                        <Track.IncreaseRepeatButton>
-                                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                        </Track.IncreaseRepeatButton>
                                                         <Track.Thumb>
                                                             <Thumb Style="{StaticResource ScrollBarThumbHorizontal}"/>
                                                         </Track.Thumb>
@@ -341,7 +334,6 @@
                                             </Border>
                                             <Path Name="SortArrow" Stroke="{StaticResource Brush_Caption}" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
                                           HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
-                                            <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                             <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                         </Grid>
                                         <ControlTemplate.Triggers>
