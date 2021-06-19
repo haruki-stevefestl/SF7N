@@ -29,7 +29,7 @@ $wpf.Return.Add_Click({
 
     if ($Return) {
         Import-CustomCSV $context.csvLocation
-        $wpf.CSVGrid.ItemsSource = $csv
+        Search-CSV $wpf.SearchBar.Text
         $wpf.Commit.IsEnabled = $false
         $wpf.Toolbar.SelectedIndex = 0
     }

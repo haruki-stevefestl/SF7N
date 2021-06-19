@@ -28,6 +28,7 @@ $script:context = [PSCustomObject] @{
     Status       = 'Initializing'
     Preview      = $null
 }
+Remove-Variable Config
 
 # Load a WPF GUI from a XAML file
 Import-Module '.\Functions\F-XAML.ps1'
