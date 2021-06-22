@@ -5,13 +5,27 @@ $wpf.SettingsReturn.Add_Click({
         'csvLocation  = ' + $context.csvLocation.Replace('\','\\') + "`n",
         'PreviewPath  = ' + $context.PreviewPath.Replace('\','\\') + "`n",
         'Theme        = ' + $context.Theme + "`n",
-        'InputAssist  = ' + $context.InputAssist + "`n",
+        'InputAlias   = ' + $context.InputAlias + "`n",
         'AppendFormat = ' + $context.AppendFormat + "`n",
         'AppendCount  = ' + $context.AppendCount + "`n",
-        'AliasMode    = ' + $context.AliasMode + "`n",
+        'OutputAlias  = ' + $context.OutputAlias + "`n",
+        'RawMode      = ' + $context.RawMode + "`n",
         'ReadWrite    = ' + $context.ReadWrite
     ) | Out-File '.\Configurations\General.ini'
 
     # Reload
-    Initialize-SF7N
+    if ($config.csvLocation -ne $context.csvLocation) {
+        Write-Log 'DBG' 'Reload all'
+        Initialize-SF7N
+
+    } elseif (
+        $config.OutputAlias -ne $context.OutputAlias -or
+        $config.RawMode -ne $context.RawMode -or
+        $config.ReadWrite -ne $context.ReadWrite
+    ) {
+        Write-Log 'DBG' 'Reload search'
+        Search-CSV $wpf.SearchBar.Text
+    }
+    Import-Configuration
+    Set-DataContext Status 'Ready'
 })

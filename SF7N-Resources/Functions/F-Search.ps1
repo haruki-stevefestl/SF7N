@@ -16,7 +16,7 @@ function Search-CSV ($SearchText, $FirstRun) {
     Set-DataContext Preview $null
     if (!$FirstRun) {Set-DataContext Status 'Processing'}
 
-    # Parse SearchRules Text into [PSCustomObject]$SearchTerm
+    # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchTerm = [PSCustomObject] @{}
 
     # While there are search terms in $SearchText
@@ -30,8 +30,9 @@ function Search-CSV ($SearchText, $FirstRun) {
         $SearchText = $SearchText.Replace($Matches[0], '')
     }
 
-    # Apply input assist
-    if ($wpf.InputAssist.IsChecked) {$SearchTerm = ConvertFrom-Alias $SearchTerm}
+    # Apply input alias
+    if ($context.InputAlias) {$SearchTerm = ConvertFrom-Alias $SearchTerm}
+    Write-Log 'DBG' $context.OutputAlias
 
     # Search with new runspace
     $Runspace = [RunspaceFactory]::CreateRunspace()
@@ -58,14 +59,14 @@ function Search-CSV ($SearchText, $FirstRun) {
         [Collections.ArrayList] $CsvSearch = @()
         foreach ($Entry in $csv) {
             # If notMatch, goto next iteration
-            if (!$FirstRun) {
+            if (!$FirstRun -or ('' -eq $SearchTerm)) {
                 $SearchTerm.PSObject.Properties.ForEach{
                     if ($Entry.($_.Name) -notmatch $_.Value) {continue}
                 }
             }
         
-            # Apply alias if AliasMode is on; else add raw content
-            if ($context.AliasMode) {
+            # Apply alias if OutputAlias is on; else add raw content
+            if ($context.OutputAlias) {
                 $CsvSearch.Add((ConvertTo-Alias $Entry.PsObject.Copy()))
             } else {
                 $CsvSearch.Add($Entry)

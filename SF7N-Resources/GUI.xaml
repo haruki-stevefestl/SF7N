@@ -251,12 +251,12 @@
                             <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Margin" Value="8,0,0,0"/>
-                            <Setter Property="MinWidth" Value="8"/>
+                            <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
+                            <Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                        <Grid x:Name="Bg" SnapsToDevicePixels="true" Margin="0,0,0,-22">
+                                        <Grid x:Name="Bg" SnapsToDevicePixels="true" Margin="0,0,0,-10">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition MaxHeight="0"/>
                                                 <RowDefinition Height="0.001*"/>
@@ -264,6 +264,12 @@
                                             </Grid.RowDefinitions>
                                             <Border Background="{TemplateBinding Background}" BorderThickness="0" Grid.Row="1"/>
                                             <Track x:Name="PART_Track" IsEnabled="{TemplateBinding IsMouseOver}" IsDirectionReversed="true" Grid.Row="1">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                                </Track.IncreaseRepeatButton>
                                                 <Track.Thumb>
                                                     <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
                                                 </Track.Thumb>
@@ -276,13 +282,13 @@
                                 <Trigger Property="Orientation" Value="Horizontal">
                                     <Setter Property="Width" Value="Auto"/>
                                     <Setter Property="MinWidth" Value="0"/>
-                                    <Setter Property="MinHeight" Value="8"/>
-                                    <Setter Property="Margin" Value="0,8,0,8"/>
+                                    <Setter Property="Height" Value="10"/>
+                                    <Setter Property="MinHeight" Value="10"/>
                                     <Setter Property="BorderThickness" Value="0"/>
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                                <Grid x:Name="Bg" SnapsToDevicePixels="true" Margin="0,0,-8,0">
+                                                <Grid x:Name="Bg" SnapsToDevicePixels="true">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition MaxWidth="0"/>
                                                         <ColumnDefinition Width="0.001*"/>
@@ -290,6 +296,12 @@
                                                     </Grid.ColumnDefinitions>
                                                     <Border Background="{TemplateBinding Background}" BorderThickness="0" Grid.Column="1"/>
                                                     <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
+                                                        <Track.DecreaseRepeatButton>
+                                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                                        </Track.DecreaseRepeatButton>
+                                                        <Track.IncreaseRepeatButton>
+                                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                                        </Track.IncreaseRepeatButton>
                                                         <Track.Thumb>
                                                             <Thumb Style="{StaticResource ScrollBarThumbHorizontal}"/>
                                                         </Track.Thumb>
@@ -334,6 +346,7 @@
                                             </Border>
                                             <Path Name="SortArrow" Stroke="{StaticResource Brush_Caption}" Data="M0,0 L4,4 L8,0" Visibility="Collapsed"
                                           HorizontalAlignment="Center" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+                                            <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                             <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
                                         </Grid>
                                         <ControlTemplate.Triggers>
@@ -361,6 +374,7 @@
                                 </Setter.Value>
                             </Setter>
                         </Style>
+
                         <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Transparent"/>
                     </DataGrid.Resources>
                 </DataGrid>
@@ -445,27 +459,28 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="3*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="SF7N Configurations"/>
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="CSV Location"/>
                 <TextBlock Grid.Column="1" Grid.Row="2" Text="Preview Location"/>
                 <TextBlock Grid.Column="1" Grid.Row="3" Text="Theme"/>
                 <TextBlock Grid.Column="1" Grid.Row="3" Text="Requires relaunch" Style="{StaticResource Caption}" Margin="0,20,0,0" />
-                <TextBlock Grid.Column="1" Grid.Row="4" Text="Input Assist"/>
+                <TextBlock Grid.Column="1" Grid.Row="4" Text="Input Alias"/>
                 <TextBlock Grid.Column="1" Grid.Row="5" Text="Append Format"/>
                 <TextBlock Grid.Column="1" Grid.Row="6" Text="Append Count"/>
-                <TextBlock Grid.Column="1" Grid.Row="7" Text="Editing Access"/>
+                <TextBlock Grid.Column="1" Grid.Row="7" Text="Editing &amp; Output"/>
 
-                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Alias Mode" IsChecked="{Binding AliasMode}" Margin="0,32,0,0"/>
-                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read/Write" IsChecked="{Binding ReadWrite}"/>
+                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read-Only, Alias" IsChecked="{Binding OutputAlias}"/>
+                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read-Only, Raw" IsChecked="{Binding RawMode}" Margin="0,32,0,0"/>
+                <RadioButton Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read-Write, Raw" IsChecked="{Binding ReadWrite}" Margin="0,64,0,0"/>
 
                 <TextBox Grid.Column="2" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
                 <TextBox Grid.Column="2" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
                 <TextBox Grid.Column="2" Grid.Row="3" Height="24" VerticalAlignment="Top" Text="{Binding Theme}"/>
-                <CheckBox Grid.Column="2" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAssist}"/>
+                <CheckBox Grid.Column="2" Grid.Row="4" VerticalAlignment="Top" IsChecked="{Binding InputAlias}"/>
                 <TextBox Grid.Column="2" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
                 <TextBox Grid.Column="2" Grid.Row="6" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>
 
