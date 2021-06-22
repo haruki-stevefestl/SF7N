@@ -1,6 +1,6 @@
 function Write-Log ($Type, $Content) {
     if ($Type -eq 'ERR') {
-        [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error') | Out-Null
+        [Void] [Windows.MessageBox]::Show($Content, 'SF7N Interface', 'OK', 'Error')
     }
     $TimeDiff = ((Get-Date)-$startTime).TotalMilliseconds.
                     ToString().Split('.')[0].  # Get integral part
@@ -16,15 +16,13 @@ function Import-CustomCSV ($ImportFrom) {
         - csvAlias     [AList] Aliases for CSV
     #>
     Write-Log 'INF' 'Import CSV'
-    try {
-        $ImportFrom = $ExecutionContext.InvokeCommand.ExpandString($ImportFrom)
+    $ImportFrom = $ExecutionContext.InvokeCommand.ExpandString($ImportFrom)
 
-        $script:csvHeader = (Get-Content $ImportFrom -First 1).Replace('"', '').Split(',')
-        [Collections.ArrayList] $script:csv = Import-CSV $ImportFrom
-        
-        $Alias = '.\Configurations\CSVAlias.csv'
-        if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}
-    } catch {Write-Log 'ERR' "Import CSV Failed: $_"}
+    $script:csvHeader = (Get-Content $ImportFrom -First 1).Replace('"', '').Split(',')
+    [Collections.ArrayList] $script:csv = Import-CSV $ImportFrom
+    
+    $Alias = '.\Configurations\CSVAlias.csv'
+    if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}
 
     # Enter edit mode if CSV is empty
     if (!$csvHeader) {
@@ -47,7 +45,31 @@ function Set-DataContext ($Key, $Value) {
     $wpf.SF7N.DataContext = $context
 }
 
+function Import-Configuration {
+    # Read and evaluate path configurations
+    Write-Log 'INF' 'Import Configurations'
+    $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
+
+    # Bulid DataContext
+    Write-Log 'INF' 'Build  DataContext'
+        $script:context = [PSCustomObject] @{
+        csvLocation  = $Config.csvLocation
+        PreviewPath  = $Config.PreviewPath
+        Theme        = $Config.Theme
+        InputAlias   = $Config.InputAlias -ieq 'true'
+        AppendFormat = $Config.AppendFormat
+        AppendCount  = $Config.AppendCount
+        OutputAlias  = $Config.OutputAlias   -ieq 'true'
+        RawMode      = $Config.RawMode   -ieq 'true'
+        ReadWrite    = $Config.ReadWrite   -ieq 'true'
+        Status       = 'Initializing'
+        Preview      = $null
+    }
+}
+
 function Initialize-SF7N {
+    Import-Configuration
+
     # Apply DataContext to GUI
     Write-Log 'INF' 'Apply  DataContext to GUI'
     $wpf.SF7N.DataContext = $context
@@ -70,7 +92,7 @@ function Initialize-SF7N {
 
         # Apply conditional formatting
         for ($i = 0; $i -lt $Format.$_.Count; $i += 2) {
-            if ([String]::IsNullOrWhiteSpace($Format.$_[$i])) {break}
+            if ($Format.$_[$i] -match '^\s*$') {break}
             $Trigger = [Windows.DataTrigger]::New()
             $Trigger.Binding = $Column.Binding
             $Trigger.Value = $Format.$_[$i]

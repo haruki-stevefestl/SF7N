@@ -10,25 +10,7 @@ Write-Log 'INF' '-- SF7N Initialization --'
 Write-Log 'INF' 'Import WPF'
 Add-Type -AssemblyName PresentationFramework
 
-# Read and evaluate path configurations
-Write-Log 'INF' 'Import Configurations'
-$Config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
-
-# Bulid DataContext
-Write-Log 'INF' 'Build  DataContext'
-$script:context = [PSCustomObject] @{
-    csvLocation  = $Config.csvLocation
-    PreviewPath  = $Config.PreviewPath
-    Theme        = $Config.Theme
-    InputAssist  = $Config.InputAssist -ieq 'true'
-    AppendFormat = $Config.AppendFormat
-    AppendCount  = $Config.AppendCount
-    AliasMode    = $Config.AliasMode   -ieq 'true'
-    ReadWrite    = $Config.ReadWrite   -ieq 'true'
-    Status       = 'Initializing'
-    Preview      = $null
-}
-Remove-Variable Config
+Import-Configuration
 
 # Load a WPF GUI from a XAML file
 Import-Module '.\Functions\F-XAML.ps1'
@@ -64,4 +46,4 @@ $wpf.SF7N.Add_Closing({
 
 # Load WPF
 Write-Log 'DBG' 'Launch GUI'
-$wpf.SF7N.ShowDialog() | Out-Null
+[Void] $wpf.SF7N.ShowDialog()
