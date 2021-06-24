@@ -1,5 +1,5 @@
 # Actions related to changing config at runtime
-$wpf.SettingsReturn.Add_Click({
+$wpf.ApplyConfig.Add_Click({
     # Export config to file
     (
         'csvLocation  = ' + $context.csvLocation.Replace('\','\\') + "`n",
@@ -28,4 +28,10 @@ $wpf.SettingsReturn.Add_Click({
     }
     Import-Configuration
     Set-DataContext Status 'Ready'
+})
+
+$wpf.ResetConfig.Add_Click({
+    $config.GetEnumerator().ForEach({
+        Set-DataContext $_.Keys ([String] $_.Values)
+    })
 })
