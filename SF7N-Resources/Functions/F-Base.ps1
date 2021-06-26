@@ -51,7 +51,7 @@ function Import-Configuration {
     $script:config = Get-Content .\Configurations\General.ini | ConvertFrom-StringData
 
     # Bulid DataContext
-    Write-Log 'INF' 'Build  DataContext'
+    Write-Log 'INF' 'Build  Data Context'
         $script:context = [PSCustomObject] @{
         csvLocation  = $Config.csvLocation
         PreviewPath  = $Config.PreviewPath
@@ -68,10 +68,8 @@ function Import-Configuration {
 }
 
 function Initialize-SF7N {
-    Import-Configuration
-
     # Apply DataContext to GUI
-    Write-Log 'INF' 'Apply  DataContext to GUI'
+    Write-Log 'INF' 'Apply  Data Context'
     $wpf.SF7N.DataContext = $context
     $wpf.SF7N.Dispatcher.Invoke([Action]{}, 'Render')
 
@@ -105,4 +103,5 @@ function Initialize-SF7N {
         $wpf.CSVGrid.Columns.Add($Column)
     }
     Search-CSV $wpf.SearchBar.Text -FirstRun $true
+    Write-Log 'DBG' ''
 }

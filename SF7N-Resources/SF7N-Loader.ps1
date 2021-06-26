@@ -13,14 +13,18 @@ Add-Type -AssemblyName PresentationFramework
 Import-Configuration
 
 # Load a WPF GUI from a XAML file
+Write-Log 'INF' 'Import XAML'
 Import-Module '.\Functions\F-XAML.ps1'
 $wpf = Get-XAML
  
 # Import GUI Control code
-Write-Log 'INF' 'Import GUI modules'
-Import-Module '.\Functions\F-Edit.ps1', '.\Functions\F-Search.ps1',
-              '.\Handlers\H-Edit.ps1', '.\Handlers\H-Config.ps1',
-              '.\Handlers\H-Search.ps1'
+Write-Log 'INF' 'Import GUI Modules'
+('.\Functions\F-Edit.ps1', '.\Functions\F-Search.ps1',
+ '.\Handlers\H-Edit.ps1', '.\Handlers\H-Config.ps1',
+ '.\Handlers\H-Search.ps1').ForEach({
+     Write-Log 'INF' "    - $($_ -Replace '^.+\\','')"
+     Import-Module $_ -Force
+ })
 
 # Initialzation work after splashscreen show
 $wpf.SF7N.Add_ContentRendered({
@@ -41,9 +45,10 @@ $wpf.SF7N.Add_Closing({
         }
     }
 
-    if (!$_.Cancel) {Remove-Module 'F-*', 'H-*'}
+    if (!$_.Cancel) {Remove-Module 'F-*', 'H-*' -Force}
 })
 
 # Load WPF
 Write-Log 'DBG' 'Launch GUI'
+Write-Log 'DBG' ''
 [Void] $wpf.SF7N.ShowDialog()
