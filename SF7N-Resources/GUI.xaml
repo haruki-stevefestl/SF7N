@@ -11,9 +11,9 @@
         <SolidColorBrush x:Key="Brush_Highlight" Color="#CCE8FF"/>
         <SolidColorBrush x:Key="Brush_Control" Color="#E5F3FF"/>
         <SolidColorBrush x:Key="Brush_Border" Color="#727272"/>
+        <Color x:Key="Color_Foreground" R="0" G="0" B="0" A="255"/>
         <Color x:Key="Color_Highlight" R="204" G="232" B="255" A="255" />
         <Color x:Key="Color_Control" R="229" G="243" B="255" A="255"/>
-        <Color x:Key="Color_Foreground" R="0" G="0" B="0" A="255"/>
         <SolidColorBrush x:Key="Brush_Scroll_Static" Color="#DDDDDD"/>
         <SolidColorBrush x:Key="Brush_Scroll_MouseOver" Color="#CCCCCC"/>
         <SolidColorBrush x:Key="Brush_Scroll_Pressed" Color="#AAAAAA"/>
