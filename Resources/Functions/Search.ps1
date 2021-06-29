@@ -1,6 +1,12 @@
 function Search-CSV ($SearchText, $FirstRun) {
     # Initialize
+    if ($csv.Count -eq 0) {
+        Set-DataContext Status Editing
+        return
+    }
+
     $wpf.CSVGrid.ItemsSource = $null
+    $wpf.Commit.IsEnabled = $false
     Set-DataContext Preview $null
     if (!$FirstRun) {Set-DataContext Status 'Processing'}
 
@@ -10,7 +16,7 @@ function Search-CSV ($SearchText, $FirstRun) {
 
     ($SearchText | Select-String $Regex -AllMatches).Matches.ForEach({
         $SearchTerm |
-        Add-Member -MemberType NoteProperty -Name $_.Groups[2].Value -Value $_.Groups[4].Value
+        Add-Member -NotePropertyName $_.Groups[2].Value $_.Groups[4].Value
     })
 
     # Apply input alias
@@ -26,20 +32,20 @@ function Search-CSV ($SearchText, $FirstRun) {
     # Search with new Powershell instance
     $Ps = [PowerShell]::Create().AddScript{
         function Update-GUI ([Action] $Action) {
-            $wpf.SF7N.Dispatcher.Invoke([Action] $Action, 'Normal')
+            $wpf.SF7N.Dispatcher.Invoke($Action, 'Normal')
         }
 
         [Collections.ArrayList] $CsvSearch = @()
         foreach ($Entry in $csv) {
-            # If notMatch, goto next iteration
             if (!$FirstRun -or ('' -eq $SearchTerm)) {
+                # If notMatch, goto next iteration
                 $SearchTerm.PSObject.Properties.ForEach({
                     if ($Entry.($_.Name) -notmatch $_.Value) {continue}
                 })
             }
         
-            # Apply alias if OutputAlias is on; else add raw content
-            if ($context.OutputAlias) {
+            # Add entry; apply alias if OutputAlias is on 
+            if ($context.EditOutput -eq 0) {
                 $Row = $Entry.PSObject.Copy()
                 $Row.PSObject.Properties.ForEach({
                     $Header = $_.Name
@@ -48,15 +54,16 @@ function Search-CSV ($SearchText, $FirstRun) {
                     }
                 })
                 $CsvSearch.Add($Row)
-                
             } else {
                 $CsvSearch.Add($Entry)
             }
 
+            # Show preliminary results
             if ($CsvSearch.Count -eq 25) {
                 Update-GUI {$wpf.CSVGrid.ItemsSource = $CsvSearch.PSObject.Copy()}
             }
         }
+        # Show full results
         Update-GUI {$wpf.CSVGrid.ItemsSource = $wpf.CSVGrid.ItemsSource = $CsvSearch}
         $context.Status = 'Ready'
         Update-GUI {$wpf.SF7N.DataContext = $null}

@@ -15,7 +15,7 @@
             "name": "PowerShell: SF7N",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/SF7N-Resources/SF7N-Loader",
+            "script": "${workspaceFolder}/Resources/SF7N",
             "cwd": "${workspaceFolder}"
         }
     ]

@@ -1,8 +1,12 @@
-# Editing-related actions
 # Enter edit mode
-$wpf.CSVGrid.Add_BeginningEdit({$wpf.Toolbar.SelectedIndex = 1})
+$wpf.CSVGrid.Add_BeginningEdit({
+    # Repeatedly setting DataContext causes changes to vanish
+    if ($context.Status -ne 'Editing') {
+        Set-DataContext Status Editing
+    }
+})
 
-# Add-Row actions
+# Change rows (add/remove)
 $wpf.CSVGrid.Add_CellEditEnding({$wpf.Commit.IsEnabled = $true})
 $wpf.InsertLast.Add_Click({ Add-Row 'InsertLast'})
 $wpf.InsertAbove.Add_Click({Add-Row 'InsertAbove'})
@@ -17,7 +21,7 @@ $wpf.RemoveSelected.Add_Click({
 # Commit CSV
 $wpf.Commit.Add_Click({Export-CustomCSV $context.csvLocation})
 
-# Reload CSV on Return
+# Reload CSV on return; ask user if unsaved
 $wpf.Return.Add_Click({
     $Return = $true
     if ($wpf.Commit.IsEnabled) {
@@ -30,7 +34,5 @@ $wpf.Return.Add_Click({
     if ($Return) {
         Import-CustomCSV $context.csvLocation
         Search-CSV $wpf.SearchBar.Text
-        $wpf.Commit.IsEnabled = $false
-        $wpf.Toolbar.SelectedIndex = 0
     }
 })
