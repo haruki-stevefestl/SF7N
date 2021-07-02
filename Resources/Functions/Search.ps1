@@ -1,14 +1,14 @@
-function Search-CSV ($SearchText, $FirstRun) {
+function Search-CSV ($SearchText) {
     # Initialize
     if ($csv.Count -eq 0) {
-        Set-DataContext Status Editing
+        Set-DataContext $context Status Editing
         return
     }
 
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.Commit.IsEnabled = $false
-    Set-DataContext Preview $null
-    if (!$FirstRun) {Set-DataContext Status 'Processing'}
+    Set-DataContext $context Preview $null
+    Set-DataContext $context Status Searching
 
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchTerm = [PSCustomObject] @{}
@@ -32,12 +32,12 @@ function Search-CSV ($SearchText, $FirstRun) {
     # Search with new Powershell instance
     $Ps = [PowerShell]::Create().AddScript{
         function Update-GUI ([Action] $Action) {
-            $wpf.SF7N.Dispatcher.Invoke($Action, 'Normal')
+            $wpf.SF7N.Dispatcher.Invoke($Action, 'ApplicationIdle')
         }
 
         [Collections.ArrayList] $CsvSearch = @()
         foreach ($Entry in $csv) {
-            if (!$FirstRun -or ('' -eq $SearchTerm)) {
+            if ('' -eq $SearchTerm) {
                 # If notMatch, goto next iteration
                 $SearchTerm.PSObject.Properties.ForEach({
                     if ($Entry.($_.Name) -notmatch $_.Value) {continue}
@@ -64,7 +64,7 @@ function Search-CSV ($SearchText, $FirstRun) {
             }
         }
         # Show full results
-        Update-GUI {$wpf.CSVGrid.ItemsSource = $wpf.CSVGrid.ItemsSource = $CsvSearch}
+        Update-GUI {$wpf.CSVGrid.ItemsSource = $CsvSearch}
         $context.Status = 'Ready'
         Update-GUI {$wpf.SF7N.DataContext = $null}
         Update-GUI {$wpf.SF7N.DataContext = $context}
@@ -75,7 +75,7 @@ function Search-CSV ($SearchText, $FirstRun) {
     $Ps.Runspace.ApartmentState = 'STA'
     $Ps.Runspace.ThreadOptions = 'ReuseThread'
     $Ps.Runspace.Open()
-    (Get-Variable wpf,csv,SearchTerm,csvAlias,context,FirstRun).ForEach({
+    (Get-Variable wpf,csv,SearchTerm,csvAlias,context).ForEach({
         $Ps.Runspace.SessionStateProxy.SetVariable($_.Name, $_.Value)
     })
     $Ps.BeginInvoke()
