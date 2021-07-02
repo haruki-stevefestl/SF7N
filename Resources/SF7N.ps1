@@ -1,8 +1,7 @@
 #Requires -Version 3
 # Base variables & functions
-$script:startTime    = Get-Date
-$script:baseLocation = $PSScriptRoot
-Set-Location $PSScriptRoot
+$script:startTime = Get-Date
+$script:baseDir   = $PSScriptRoot
 
 function Write-Log ($Log, [Boolean] $IsError) {
     $TimeDiff = ((Get-Date)-$startTime).TotalMilliseconds
@@ -20,8 +19,7 @@ Write-Log '-------------------------'
 Write-Log 'Set    Defaults Parameters'
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Set-Location $PSScriptRoot\Functions
-Unblock-File DataContext.ps1, DataIO.ps1, Edit.ps1,
-             Initialize.ps1, Search.ps1, XAML.ps1
+Unblock-File DataContext.ps1, IO.ps1, Edit.ps1, Initialize.ps1, Search.ps1, XAML.ps1
 Set-Location $PSScriptRoot\Handlers
 Unblock-File Config.ps1, Edit.ps1, Lifecycle.ps1, Search.ps1
 Set-Location $PSScriptRoot
@@ -34,25 +32,22 @@ $script:context = New-DataContext $config
 # XAML & GUI
 Import-Module .\Functions\XAML.ps1 -Force
 $script:wpf = New-GUI .\GUI.xaml
+Update-DataContext $context
 
 # GUI Functions
 Write-Log 'Import GUI Functions'
-foreach ($Function in 'DataIO','Search','Edit') {
-    Write-Log ('  - '+$Function)
-    Import-Module ".\Functions\$Function.ps1" -Force
+foreach ($Module in 'IO','Search','Edit') {
+    Write-Log ('  - '+$Module)
+    Import-Module .\Functions\$Module.ps1 -Force
 }
 
-# GUI Handlers
-Write-Log 'Import GUI Handlers'
-foreach ($Handler in 'Search','Edit','Config') {
-    Write-Log ('  - '+$Handler)
-    Import-Module ".\Handlers\$Handler.ps1" -Force
+# Handlers
+Write-Log 'Import Handlers'
+foreach ($Module in 'Search','Edit','Config','Lifecycle') {
+    Write-Log ('  - '+$Module)
+    Import-Module .\Handlers\$Module.ps1 -Force
 }
-Remove-Variable Function, Handler
-
-# Lifecycle Handlers
-Write-Log 'Import Lifecycle Handlers'
-Import-Module .\Handlers\Lifecycle.ps1 -Force
+Remove-Variable Module
 
 # Display GUI
 Write-Log '-------------------------'
