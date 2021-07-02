@@ -37,7 +37,7 @@ function Search-CSV ($SearchText) {
 
         [Collections.ArrayList] $CsvSearch = @()
         foreach ($Entry in $csv) {
-            if ('' -eq $SearchTerm) {
+            if ('' -ne $SearchTerm) {
                 # If notMatch, goto next iteration
                 $SearchTerm.PSObject.Properties.ForEach({
                     if ($Entry.($_.Name) -notmatch $_.Value) {continue}

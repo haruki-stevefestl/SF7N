@@ -11,6 +11,7 @@
         <SolidColorBrush x:Key="Brush_Highlight" Color="#CCE8FF"/>
         <SolidColorBrush x:Key="Brush_Control" Color="#E5F3FF"/>
         <SolidColorBrush x:Key="Brush_Border" Color="#727272"/>
+        <SolidColorBrush x:Key="Brush_Progress" Color="#06B025"/>
         <Color x:Key="Color_Foreground" R="0" G="0" B="0" A="255"/>
         <Color x:Key="Color_Highlight" R="204" G="232" B="255" A="255" />
         <Color x:Key="Color_Control" R="229" G="243" B="255" A="255"/>
@@ -177,7 +178,9 @@
                 </TabControl>
 
                 <!-- Datagrid -->
-                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Height="4" IsIndeterminate="True" VerticalAlignment="Top" Background="Transparent" BorderThickness="0">
+                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Height="4" IsIndeterminate="True"
+                VerticalAlignment="Top" BorderThickness="0"
+                Background="Transparent" Foreground="{StaticResource Brush_Progress}">
                     <ProgressBar.Style>
                         <Style TargetType="ProgressBar">
                             <Style.Triggers>
