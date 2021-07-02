@@ -2,7 +2,7 @@
 $wpf.CSVGrid.Add_BeginningEdit({
     # Repeatedly setting DataContext causes changes to vanish
     if ($context.Status -ne 'Editing') {
-        Set-DataContext Status Editing
+        Set-DataContext $context Status Editing
     }
 })
 

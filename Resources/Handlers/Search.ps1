@@ -15,7 +15,7 @@ $wpf.CSVGrid.Add_SelectionChanged({
     $Replacements.Matches.Value.ForEach({
         $Preview = $Preview.Replace("<$_>", $wpf.CSVGrid.SelectedItem.$_)
     })
-    Set-DataContext Preview $Preview
+    Set-DataContext $context Preview $Preview
 })
 
 # Copy preview
@@ -28,4 +28,4 @@ $wpf.PreviewCopy.Add_Click({
 })
 
 # Open config page
-$wpf.Settings.Add_Click({Set-DataContext Status Configurating})
+$wpf.Settings.Add_Click({Set-DataContext $context Status Configurating})

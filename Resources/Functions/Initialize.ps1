@@ -1,6 +1,6 @@
 function Initialize-SF7N {
     Write-Log 'Init.  SF7N'
-    Update-DataContext
+    Update-DataContext $context
 
     # Import CSV
     Import-CustomCSV $context.csvLocation
@@ -33,5 +33,5 @@ function Initialize-SF7N {
         $wpf.CSVGrid.Columns.Add($Column)
     })
     
-    Search-CSV $wpf.SearchBar.Text -FirstRun $true
+    Search-CSV $wpf.SearchBar.Text
 }

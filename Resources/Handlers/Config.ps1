@@ -1,11 +1,11 @@
 $wpf.ApplyConfig.Add_Click({
     # Handle RadioButton -> $context.EditOutput
     if ($wpf.ReadAlias.IsChecked) {
-        Set-DataContext EditOutput 0
+        Set-DataContext $context EditOutput 0
     } elseif ($wpf.ReadRaw.IsChecked) {
-        Set-DataContext EditOutput 1
+        Set-DataContext $context EditOutput 1
     } else {
-        Set-DataContext EditOutput 2
+        Set-DataContext $context EditOutput 2
     }
 
     # Export config to file
@@ -32,7 +32,7 @@ $wpf.ApplyConfig.Add_Click({
         Write-Log 'Reload search'
         Search-CSV $wpf.SearchBar.Text
     }
-    Set-DataContext Status 'Ready'
+    Set-DataContext $context Status Ready
 })
 
 $wpf.ResetConfig.Add_Click({

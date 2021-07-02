@@ -7,8 +7,8 @@ function Import-CustomCSV ($ImportFrom) {
     $ImportFrom = $ExecutionContext.InvokeCommand.ExpandString($ImportFrom)
     [Collections.ArrayList] $script:csv = Import-CSV $ImportFrom
 
-    $script:csvHeader = [IO.StreamReader]::New($ImportFrom).
-                        ReadLine() -replace '"' -split ','
+    $Reader = [IO.StreamReader]::New($ImportFrom)
+    $script:csvHeader = $Reader.ReadLine() -replace '"' -split ','
 
     $Alias = '.\Configurations\CSVAlias.csv'
     if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}

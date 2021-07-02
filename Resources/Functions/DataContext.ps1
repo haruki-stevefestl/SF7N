@@ -3,16 +3,16 @@ function Import-Configuration ($ImportFrom) {
     return Get-Content $ImportFrom | ConvertFrom-StringData
 }
 
-function Update-DataContext {
+function Update-DataContext ($DataContext) {
     # Update DataContext manually as INPC is difficult to implement
     # https://stackoverflow.com/q/21814444
     $wpf.SF7N.DataContext = $null
-    $wpf.SF7N.DataContext = $context
+    $wpf.SF7N.DataContext = $DataContext
 }
 
-function Set-DataContext ($Key, $Value) {
-    $context.$Key = $Value
-    Update-DataContext
+function Set-DataContext ($ToChange, $Key, $Value) {
+    $ToChange.$Key = $Value
+    Update-DataContext $ToChange
 }
 
 function New-DataContext ($Key) {
