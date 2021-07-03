@@ -3,6 +3,10 @@ function Import-Configuration ($ImportFrom) {
     return Get-Content $ImportFrom | ConvertFrom-StringData
 }
 
+function Expand-Path ($Path) {
+    return ($ExecutionContext.InvokeCommand.ExpandString($Path))
+}
+
 function Update-DataContext ($DataContext) {
     # Update DataContext manually as INPC is difficult to implement
     # https://stackoverflow.com/q/21814444
