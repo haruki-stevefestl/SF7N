@@ -4,9 +4,8 @@ function Add-Row ($Action) {
     $csvHeader.Foreach({$RowTemplate | Add-Member NoteProperty $_ ''})
     
     if ($Action -eq 'InsertLast') {
-        # InsertLast
         for ($I = 0; $I -lt $context.AppendCount; $I++) {
-            # Add rows at end with IDing
+            # Expand %x (legacy) and <x> (current) noation
             $ThisRow = $RowTemplate.PsObject.Copy()
             $ThisRow.($csvHeader[0]) = $context.AppendFormat -replace
                 '%D|<D>', (Get-Date -Format yyyyMMdd) -replace

@@ -10,12 +10,12 @@ $wpf.ApplyConfig.Add_Click({
 
     # Export config to file
     (
-        'csvLocation  = ' + $context.csvLocation.Replace('\','\\') + "`n",
-        'PreviewPath  = ' + $context.PreviewPath.Replace('\','\\') + "`n",
-        'Theme        = ' + $context.Theme + "`n",
-        'InputAlias   = ' + $context.InputAlias   + "`n",
-        'AppendFormat = ' + $context.AppendFormat + "`n",
-        'AppendCount  = ' + $context.AppendCount  + "`n",
+        'csvLocation  = ' + $context.csvLocation.Replace('\','\\') + "`n" +
+        'PreviewPath  = ' + $context.PreviewPath.Replace('\','\\') + "`n" +
+        'Theme        = ' + $context.Theme + "`n" +
+        'InputAlias   = ' + $context.InputAlias   + "`n" +
+        'AppendFormat = ' + $context.AppendFormat + "`n" +
+        'AppendCount  = ' + $context.AppendCount  + "`n" +
         'EditOutput   = ' + $context.EditOutput   + "`n"
     ) | Out-File '.\Configurations\General.ini'
 
@@ -30,7 +30,7 @@ $wpf.ApplyConfig.Add_Click({
         $config.InputAlias -ne $context.InputAlias
     ) {
         Write-Log 'Reload search'
-        Search-CSV $wpf.SearchBar.Text
+        Search-CSV $wpf.Searchbar.Text
     }
     Set-DataContext $context Status Ready
 })
