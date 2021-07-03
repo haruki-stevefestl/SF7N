@@ -33,5 +33,5 @@ function Initialize-SF7N {
         $wpf.CSVGrid.Columns.Add($Column)
     })
     
-    Search-CSV $wpf.SearchBar.Text
+    Search-CSV $wpf.Searchbar.Text
 }

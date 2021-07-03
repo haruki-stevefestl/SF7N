@@ -12,7 +12,7 @@ function Search-CSV ($SearchText) {
 
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchTerm = [PSCustomObject] @{}
-    $Regex = '(["'']?)(?(1)(.+?|[\S"'']+?))\1[:=](["'']?)(?(1)(.+?|[\S"'']+?))\3(?:\s|$)'
+    $Regex = '(["'']?)(.+?)\1[:=](["'']?)(.+?)\3(\s|$)'
 
     ($SearchText | Select-String $Regex -AllMatches).Matches.ForEach({
         $SearchTerm |

@@ -110,7 +110,7 @@
 
         <!-- Splashscreen -->
         <TabItem>
-            <TextBlock Text="SF7N 1.7" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="SF7N 1.6" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </TabItem>
 
         <!-- Homepage -->
@@ -151,7 +151,7 @@
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
+                                                <DataTrigger Binding="{Binding ElementName=Searchbar, Path=Text.IsEmpty}" Value="True">
                                                     <Setter Property="Text" Value="Filter by Header:Value"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -159,7 +159,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0" Background="Transparent"/>
+                                <TextBox Name="Searchbar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0" Background="Transparent"/>
                             </Grid>
                             <Button Name="Search" Grid.Column="1" DockPanel.Dock="Right" Content="Filter" Margin="8,0"/>
                             <Button Name="Settings" Grid.Column="2"  DockPanel.Dock="Right" Content="Settings"/>
@@ -453,7 +453,7 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ReadWrite}" Value="True">
+                                    <DataTrigger Binding="{Binding EditOutput}" Value="2">
                                         <Setter Property="Text" Value="Read/Write"/>
                                     </DataTrigger>
                                 </Style.Triggers>
