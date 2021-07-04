@@ -5,7 +5,6 @@ function New-GUI ($ImportFrom) {
     $Xaml = Set-GUITheme $Xaml
 
     Write-Log '  - Parse XAML'
-    Add-Type -AssemblyName PresentationFramework
     $Form = [Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::New($Xaml))
 
     # Populate $Hash with elements

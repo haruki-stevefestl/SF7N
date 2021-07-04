@@ -1,7 +1,7 @@
 <Window Name="SF7N"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SF7N Interface" Height="600" Width="1600"
+        Title="SF7N" Height="600" Width="1600"
         FontFamily="Courier New" FontSize="16">
     <Window.Resources>
         <SolidColorBrush x:Key="Brush_Background" Color="#FFFFFF"/>
@@ -470,7 +470,7 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ReadWrite}" Value="True">
+                                    <DataTrigger Binding="{Binding EditOutput}" Value="2">
                                         <Setter Property="Text" Value="Read/Write"/>
                                     </DataTrigger>
                                 </Style.Triggers>

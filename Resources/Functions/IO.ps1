@@ -13,11 +13,7 @@ function Import-CustomCSV ($ImportFrom) {
     $Alias = '.\Configurations\CSVAlias.csv'
     if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}
 
-    # Exit if CSV is empty
-    if (!$csvHeader) {
-        Write-Log 'Data file is empty; SF7N will exit.' -IsError $true
-        $wpf.SF7N.Close()
-    }
+    if (!$csvHeader) {throw '(Terminating) Data file is empty'}
 }
 
 function Export-CustomCSV ($ExportTo) {
@@ -25,7 +21,7 @@ function Export-CustomCSV ($ExportTo) {
         $csv | Export-CSV (Expand-Path $ExportTo) -NoTypeInformation
         $wpf.Commit.IsEnabled = $false
     } catch {
-        Write-Log ('CSV cannot be saved: '+$_) -IsError $true
+        throw ('CSV cannot be saved: '+$_)
     }
 }
 
