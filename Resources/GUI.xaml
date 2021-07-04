@@ -11,7 +11,6 @@
         <SolidColorBrush x:Key="Brush_Highlight" Color="#CCE8FF"/>
         <SolidColorBrush x:Key="Brush_Control" Color="#E5F3FF"/>
         <SolidColorBrush x:Key="Brush_Border" Color="#727272"/>
-        <SolidColorBrush x:Key="Brush_Progress" Color="#06B025"/>
         <Color x:Key="Color_Foreground" R="0" G="0" B="0" A="255"/>
         <Color x:Key="Color_Highlight" R="204" G="232" B="255" A="255" />
         <Color x:Key="Color_Control" R="229" G="243" B="255" A="255"/>
@@ -110,7 +109,7 @@
 
         <!-- Splashscreen -->
         <TabItem>
-            <TextBlock Text="SF7N 1.6" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="SF7N 1.7" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </TabItem>
 
         <!-- Homepage -->
@@ -151,7 +150,7 @@
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ElementName=Searchbar, Path=Text.IsEmpty}" Value="True">
+                                                <DataTrigger Binding="{Binding ElementName=SearchBar, Path=Text.IsEmpty}" Value="True">
                                                     <Setter Property="Text" Value="Filter by Header:Value"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -159,7 +158,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBox Name="Searchbar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0" Background="Transparent"/>
+                                <TextBox Name="SearchBar" AcceptsReturn="True" VerticalContentAlignment="Center" Padding="4,0" Background="Transparent"/>
                             </Grid>
                             <Button Name="Search" Grid.Column="1" DockPanel.Dock="Right" Content="Filter" Margin="8,0"/>
                             <Button Name="Settings" Grid.Column="2"  DockPanel.Dock="Right" Content="Settings"/>
@@ -178,13 +177,14 @@
                 </TabControl>
 
                 <!-- Datagrid -->
-                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Height="4" IsIndeterminate="True"
-                VerticalAlignment="Top" BorderThickness="0"
-                Background="Transparent" Foreground="{StaticResource Brush_Progress}">
+                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Height="4" IsIndeterminate="True" VerticalAlignment="Top" Background="Transparent" BorderThickness="0">
                     <ProgressBar.Style>
                         <Style TargetType="ProgressBar">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Status}" Value="Searching">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Saving">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -192,20 +192,37 @@
                         </Style>
                     </ProgressBar.Style>
                 </ProgressBar>
-                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
+                
+                <!-- Empty CSV messages -->
+                <TabControl Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0">
+                    <TabControl.Style>
+                        <Style TargetType="TabControl">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Editing">
+                                    <Setter Property="SelectedIndex" Value="1"/>
+                                </DataTrigger>
                             </Style.Triggers>
-                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Setter Property="SelectedIndex" Value="0"/>
                         </Style>
-                    </StackPanel.Style>
-                    <TextBlock Style="{StaticResource Caption}" Text="The search returns no matches yet." HorizontalAlignment="Center"/>
-                    <TextBlock Style="{StaticResource Caption}" Text="Try other search criteria or await pending results." Margin="0,8,0,0"/>
-                </StackPanel>
+                    </TabControl.Style>
+                    <TabItem>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Caption}" Text="The search returns no matches yet." HorizontalAlignment="Center"/>
+                            <TextBlock Style="{StaticResource Caption}" Text="Try other search criteria or await pending results." Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Caption}" Text="The input file has no rows." HorizontalAlignment="Center"/>
+                            <TextBlock Style="{StaticResource Caption}" Text="Press &quot;Append&quot; to fill in the file." Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+                
                 <DataGrid Name="CSVGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="0,8,0,0" MinColumnWidth="48"
                   Background="Transparent" Foreground="{StaticResource Brush_Foreground}" GridLinesVisibility="None" BorderThickness="0"
                   RowHeaderWidth="0" MinRowHeight="25" FrozenColumnCount="1" CanUserAddRows="False"
@@ -453,7 +470,7 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding EditOutput}" Value="2">
+                                    <DataTrigger Binding="{Binding ReadWrite}" Value="True">
                                         <Setter Property="Text" Value="Read/Write"/>
                                     </DataTrigger>
                                 </Style.Triggers>

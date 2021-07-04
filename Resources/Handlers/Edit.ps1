@@ -15,7 +15,8 @@ $wpf.RemoveSelected.Add_Click({
     $wpf.CSVGrid.SelectedItems.ForEach{$csv.Remove($_)}
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
-    $wpf.Commit.IsEnabled = $true
+    # Disable commit button if $csv is empty
+    $wpf.Commit.IsEnabled = [Boolean] $csv
 })
 
 # Commit CSV
