@@ -36,7 +36,5 @@ $wpf.ApplyConfig.Add_Click({
 })
 
 $wpf.ResetConfig.Add_Click({
-    $config.GetEnumerator().ForEach({
-        Set-DataContext $_.Keys ([String] $_.Values)
-    })
+    $config.Keys.Foreach({Set-DataContext $context $_ $config.$_})
 })
