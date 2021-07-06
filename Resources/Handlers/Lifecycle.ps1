@@ -10,7 +10,7 @@ $wpf.SF7N.Add_ContentRendered({
 # Prompt exit if unsaved
 $wpf.SF7N.Add_Closing({
     if ($wpf.Commit.IsEnabled) {
-        $Dialog = New-SaveDialog
+        $Dialog = New-Dialog 'Commit changes before exiting?' 'YesNoCancel' 'Question'
         if ($Dialog -eq 'Cancel') {
             $_.Cancel = $true
         } elseif ($Dialog -eq 'Yes') {

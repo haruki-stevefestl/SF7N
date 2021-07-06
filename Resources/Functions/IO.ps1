@@ -13,7 +13,7 @@ function Import-CustomCSV ($ImportFrom) {
     $Alias = '.\Configurations\CSVAlias.csv'
     if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}
 
-    if (!$csvHeader) {throw '(Terminating) Data file is empty'}
+    if (!$csvHeader) {throw 'Data file is empty'}
 }
 
 function Export-CustomCSV ($ExportTo) {
@@ -23,8 +23,4 @@ function Export-CustomCSV ($ExportTo) {
     } catch {
         throw ('CSV cannot be saved: '+$_)
     }
-}
-
-function New-SaveDialog {
-    return [Windows.MessageBox]::Show('Commit changes before exiting?', 'SF7N', 'YesNoCancel', 'Question')
 }

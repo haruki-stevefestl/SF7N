@@ -9,27 +9,15 @@ function Write-Log ($Log) {
     Write-Output ("{0,-8:0}  {1}" -F $TimeDiff,$Log) | Out-Host
 }
 
+function New-Dialog ($Message = '', $Option = 'OK', $Icon = 'Information') {
+    return [Windows.MessageBox]::Show($Message, 'SF7N', $Option, $Icon)
+}
+
 # Error handling
 trap {
-    function Exit-Force {
-        Get-Process | 
-        Where-Object {($_.MainWindowTitle -eq 'SF7N') -and ($_.ProcessName -eq 'powershell')} |
-        Stop-Process
-    }
-
-    if ($_ -match 'Terminating') {
-        [Void][Windows.MessageBox]::Show(
-            "Error: $_`n`nPress OK to exit", 'SF7N', 'OK', 'Error'
-        )
-        Exit-Force
-
-    } else {
-        $Dialog = [Windows.MessageBox]::Show(
-            "Error: $_`n`nClick YES to continue at your own discretion`nClick NO to exit.",
-            'SF7N', 'YesNo', 'Error'
-        )
-        if ($Dialog -eq 'No') {Exit-Force}
-    }
+    New-Dialog "Error: $_`n`nClick OK to exit" 'OK' 'Error'
+    if ($wpf) {$wpf.SF7N.Close()} # IF to prevent error before GUI shows
+    exit
 }
 
 # Defaults for SF7N
@@ -70,5 +58,6 @@ foreach ($Module in 'Search','Edit','Config','Lifecycle') {
 Remove-Variable Module
 
 # Display GUI
+# Execution goes to Handlers\Lifecycle.ps1
 Write-Log '-------------------------'
 [Void] $wpf.SF7N.ShowDialog()

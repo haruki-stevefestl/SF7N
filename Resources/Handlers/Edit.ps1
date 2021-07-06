@@ -15,8 +15,7 @@ $wpf.RemoveSelected.Add_Click({
     $wpf.CSVGrid.SelectedItems.ForEach{$csv.Remove($_)}
     $wpf.CSVGrid.ItemsSource = $csv
     $wpf.CSVGrid.Items.Refresh()
-    # Disable commit button if $csv is empty
-    $wpf.Commit.IsEnabled = [Boolean] $csv
+    $wpf.Commit.IsEnabled = [Boolean] $csv # Disable commit button if $csv is empty
 })
 
 # Commit CSV
@@ -26,9 +25,12 @@ $wpf.Commit.Add_Click({Export-CustomCSV $context.csvLocation})
 $wpf.Return.Add_Click({
     $Return = $true
     if ($wpf.Commit.IsEnabled) {
-        switch (New-SaveDialog) {
-            'Yes'    {Export-CustomCSV $context.csvLocation}
-            'Cancel' {$Return = $false}
+        $Dialog = New-Dialog 'Commit changes before exiting?' 'YesNoCancel' 'Question'
+        if ($Dialog -eq 'Yes') {
+            Export-CustomCSV $context.csvLocation
+
+        } elseif ($Dialog -eq 'Cancel') {
+            $Return = $false
         }
     }
 
