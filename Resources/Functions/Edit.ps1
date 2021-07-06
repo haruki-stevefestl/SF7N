@@ -4,7 +4,7 @@ function Add-Row ($Action) {
     $csvHeader.Foreach({$RowTemplate | Add-Member NoteProperty $_ ''})
     
     if ($Action -eq 'InsertLast') {
-        for ($I = 0; $I -lt $context.AppendCount; $I++) {
+        for ($i = 0; $i -lt $context.AppendCount; $i++) {
             # Expand %x (legacy) and <x> (current) noation
             $ThisRow = $RowTemplate.PsObject.Copy()
             $ThisRow.($csvHeader[0]) = $context.AppendFormat -replace
@@ -26,7 +26,12 @@ function Add-Row ($Action) {
         if ($Action -eq 'InsertBelow') {$At += $Count}
 
         # Max & Min to prevent under/overflowing
-        $csv.InsertRange([Math]::Max(0, [Math]::Min($At,$csv.Count)), @($RowTemplate)*$Count)
+        for ($i = 0; $i -lt $Count; $i++) {
+            $csv.Insert(
+                [Math]::Max(0, [Math]::Min($At,$csv.Count)),
+                $RowTemplate.PSObject.Copy()
+            )
+        }
     }
 
     $wpf.Commit.IsEnabled = $true
