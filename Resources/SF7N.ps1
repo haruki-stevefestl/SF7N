@@ -60,4 +60,5 @@ Remove-Variable Module
 # Display GUI
 # Execution goes to Handlers\Lifecycle.ps1
 Write-Log '-------------------------'
+$wpf.TabControl.SelectedIndex = 0
 [Void] $wpf.SF7N.ShowDialog()

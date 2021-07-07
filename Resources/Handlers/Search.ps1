@@ -32,4 +32,4 @@ $wpf.PreviewCopy.Add_Click({
 })
 
 # Open config page
-$wpf.Settings.Add_Click({Set-DataContext $context Status Configurating})
+$wpf.Settings.Add_Click({$wpf.TabControl.SelectedIndex = 2})

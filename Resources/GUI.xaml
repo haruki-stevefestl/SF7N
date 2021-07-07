@@ -119,21 +119,7 @@
         </Style>
     </Window.Resources>
 
-    <TabControl BorderThickness="0" Margin="-4" Background="{StaticResource Brush_Background}">
-        <TabControl.Style>
-            <Style TargetType="TabControl">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Status}" Value="Initializing">
-                        <Setter Property="SelectedIndex" Value="0"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Status}" Value="Configurating">
-                        <Setter Property="SelectedIndex" Value="2"/>
-                    </DataTrigger>
-                </Style.Triggers>
-                <Setter Property="SelectedIndex" Value="1"/>
-            </Style>
-        </TabControl.Style>
-
+    <TabControl Name="TabControl" BorderThickness="0" Margin="-4" Background="{StaticResource Brush_Background}">
         <!-- Splashscreen -->
         <TabItem>
             <TextBlock Text="SF7N 1.7" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>

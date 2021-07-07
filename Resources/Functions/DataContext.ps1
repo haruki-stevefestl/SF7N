@@ -29,7 +29,7 @@ function New-DataContext ($Key) {
         AppendCount  = $Key.AppendCount
         InputAlias   = $Key.InputAlias -ieq 'true'
         EditOutput   = $Key.EditOutput
-        Status       = 'Initializing'
+        Status       = 'Ready'
         Preview      = $null
     })
 }

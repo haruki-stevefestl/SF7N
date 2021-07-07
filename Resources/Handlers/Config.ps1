@@ -32,7 +32,7 @@ $wpf.ApplyConfig.Add_Click({
         Write-Log 'Reload search'
         Search-CSV $wpf.Searchbar.Text
     }
-    Set-DataContext $context Status Ready
+    $wpf.TabControl.SelectedIndex = 1
 })
 
 $wpf.ResetConfig.Add_Click({
