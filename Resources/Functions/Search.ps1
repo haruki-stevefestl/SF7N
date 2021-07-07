@@ -23,7 +23,9 @@ function Search-CSV ($SearchText) {
     if ($context.InputAlias) {
         $SearchTerm.PSObject.Properties.ForEach({
             $Header = $_.Name
-            for ($i = 0; $i -lt $csvAlias.$Header.Count; $i += 2) {
+            # Take into account of empty alias strings
+            $Count  = ($csvAlias.$Header | Where-Object {$_}).Count
+            for ($i = 0; $i -lt $Count; $i += 2) {
                 $_.Value = $_.Value.Replace($csvAlias[$i+1].$Header, $csvAlias[$i].$Header)
             }
         })
@@ -49,7 +51,9 @@ function Search-CSV ($SearchText) {
                 $Row = $Entry.PSObject.Copy()
                 $Row.PSObject.Properties.ForEach({
                     $Header = $_.Name
-                    for ($i = 0; $i -lt $csvAlias.$Header.Count; $i += 2) {
+                    # Take into account of empty alias strings
+                    $Count  = ($csvAlias.$Header | Where-Object {$_}).Count
+                    for ($i = 0; $i -lt $Count; $i += 2) {
                         $_.Value = $_.Value.Replace($csvAlias[$i].$Header, $csvAlias[$i+1].$Header)
                     }
                 })
