@@ -54,46 +54,7 @@
         <Style TargetType="RadioButton">
             <Setter Property="Foreground" Value="{StaticResource Brush_Foreground}"/>
         </Style>
-        <Style x:Key="HideEditControl" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource Brush_Button_Background}"/>
-            <Setter Property="Foreground" Value="{StaticResource Brush_Foreground}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource Brush_Border}"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
-                    <Setter Property="IsEnabled" Value="False"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ButtonBase}">
-                                <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}" 
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                                    <ContentPresenter x:Name="ContentPresenter" 
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                          Focusable="False"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          Margin="{TemplateBinding Padding}"
-                                          RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="Background" TargetName="Border" Value="{StaticResource Brush_Button_Disabled_Background}"/>
-                                        <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource Brush_Button_Disabled_Foreground}"/>
-                                        <Setter Property="TextElement.Foreground" TargetName="ContentPresenter" Value="{StaticResource Brush_Button_Disabled_Foreground}"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource Brush_Button_Background}"/>
-            <Setter Property="Foreground" Value="{StaticResource Brush_Foreground}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource Brush_Border}"/>
+        <Style TargetType="Button" x:Key="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -116,6 +77,14 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Setter Property="Foreground" Value="{StaticResource Brush_Foreground}"/>
+        </Style>
+        <Style x:Key="HideEditControl" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
