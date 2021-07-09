@@ -220,19 +220,6 @@
                                 </Setter.Value>
                             </Setter>
                         </Style>
-                        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
-                            <Setter Property="OverridesDefaultStyle" Value="true"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Focusable" Value="false"/>
-                            <Setter Property="IsTabStop" Value="false"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type RepeatButton}">
-                                        <Rectangle Fill="{TemplateBinding Background}" Height="10" Width="10"/>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
                         <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
                             <Setter Property="OverridesDefaultStyle" Value="true"/>
                             <Setter Property="IsTabStop" Value="false"/>
@@ -287,14 +274,7 @@
                                                 <RowDefinition Height="0.001*"/>
                                                 <RowDefinition MaxHeight="0"/>
                                             </Grid.RowDefinitions>
-                                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Grid.Row="1"/>
                                             <Track x:Name="PART_Track" IsEnabled="{TemplateBinding IsMouseOver}" IsDirectionReversed="true" Grid.Row="1">
-                                                <Track.DecreaseRepeatButton>
-                                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                </Track.DecreaseRepeatButton>
-                                                <Track.IncreaseRepeatButton>
-                                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                </Track.IncreaseRepeatButton>
                                                 <Track.Thumb>
                                                     <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
                                                 </Track.Thumb>
@@ -319,14 +299,7 @@
                                                         <ColumnDefinition Width="0.001*"/>
                                                         <ColumnDefinition MaxWidth="0"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Border Background="{TemplateBinding Background}" BorderThickness="0" Grid.Column="1"/>
                                                     <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
-                                                        <Track.DecreaseRepeatButton>
-                                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                        </Track.DecreaseRepeatButton>
-                                                        <Track.IncreaseRepeatButton>
-                                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                                        </Track.IncreaseRepeatButton>
                                                         <Track.Thumb>
                                                             <Thumb Style="{StaticResource ScrollBarThumbHorizontal}"/>
                                                         </Track.Thumb>
@@ -406,12 +379,12 @@
 
                 <!-- Preview -->
                 <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
-                <Button Name="PreviewCopy" Margin="8,8,0,0" Grid.Row="1" Grid.Column="1" Background="Transparent">
+                <Button Name="PreviewCopy" Margin="8,8,0,0" Grid.Row="1" Grid.Column="1">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Template">
                                 <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
+                                    <ControlTemplate TargetType="Button">
                                         <Border x:Name="Border" BorderThickness="0">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
@@ -428,11 +401,12 @@
                             </Setter>
                         </Style>
                     </Button.Style>
-                    <Grid>
-                        <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource Caption}"/>
-                        <Image Source="{Binding Preview}"/>
-                    </Grid>
                 </Button>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource Caption}"/>
+                    <Image Source="{Binding Preview}"/>
+                </Grid>
+
 
                 <!-- Stausbar -->
                 <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
@@ -462,7 +436,7 @@
                     </TextBlock>
                     <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Style="{StaticResource Caption}" Margin="0,0,48,0"/>
                     <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Style="{StaticResource Caption}"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{Binding Status, UpdateSourceTrigger=Explicit}" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding Status}" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
                 </DockPanel>
             </Grid>
         </TabItem>
@@ -471,10 +445,10 @@
         <TabItem>
             <Grid Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="-20,-10,-20,-8">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" MaxHeight="50"/>
@@ -487,7 +461,7 @@
                     <RowDefinition Height="2.5*" MaxHeight="125"/>
                     <RowDefinition Height="*" MaxHeight="50"/>
                     <RowDefinition Height="*" MaxHeight="50"/>
-                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="0.5*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="SF7N Configurations"/>
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="CSV Location"/>
@@ -499,39 +473,11 @@
                 <TextBlock Grid.Column="1" Grid.Row="6" Text="Input Alias"/>
                 <TextBlock Grid.Column="1" Grid.Row="7" Text="Editing &amp; Output"/>
 
-                <RadioButton Name="ReadAlias" Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read-Only, Alias" Foreground="{StaticResource Brush_Foreground}">
-                    <RadioButton.Style>
-                        <Style TargetType="RadioButton">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding EditOutput}" Value="0">
-                                    <Setter Property="IsChecked" Value="True"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </RadioButton.Style>
-                </RadioButton>
-                <RadioButton Name="ReadRaw" Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read-Only, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,32,0,0">
-                    <RadioButton.Style>
-                        <Style TargetType="RadioButton">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding EditOutput}" Value="1">
-                                    <Setter Property="IsChecked" Value="True"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </RadioButton.Style>
-                </RadioButton>
-                <RadioButton Name="WriteAlias" Grid.Column="2" Grid.Row="7" Height="24" VerticalAlignment="Top" Content=" Read-Write, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,64,0,0">
-                    <RadioButton.Style>
-                        <Style TargetType="RadioButton">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding EditOutput}" Value="2">
-                                    <Setter Property="IsChecked" Value="True"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </RadioButton.Style>
-                </RadioButton>
+                <StackPanel Grid.Column="2" Grid.Row="7">
+                    <RadioButton Name="ReadAlias"  IsChecked="{Binding EditOutput2[0]}" VerticalAlignment="Top" Content=" Read-Only, Alias" Foreground="{StaticResource Brush_Foreground}"/>
+                    <RadioButton Name="ReadRaw"    IsChecked="{Binding EditOutput2[1]}" VerticalAlignment="Top" Content=" Read-Only, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,24,0,0"/>
+                    <RadioButton Name="WriteAlias" IsChecked="{Binding EditOutput2[2]}" VerticalAlignment="Top" Content=" Read-Write, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,24,0,0"/>
+                </StackPanel>
 
                 <TextBox Grid.Column="2" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
                 <TextBox Grid.Column="2" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>

@@ -21,15 +21,21 @@ function Set-DataContext ($ToChange, $Key, $Value) {
 
 function New-DataContext ($Key) {
     Write-Log 'New    DataContext'
-    return ([PSCustomObject] @{
+    $DataContext =[PSCustomObject] @{
         csvLocation  = $Key.csvLocation
         PreviewPath  = $Key.PreviewPath
         Theme        = $Key.Theme
         AppendFormat = $Key.AppendFormat
         AppendCount  = $Key.AppendCount
         InputAlias   = $Key.InputAlias -ieq 'true'
-        EditOutput   = $Key.EditOutput
+        EditOutput  = @($False) * 3
         Status       = 'Ready'
         Preview      = $null
-    })
+    }
+    
+    # .EditOutput is an array of three boolean values,
+    # each representing the IsChecked of a EditOutput checkbox 
+    $DataContext.EditOutput[$Key.EditOutput] = $true
+
+    return $DataContext
 }

@@ -23,6 +23,6 @@ $wpf.SF7N.Add_Closing({
     }
 
     # Cleanup
-    # Remove-Variable baseDir,config,context,csv,
-    #     csvAlias,csvHeader,startTime,wpf -Scope Script -Force
+    Remove-Variable baseDir,config,context,csv,
+        csvAlias,csvHeader,startTime,wpf -Scope Script -Force
 })
