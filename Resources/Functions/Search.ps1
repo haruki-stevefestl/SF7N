@@ -1,14 +1,14 @@
 function Search-CSV ($SearchText) {
     # Initialize
     if ($csv.Count -eq 0) {
-        Set-DataContext $context Status Editing
+        $wpf.Status.Text = 'Editing'
         return
     }
 
     $wpf.CSVGrid.ItemsSource = $null
     $wpf.Commit.IsEnabled = $false
-    Set-DataContext $context Preview $null
-    Set-DataContext $context Status Searching
+    $wpf.Status.Text = 'Searching'
+    $wpf.Preview.Source = $null
 
     # Parse SearchRules Text into [PSCustomObject] $SearchTerm
     $SearchTerm = [PSCustomObject] @{}
@@ -69,9 +69,7 @@ function Search-CSV ($SearchText) {
         }
         # Show full results
         Update-GUI {$wpf.CSVGrid.ItemsSource = $CsvSearch}
-        $context.Status = 'Ready'
-        Update-GUI {$wpf.SF7N.DataContext = $null}
-        Update-GUI {$wpf.SF7N.DataContext = $context}
+        Update-GUI {$wpf.Status.Text = 'Ready'}
     }
     
     # Assign runspace to instance

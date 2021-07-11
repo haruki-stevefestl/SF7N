@@ -40,7 +40,7 @@ $script:context = New-DataContext $config
 # XAML & GUI
 Import-Module .\Functions\XAML.ps1 -Force
 $script:wpf = New-GUI .\GUI.xaml
-Update-DataContext $context
+$wpf.SF7N.DataContext = $context
 
 # GUI Functions
 Write-Log 'Import GUI Functions'

@@ -19,14 +19,15 @@ $wpf.CSVGrid.Add_SelectionChanged({
     ($Preview | Select-String $Regex -AllMatches).Matches.Value.ForEach({
         $Preview = $Preview.Replace("<$_>", $wpf.CSVGrid.SelectedItem.$_)
     })
-    Set-DataContext $context Preview $Preview
+    
+    if (Test-Path $Preview) {$wpf.Preview.Source = $Preview}
 })
 
 # Copy preview
 $wpf.PreviewCopy.Add_Click({
-    if (Test-Path $context.Preview) {
+    if (Test-Path $wpf.Preview.Source) {
         [Windows.Forms.Clipboard]::SetImage([Drawing.Image]::FromFile(
-            $context.Preview
+            $wpf.Preview.Source
         ))
     }
 })

@@ -1,10 +1,5 @@
 # Enter edit mode
-$wpf.CSVGrid.Add_BeginningEdit({
-    # Repeatedly setting DataContext causes changes to vanish
-    if ($context.Status -ne 'Editing') {
-        Set-DataContext $context Status Editing
-    }
-})
+$wpf.CSVGrid.Add_BeginningEdit({$wpf.Status.Text = 'Editing'})
 
 # Change rows (add/remove)
 $wpf.CSVGrid.Add_CellEditEnding({$wpf.Commit.IsEnabled = $true})

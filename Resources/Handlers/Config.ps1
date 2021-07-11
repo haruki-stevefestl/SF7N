@@ -1,22 +1,16 @@
 $wpf.ApplyConfig.Add_Click({
-    # Handle RadioButton -> $context.EditOutput
-    if ($wpf.ReadAlias.IsChecked) {
-        Set-DataContext $context EditOutput 0
-    } elseif ($wpf.ReadRaw.IsChecked) {
-        Set-DataContext $context EditOutput 1
-    } else {
-        Set-DataContext $context EditOutput 2
-    }
 
     # Export config to file
     (
         'csvLocation  = ' + $context.csvLocation.Replace('\','\\') + "`n" +
         'PreviewPath  = ' + $context.PreviewPath.Replace('\','\\') + "`n" +
-        'Theme        = ' + $context.Theme + "`n" +
-        'InputAlias   = ' + $context.InputAlias   + "`n" +
+        'Theme        = ' + $context.Theme        + "`n" +
         'AppendFormat = ' + $context.AppendFormat + "`n" +
         'AppendCount  = ' + $context.AppendCount  + "`n" +
-        'EditOutput   = ' + $context.EditOutput   + "`n"
+        'InputAlias   = ' + $context.InputAlias   + "`n" +
+        'OutputAlias  = ' + $context.OutputAlias  + "`n" +
+        'OutputRaw    = ' + $context.OutputRaw    + "`n" +
+        'ReadWrite    = ' + $context.ReadWrite    + "`n"
     ) | Out-File '.\Configurations\General.ini'
 
     # Reload
@@ -36,5 +30,9 @@ $wpf.ApplyConfig.Add_Click({
 })
 
 $wpf.ResetConfig.Add_Click({
-    $config.Keys.Foreach({Set-DataContext $context $_ $config.$_})
+    # Update DataContext manually as INPC is difficult to implement
+    # https://stackoverflow.com/q/21814444
+    $config.Keys.Foreach({$context.$_ = $config.$_})
+    $wpf.SF7N.DataContext = $null
+    $wpf.SF7N.DataContext = $context
 })

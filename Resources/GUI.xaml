@@ -112,7 +112,7 @@
                     <TabControl.Style>
                         <Style TargetType="TabControl">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Status}" Value="Editing">
+                                <DataTrigger Binding="{Binding ElementName=Status, Path=Text}" Value="Editing">
                                     <Setter Property="SelectedIndex" Value="1"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -163,10 +163,10 @@
                     <ProgressBar.Style>
                         <Style TargetType="ProgressBar">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Status}" Value="Searching">
+                                <DataTrigger Binding="{Binding ElementName=Status, Path=Text}" Value="Searching">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Status}" Value="Saving">
+                                <DataTrigger Binding="{Binding ElementName=Status, Path=Text}" Value="Saving">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -183,7 +183,7 @@
                                 <DataTrigger Binding="{Binding ElementName=CSVGrid, Path=Items.Count}" Value="0">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Status}" Value="Editing">
+                                <DataTrigger Binding="{Binding ElementName=Status, Path=Text}" Value="Editing">
                                     <Setter Property="SelectedIndex" Value="1"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -313,7 +313,7 @@
                         </Style>
                         <Style TargetType="DataGrid">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding EditOutput}" Value="2">
+                                <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="True">
                                     <Setter Property="IsReadOnly" Value="False"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -404,17 +404,16 @@
                 </Button>
                 <Grid Grid.Row="1" Grid.Column="1">
                     <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource Caption}"/>
-                    <Image Source="{Binding Preview}"/>
+                    <Image Name="Preview"/>
                 </Grid>
-
-
+                
                 <!-- Stausbar -->
                 <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
                     <TextBlock Margin="0,0,48,0">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Status}" Value="Editing">
+                                    <DataTrigger Binding="{Binding ElementName=Status, Path=Text}" Value="Editing">
                                         <Setter Property="Text" Value="Edit Mode"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -426,7 +425,7 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding EditOutput}" Value="2">
+                                    <DataTrigger Binding="{Binding ElementName=ReadWrite, Path=IsChecked}" Value="True">
                                         <Setter Property="Text" Value="Read/Write"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -436,7 +435,7 @@
                     </TextBlock>
                     <TextBlock Text="{Binding ElementName=CSVGrid, Path=Items.Count, StringFormat='\{0\} item(s)'}" Style="{StaticResource Caption}" Margin="0,0,48,0"/>
                     <TextBlock Text="{Binding ElementName=CSVGrid, Path=SelectedItems.Count, StringFormat='\{0\} selected'}" Style="{StaticResource Caption}"/>
-                    <TextBlock Text="{Binding Status}" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                    <TextBlock Name="Status" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
                 </DockPanel>
             </Grid>
         </TabItem>
@@ -473,18 +472,17 @@
                 <TextBlock Grid.Column="1" Grid.Row="6" Text="Input Alias"/>
                 <TextBlock Grid.Column="1" Grid.Row="7" Text="Editing &amp; Output"/>
 
-                <StackPanel Grid.Column="2" Grid.Row="7">
-                    <RadioButton Name="ReadAlias"  IsChecked="{Binding EditOutput2[0]}" VerticalAlignment="Top" Content=" Read-Only, Alias" Foreground="{StaticResource Brush_Foreground}"/>
-                    <RadioButton Name="ReadRaw"    IsChecked="{Binding EditOutput2[1]}" VerticalAlignment="Top" Content=" Read-Only, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,24,0,0"/>
-                    <RadioButton Name="WriteAlias" IsChecked="{Binding EditOutput2[2]}" VerticalAlignment="Top" Content=" Read-Write, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,24,0,0"/>
-                </StackPanel>
-
                 <TextBox Grid.Column="2" Grid.Row="1" Height="24" VerticalAlignment="Top" Text="{Binding csvLocation}"/>
                 <TextBox Grid.Column="2" Grid.Row="2" Height="24" VerticalAlignment="Top" Text="{Binding PreviewPath}"/>
                 <TextBox Grid.Column="2" Grid.Row="3" Height="24" VerticalAlignment="Top" Text="{Binding Theme}"/>
                 <TextBox Grid.Column="2" Grid.Row="4" Height="24" VerticalAlignment="Top" Text="{Binding AppendFormat}"/>
                 <TextBox Grid.Column="2" Grid.Row="5" Height="24" VerticalAlignment="Top" Text="{Binding AppendCount}"/>
                 <CheckBox Grid.Column="2" Grid.Row="6" VerticalAlignment="Top" IsChecked="{Binding InputAlias}"/>
+                <StackPanel Grid.Column="2" Grid.Row="7">
+                    <RadioButton IsChecked="{Binding OutputAlias}" VerticalAlignment="Top" Content=" Read-Only, Alias" Foreground="{StaticResource Brush_Foreground}"/>
+                    <RadioButton IsChecked="{Binding OutputRaw}" VerticalAlignment="Top" Content=" Read-Only, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,24,0,0"/>
+                    <RadioButton Name="ReadWrite" IsChecked="{Binding ReadWrite}" VerticalAlignment="Top" Content=" Read-Write, Raw" Foreground="{StaticResource Brush_Foreground}" Margin="0,24,0,0"/>
+                </StackPanel>
 
                 <Button Name="ResetConfig" Content="Reset Configurations" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Height="24"/>
                 <Button Name="ApplyConfig" Content="Save and Apply" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Height="24"/>
