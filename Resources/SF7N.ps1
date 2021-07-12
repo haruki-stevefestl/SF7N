@@ -24,7 +24,6 @@ trap {
 Write-Log 'SF7N 1.7'
 Write-Log '-------------------------'
 Write-Log 'Set    Defaults Parameters'
-$ErrorActionPreference = 'Continue'
 $PSDefaultParameterValues = @{'*:Encoding' = 'UTF8'}
 Set-Location $PSScriptRoot\Functions
 Unblock-File DataContext.ps1, IO.ps1, Edit.ps1, Initialize.ps1, Search.ps1, XAML.ps1

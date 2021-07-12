@@ -17,7 +17,6 @@ function New-DataContext ($Key) {
         AppendCount  = $Key.AppendCount
         InputAlias   = $Key.InputAlias  -ieq 'true'
         OutputAlias  = $Key.OutputAlias -ieq 'true'
-        OutputRaw    = $Key.OutputRaw   -ieq 'true'
         ReadWrite    = $Key.ReadWrite   -ieq 'true'
         Status       = 'Ready'
         Preview      = $null

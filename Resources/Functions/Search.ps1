@@ -47,7 +47,7 @@ function Search-CSV ($SearchText) {
             }
         
             # Add entry; apply alias if OutputAlias is on 
-            if ($context.EditOutput -eq 0) {
+            if ($context.OutputAlias) {
                 $Row = $Entry.PSObject.Copy()
                 $Row.PSObject.Properties.ForEach({
                     $Header = $_.Name

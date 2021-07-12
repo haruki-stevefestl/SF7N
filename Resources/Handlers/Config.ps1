@@ -9,7 +9,6 @@ $wpf.ApplyConfig.Add_Click({
         'AppendCount  = ' + $context.AppendCount  + "`n" +
         'InputAlias   = ' + $context.InputAlias   + "`n" +
         'OutputAlias  = ' + $context.OutputAlias  + "`n" +
-        'OutputRaw    = ' + $context.OutputRaw    + "`n" +
         'ReadWrite    = ' + $context.ReadWrite    + "`n"
     ) | Out-File '.\Configurations\General.ini'
 
@@ -20,8 +19,8 @@ $wpf.ApplyConfig.Add_Click({
         Initialize-SF7N
 
     } elseif (
-        $config.EditOutput -ne $context.EditOutput -or
-        $config.InputAlias -ne $context.InputAlias
+        $config.OutputAlias -ne $context.OutputAlias -or
+        $config.ReadWrite   -ne $context.ReadWrite
     ) {
         Write-Log 'Reload search'
         Search-CSV $wpf.Searchbar.Text
