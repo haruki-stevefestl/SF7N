@@ -31,6 +31,6 @@ $wpf.Return.Add_Click({
 
     if ($Return) {
         Import-CustomCSV $context.csvLocation
-        Search-CSV $wpf.Searchbar.Text
+        Search-CSV $wpf.Searchbar.Text $csv
     }
 })

@@ -6,9 +6,7 @@ $wpf.SF7N.Add_ContentRendered({
     Write-Log 'Import WinForms'
     Add-Type -AssemblyName System.Windows.Forms, System.Drawing 
 
-    Search-CSV $wpf.Searchbar.Text
-    Start-Sleep 1
-    $wpf.TabControl.SelectedIndex = 1
+    Search-CSV $wpf.Searchbar.Text $csv
 })
 
 # Prompt exit if unsaved

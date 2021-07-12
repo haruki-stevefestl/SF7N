@@ -13,7 +13,12 @@ function Import-CustomCSV ($ImportFrom) {
     $Alias = '.\Configurations\CSVAlias.csv'
     if (Test-Path $Alias) {$script:csvAlias = Import-CSV $Alias}
 
-    if (!$csvHeader) {throw 'Data file is empty'}
+    if (!$csvHeader) {
+        throw (
+            'The input CSV file is empty' + "`n" +
+            'Please set a valid path within the configuration file.'
+        )
+    }
 }
 
 function Export-CustomCSV ($ExportTo) {

@@ -378,7 +378,6 @@
                 </DataGrid>
 
                 <!-- Preview -->
-                <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="Transparent" HorizontalAlignment="Left"/>
                 <Button Name="PreviewCopy" Margin="8,8,0,0" Grid.Row="1" Grid.Column="1">
                     <Button.Style>
                         <Style TargetType="Button">
@@ -406,7 +405,7 @@
                     <TextBlock Text="Click to copy image" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource Caption}"/>
                     <Image Name="Preview"/>
                 </Grid>
-
+                <GridSplitter Grid.Row="1" Grid.Column="1" Width="8" Background="{StaticResource Brush_Background}" HorizontalAlignment="Left"/>
 
                 <!-- Stausbar -->
                 <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
@@ -497,11 +496,6 @@
                         </Style>
                     </CheckBox.Style>
                 </CheckBox>
-
-                <TextBlock Grid.Row="1" Text="{Binding OutputAlias}" Margin="20,0,0,0"/>
-                <TextBlock Grid.Row="3" Text="{Binding ReadWrite}" Margin="20,0,0,0"/>
-                <TextBlock Grid.Row="4" Text="{Binding AppendCount}" Margin="20,0,0,0"/>
-
                 <Button Name="ResetConfig" Content="Reset Configurations" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Height="24"/>
                 <Button Name="ApplyConfig" Content="Save and Apply" Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Height="24"/>
             </Grid>

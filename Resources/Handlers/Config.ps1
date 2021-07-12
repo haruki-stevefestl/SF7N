@@ -23,7 +23,7 @@ $wpf.ApplyConfig.Add_Click({
         $config.ReadWrite   -ne $context.ReadWrite
     ) {
         Write-Log 'Reload search'
-        Search-CSV $wpf.Searchbar.Text
+        Search-CSV $wpf.Searchbar.Text $csv
     }
     $wpf.TabControl.SelectedIndex = 1
 })

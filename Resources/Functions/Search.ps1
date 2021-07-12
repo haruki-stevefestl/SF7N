@@ -1,6 +1,6 @@
-function Search-CSV ($SearchText) {
+function Search-CSV ($SearchText, $SearchFrom) {
     # Initialize
-    if ($csv.Count -eq 0) {
+    if ($SearchFrom.Count -eq 0) {
         $wpf.Status.Text = 'Editing'
         return
     }
@@ -24,9 +24,9 @@ function Search-CSV ($SearchText) {
         $SearchTerm.PSObject.Properties.ForEach({
             $Header = $_.Name
             # Take into account of empty alias strings
-            $Count  = ($csvAlias.$Header | Where-Object {$_}).Count
+            $Count  = ($SearchFromAlias.$Header | Where-Object {$_}).Count
             for ($i = 0; $i -lt $Count; $i += 2) {
-                $_.Value = $_.Value.Replace($csvAlias[$i+1].$Header, $csvAlias[$i].$Header)
+                $_.Value = $_.Value.Replace($SearchFromAlias[$i+1].$Header, $SearchFromAlias[$i].$Header)
             }
         })
     }
@@ -37,8 +37,8 @@ function Search-CSV ($SearchText) {
             $wpf.SF7N.Dispatcher.Invoke($Action, 'ApplicationIdle')
         }
 
-        [Collections.ArrayList] $CsvSearch = @()
-        foreach ($Entry in $csv) {
+        [Collections.ArrayList] $SearchFromSearch = @()
+        foreach ($Entry in $SearchFrom) {
             if ('' -ne $SearchTerm) {
                 # If notMatch, goto next iteration
                 $SearchTerm.PSObject.Properties.ForEach({
@@ -52,23 +52,23 @@ function Search-CSV ($SearchText) {
                 $Row.PSObject.Properties.ForEach({
                     $Header = $_.Name
                     # Take into account of empty alias strings
-                    $Count  = ($csvAlias.$Header | Where-Object {$_}).Count
+                    $Count  = ($SearchFromAlias.$Header | Where-Object {$_}).Count
                     for ($i = 0; $i -lt $Count; $i += 2) {
-                        $_.Value = $_.Value.Replace($csvAlias[$i].$Header, $csvAlias[$i+1].$Header)
+                        $_.Value = $_.Value.Replace($SearchFromAlias[$i].$Header, $SearchFromAlias[$i+1].$Header)
                     }
                 })
-                $CsvSearch.Add($Row)
+                $SearchFromSearch.Add($Row)
             } else {
-                $CsvSearch.Add($Entry)
+                $SearchFromSearch.Add($Entry)
             }
 
             # Show preliminary results
-            if ($CsvSearch.Count -eq 25) {
-                Update-GUI {$wpf.CSVGrid.ItemsSource = $CsvSearch.PSObject.Copy()}
+            if ($SearchFromSearch.Count -eq 25) {
+                Update-GUI {$wpf.CSVGrid.ItemsSource = $SearchFromSearch.PSObject.Copy()}
             }
         }
         # Show full results
-        Update-GUI {$wpf.CSVGrid.ItemsSource = $CsvSearch}
+        Update-GUI {$wpf.CSVGrid.ItemsSource = $SearchFromSearch}
         Update-GUI {$wpf.Status.Text = 'Ready'}
     }
     
@@ -77,8 +77,9 @@ function Search-CSV ($SearchText) {
     $Ps.Runspace.ApartmentState = 'STA'
     $Ps.Runspace.ThreadOptions = 'ReuseThread'
     $Ps.Runspace.Open()
-    (Get-Variable wpf,csv,SearchTerm,csvAlias,context).ForEach({
+    (Get-Variable wpf,SearchFrom,SearchTerm,csvAlias,context).ForEach({
         $Ps.Runspace.SessionStateProxy.SetVariable($_.Name, $_.Value)
     })
     $Ps.BeginInvoke()
+    $wpf.TabControl.SelectedIndex = 1
 }
