@@ -91,7 +91,7 @@
     <TabControl Name="TabControl" BorderThickness="0" Margin="-4" Background="{StaticResource Brush_Background}">
         <!-- Splashscreen -->
         <TabItem>
-            <TextBlock Text="SF7N 1.7" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="SF7N 1.6" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </TabItem>
 
         <!-- Homepage -->
@@ -384,7 +384,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Border" BorderThickness="0">
+                                        <Border x:Name="Border" BorderThickness="0" Background="Transparent">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
